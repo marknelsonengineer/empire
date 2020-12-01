@@ -1,5 +1,12 @@
-all: empire
+CXX = g++
+CXXFLAGS = -std=c++17
+TARGET = empire
 
-empire: main.cpp
-	g++ -std=c++17 -o empire main.cpp
+CXXSRC = main.cpp World.cpp
+CXXHEADERS = World.hpp
+
+all: $(TARGET)
+
+empire: $(CXXSRC) $(CXXHEADERS)
+	$(CXX) $(CXXFLAGS) -o empire $(CXXSRC)
 
