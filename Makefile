@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -O2 -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
+CXXFLAGS = -std=c++17 -O2 -Wall -Wshadow -Wconversion
 TARGET = empire src_docs
 
 CXXSRC = main.cpp World.cpp

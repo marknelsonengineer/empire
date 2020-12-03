@@ -5,7 +5,7 @@
 using namespace std;
 
 int main() {
-	cout << "Welcome to Empire\n";
+	std::printf("Welcome to Empire\n");
 	
 	World world(10, 20);
 	
