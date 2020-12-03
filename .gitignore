@@ -31,3 +31,6 @@ empire
 *.exe
 *.out
 *.app
+
+# Directories
+target/*
