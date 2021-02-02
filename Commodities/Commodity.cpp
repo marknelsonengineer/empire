@@ -29,7 +29,16 @@ typedef std::int16_t commodityValue;
 
 /// @class Base class for all commodities (food, iron ore, civs, mil, etc.)
 class Commodity {
-
+public:
+	 Commodity( const bool           inIsEnabled
+	           ,const commodityValue inMaxValue 
+	          ) :
+  	          isEnabled           (inIsEnabled)
+             ,maxValue            (inMaxValue)
+   {
+      // @todo Validate the object
+   }
+   
 private: 
 
    /// @var Commodities will be stored in Resources (another base class for ships,
