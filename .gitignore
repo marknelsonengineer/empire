@@ -33,4 +33,7 @@ empire
 *.app
 
 # Directories
-target/*
+doxygen/generated_docs/*
+
+# Apple Filesystem files
+.DS_Store

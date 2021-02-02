@@ -10,8 +10,8 @@ class World {
 		unsigned short getHeight();
 		
 	private:
-		unsigned short width;
-		unsigned short height;
+		unsigned short width;     ///< The width of the world.
+		unsigned short height;    ///< The height of the world.
 };
 
 #endif

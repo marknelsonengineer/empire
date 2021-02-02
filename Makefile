@@ -5,13 +5,16 @@ TARGET = empire src_docs
 CXXSRC = main.cpp World.cpp
 CXXHEADERS = World.hpp
 
+DOXYGEN_CONF = ./doxygen/doxygen.conf
+
 all: $(TARGET)
 
 empire: $(CXXSRC) $(CXXHEADERS)
 	$(CXX) $(CXXFLAGS) -o target/empire $(CXXSRC)
 
-src_docs: doxygen.conf empire
-	doxygen doxygen.conf
+src_docs: $(DOXYGEN_CONF)
+	doxygen $(DOXYGEN_CONF)
+	# clear && make src_docs 2>&1 | fgrep "Commodity.cpp"
 
 clean:
 	rm -fr target
