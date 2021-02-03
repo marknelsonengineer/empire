@@ -1,18 +1,14 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Empire ][
+//  Empire ][
+//
+/// Helper class that keeps constant values for commodities.
+/// 
+/// @file      CommodityType.cpp
+/// @version   1.0
 ///
-/// @brief   Helper class for all commodities (food, iron ore, civs, mil, etc.)
-///
-///          This is the "Intrinsic" part of a Flyweight design pattern.  
-///          All commodities have a number of variables that are the same, so
-///          they will be found in here.  Commodity will hold the variables that 
-///          change with each instance.
-///
-/// @file    CommodityType.cpp
-/// @version 1.0
-///
-/// @author Mark Nelson <@todo mr_nelson@icloud.com>
-/// @date   29 Jan 2021
+/// @author    Mark Nelson <mr_nelson@icloud.com>
+/// @date      29 Jan 2021
+/// @copyright (c) 2021 Mark Nelson
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <cstdint>
@@ -20,20 +16,36 @@
 #include <cstring>
 
 
-/// @enum Identifies the Commodity by type.  Acts as an index into the Commodities array
+/// Identifies the Commodity by type.  Acts as an index into the Commodities array
 enum CommodityEnum {CIV, MIL, SHELL, GUN, PETROL, IRON_ORE, GOLD_DUST, GOLD_BAR, FOOD, OIL, LCM, HCM, UCW, RAD };
 
 
 
-/// @def The number of commodity types.  Should match the number of elements in the enum and in the CommodityTypes array.
+/// The number of commodity types.  Should match the number of elements in the enum and in the CommodityTypes array.
 #define NUMBER_OF_COMMODITY_TYPES (14)
 
 
 
 
-/// @class Heper class for all commodities (food, iron ore, civs, mil, etc.)
+/// Heper class for all commodities (food, iron ore, civs, mil, etc.)
+///
+/// Commodity and CommodityType work together in a Flyweight pattern.
+///
+/// @internal
+/// This is the "Intrinsic" part of a Flyweight design pattern.         
+/// All commodities have a number of variables that are the same, so    
+/// they will be found in here.  Commodity will hold the variables that 
+/// change with each instance.                                          
+/// 
 class CommodityType {
 public:
+   
+   /// Constructor for CommodityType.
+   ///
+   /// @internal
+   /// Because this class holds all of its members as const, we need to set them
+   /// in a constructor and use an initializer list to set them.
+   ///
    CommodityType(const char     inName1 
                 ,const char*    inName3
                 ,const char*    inName8
@@ -66,73 +78,73 @@ public:
    }
 
 private: 
-   /// @var The 1 character mnemonic for this commodity.
+   /// The 1 character mnemonic for this commodity.
    const char name1;
 
 
-   /// @var The 3 character mnemonic for this commodity.
+   /// The 3 character mnemonic for this commodity.
    const char* name3;
 
 
-   /// @var The 8 character name for this commodity.
+   /// The 8 character name for this commodity.
    const char* name8;
    
 
-   /// @var How much 1000 units of this item contribute to power (see info power).
+   /// How much 1000 units of this item contribute to power (see info power).
    const uint16_t power;
 
 
-   /// @var Whether you can sell the item on the market.
+   /// Whether you can sell the item on the market.
    const bool isSellable;
 
 
-   /// @var The value if the item is mortgaged.  Also known as the "Melt Denominator".
+   /// The value if the item is mortgaged.  Also known as the "Melt Denominator".
    const uint16_t value;
 
 
-   /// @var The weight of the item, which determines how much mobility it takes to move it.
+   /// The weight of the item, which determines how much mobility it takes to move it.
    const uint8_t weight;
 
 
-   /// @var The packing bonus the item receives in inefficient (<60%) sectors.
+   /// The packing bonus the item receives in inefficient (<60%) sectors.
    const uint8_t packingInefficient;
 
 
-   /// @var The packing bonus the item receives in normal sectors.
+   /// The packing bonus the item receives in normal sectors.
    const uint8_t packingNormal;
 
 
-   /// @var The packing bonus the item receives in warehouse sectors.
+   /// The packing bonus the item receives in warehouse sectors.
    const uint8_t packingWarehouse;
 
 
-   /// @var The packing bonus the item receives in urban sectors.
+   /// The packing bonus the item receives in urban sectors.
    const uint8_t packingUrban;
 
 
-   /// @var The packing bonus the item receives in bank sectors.
+   /// The packing bonus the item receives in bank sectors.
    const uint8_t packingBank;
 
 
-   /// @var The up-to-32 character name for this commodity.
+   /// The up-to-32 character name for this commodity.
    const char* name32;
 
 
 public:
-   /// @brief Return the 1-character mnemonic for this commodity.
+   /// Return the 1-character mnemonic for this commodity.
    const char getName1() {
       return name1;
    }
 
 
-   /// @brief Validate the health of the CommodityType
+   /// Validate the health of the CommodityType
    void validate() {
       if( strlen(name3) > 3 ) {
          /// @todo throw an exception
       }
 
       if (strlen(name8) > 8 ) {
-         /// @tod throw an exception
+         /// @todo throw an exception
       }
 
       if (strlen(name32) > 32 ) {
@@ -149,7 +161,7 @@ public:
 /// This should use the Singleton design pattern
 class CommodityTypes {
 private:
-   /// @var Array of CommodityTypes -- the intrinsic values of various Commodities.
+   /// Array of CommodityTypes -- the intrinsic values of various Commodities.
    CommodityType CommodityArray[9] = {
       //                                  power sellable value weight    packing          long name
       //                                                               in  no  wh  ur  bk
@@ -167,12 +179,14 @@ private:
 
 
 public:
-   // Disallow access by anything other than via enum
+   /// Disallow access by anything other than via enum.
+   /// <span style="color:red"> Calling this operator will throw an exception! </span>
    CommodityType &operator[](int i) {
       /// @todo Throw exception...
       return CommodityArray[i];  // Will never get here
    }
 
+   /// Use the CommodityEnum as the index to retrieve elements from CommodityArray.
    CommodityType &operator[](enum CommodityEnum i) {
       return CommodityArray[i];
    }

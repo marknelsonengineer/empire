@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -O2 -Wall -Wshadow -Wconversion
+CXXFLAGS = -std=c++17 -O2 -Wall -pedantic -Wshadow -Wconversion 
 TARGET = Commodity.o CommodityType.o
 
 CXXSRC = main.cpp World.cpp
@@ -17,6 +17,5 @@ src_docs: doxygen.conf empire
 	doxygen doxygen.conf
 
 clean:
-	rm -fr target
-	mkdir target
+	rm -fr $(TARGET)
 

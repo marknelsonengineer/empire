@@ -1,12 +1,23 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Empire ][
-/// Base class for all commodities (food, iron ore, civs, mil, etc.)
-/// 
-/// @file    Commodity.cpp
-/// @version 1.0
+//
+/// Base class for all commodities (food, iron ore, civs, mil, etc.) that keeps
+/// data that varies between instances of a commodity.
 ///
-/// @author Mark Nelson <mr_nelson@icloud.com>
-/// @date   29 Jan 2021
+/// Commodity and CommodityType work together in a Flyweight pattern.
+///
+/// @internal
+/// This is the "Extrinsic" part of a Flyweight design pattern.         
+/// All commodities have a number of variables that change with each instance,
+/// which can be found in this class.  CommodityType will hold the values that
+/// are common for all commodities of that type.                                      
+/// 
+/// @file      Commodity.cpp
+/// @version   1.0
+///
+/// @author    Mark Nelson <mr_nelson@icloud.com>
+/// @date      29 Jan 2021
+/// @copyright (c) 2021 Mark Nelson
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <cstdint>
