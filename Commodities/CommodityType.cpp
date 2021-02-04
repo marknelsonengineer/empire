@@ -3,7 +3,7 @@
 //
 /// Helper class that keeps constant values for commodities.
 /// 
-/// @file      CommodityType.cc
+/// @file      CommodityType.cpp
 /// @version   1.0
 ///
 /// @author    Mark Nelson <mr_nelson@icloud.com>
@@ -15,7 +15,7 @@
 #include <cstdbool>
 #include <cstring>
 
-#include "CommodityType.hh"
+#include "CommodityType.hpp"
 
    /// Constructor for CommodityType.
    ///

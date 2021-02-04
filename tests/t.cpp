@@ -1,4 +1,5 @@
-#include <my_class.hpp>
+#include "../Commodities/Commodity.hh"
+
 #define BOOST_TEST_MODULE MyTest
 #include <boost/test/unit_test.hpp>
 

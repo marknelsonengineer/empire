@@ -2,16 +2,16 @@ CXX = g++
 CXXFLAGS = -std=c++20 -O2 -Wall -pedantic -Wshadow -Wconversion 
 TARGET = Commodity.o CommodityType.o
 
-CXXSRC = main.cc World.cc
+CXXSRC = main.cpp World.cpp
 CXXHEADERS = World.hpp
 
 all: $(TARGET)
 
-Commodity.o: Commodity.cc
-	$(CXX) $(CXXFLAGS) -c Commodity.cc
+Commodity.o: Commodity.cpp Commodity.hpp
+	$(CXX) $(CXXFLAGS) -c Commodity.cpp
 
-CommodityType.o: CommodityType.cc
-	$(CXX) $(CXXFLAGS) -c CommodityType.cc
+CommodityType.o: CommodityType.cpp CommodityType.hpp
+	$(CXX) $(CXXFLAGS) -c CommodityType.cpp
 
 src_docs: doxygen.conf empire
 	doxygen doxygen.conf

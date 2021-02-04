@@ -3,7 +3,7 @@
 //
 /// Helper class that keeps constant values for commodities.
 /// 
-/// @file      CommodityType.hh
+/// @file      CommodityType.hpp
 /// @version   1.0
 ///
 /// @author    Mark Nelson <mr_nelson@icloud.com>

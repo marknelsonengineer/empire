@@ -10,7 +10,7 @@
 /// which can be found in this class.  CommodityType will hold the values that
 /// are common for all commodities of that type.
 ///
-/// @file      Commodity.hh
+/// @file      Commodity.hpp
 /// @version   1.0
 ///
 /// @author    Mark Nelson <mr_nelson@icloud.com>
@@ -18,10 +18,10 @@
 /// @copyright (c) 2021 Mark Nelson
 ///////////////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 #include <cstdint>
 #include <cstdbool>
-
-#pragma once
 
 
 /// Standard signed integer for commodity values.

@@ -10,7 +10,7 @@
 /// which can be found in this class.  CommodityType will hold the values that
 /// are common for all commodities of that type.
 ///
-/// @file      Commodity.cc
+/// @file      Commodity.cpp
 /// @version   1.0
 ///
 /// @author    Mark Nelson <mr_nelson@icloud.com>
@@ -21,7 +21,7 @@
 #include <cstdint>
 #include <cstdbool>
 
-#include "Commodity.hh"
+#include "Commodity.hpp"
 
 
 /// Constructor for Commodity.  Commodity has a few immutable values (isEnabled
