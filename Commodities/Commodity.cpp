@@ -4,8 +4,6 @@
 /// Base class for all commodities (food, iron ore, civs, mil, etc.) that keeps
 /// data that varies between instances of a commodity.
 ///
-/// Commodity and CommodityType work together in a Flyweight pattern.
-///
 /// @internal
 /// This is the "Extrinsic" part of a Flyweight design pattern.         
 /// All commodities have a number of variables that change with each instance,
@@ -19,6 +17,10 @@
 /// @date      29 Jan 2021
 /// @copyright (c) 2021 Mark Nelson
 ///////////////////////////////////////////////////////////////////////////////
+
+export module Commodity;
+
+import CommodityType;
 
 #include <cstdint>
 #include <cstdbool>
@@ -36,6 +38,8 @@ typedef std::int16_t commodityValue;
 
 
 /// Base class for all commodities (food, iron ore, civs, mil, etc.)
+///
+/// @pattern Flyweight:  Commodity and CommodityType work together in a Flyweight pattern.
 ///
 /// @internal
 /// This is the "Extrinsic" part of a Flyweight design pattern.  

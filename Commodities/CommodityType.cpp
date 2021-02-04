@@ -11,6 +11,8 @@
 /// @copyright (c) 2021 Mark Nelson
 ///////////////////////////////////////////////////////////////////////////////
 
+export module CommodityType;
+
 #include <cstdint>
 #include <cstdbool>
 #include <cstring>
@@ -29,7 +31,7 @@ enum CommodityEnum {CIV, MIL, SHELL, GUN, PETROL, IRON_ORE, GOLD_DUST, GOLD_BAR,
 
 /// Heper class for all commodities (food, iron ore, civs, mil, etc.)
 ///
-/// Commodity and CommodityType work together in a Flyweight pattern.
+/// @pattern Flyweight:  Commodity and CommodityType work together in a Flyweight pattern.
 ///
 /// @internal
 /// This is the "Intrinsic" part of a Flyweight design pattern.         
