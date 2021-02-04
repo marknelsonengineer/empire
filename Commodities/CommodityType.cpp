@@ -17,12 +17,14 @@
 
 #include "CommodityType.hpp"
 
-   /// Constructor for CommodityType.
-   ///
-   /// @internal
-   /// Because this class holds all of its members as const, we need to set them
-   /// in a constructor and use an initializer list to set them.
-   ///
+namespace empire {
+   
+/// Constructor for CommodityType.
+///
+/// @internal
+/// Because this class holds all of its members as const, we need to set them
+/// in a constructor and use an initializer list to set them.
+///
 CommodityType::CommodityType(const char     inName1 
                             ,const char*    inName3
                             ,const char*    inName8
@@ -55,7 +57,7 @@ CommodityType::CommodityType(const char     inName1
 }
    
 
-   /// Return the 1-character mnemonic for this commodity.
+/// Return the 1-character mnemonic for this commodity.
 const char CommodityType::getName1() {
    return name1;
 }
@@ -111,3 +113,6 @@ void CommodityTypes::validate() {
 void CommodityTypes::print() {
    /// @todo Print the commodity type list
 }
+
+
+} // namespace empire;

@@ -24,6 +24,8 @@
 #include <cstdbool>
 
 
+namespace empire {
+   
 /// Standard signed integer for commodity values.
 ///
 /// Commodities are integers that range from 0 to 1,000.  It's important
@@ -75,3 +77,4 @@ public:
 };
 
 
+} // namespace empire;

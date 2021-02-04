@@ -17,6 +17,7 @@
 #include <cstdbool>
 #include <cstring>
 
+namespace empire {
 
 /// Identifies the Commodity by type.  Acts as an index into the Commodities array
 enum CommodityEnum {CIV, MIL, SHELL, GUN, PETROL, IRON_ORE, GOLD_DUST, GOLD_BAR, FOOD, OIL, LCM, HCM, UCW, RAD };
@@ -161,3 +162,5 @@ public:
 
 };
 
+
+} // namespace empire;

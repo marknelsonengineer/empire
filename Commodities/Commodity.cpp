@@ -23,7 +23,8 @@
 
 #include "Commodity.hpp"
 
-
+namespace empire {
+   
 /// Constructor for Commodity.  Commodity has a few immutable values (isEnabled
 /// and maxValue), so they are required when Commodity is built.
 Commodity::Commodity( const bool           inIsEnabled
@@ -47,3 +48,6 @@ bool Commodity::validate() {
    // All tests pass
    return true;
 }
+
+
+}  // namespace empire
