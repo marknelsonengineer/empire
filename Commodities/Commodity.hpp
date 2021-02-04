@@ -68,6 +68,10 @@ private:
 
    /// Holds the value of the commodity.  It should range from 0 to maxValue.
    commodityValue value;
+
+public:
+   /// Validate the commodity.
+   bool validate();
 };
 
 

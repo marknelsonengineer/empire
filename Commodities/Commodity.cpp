@@ -32,5 +32,18 @@ Commodity::Commodity( const bool           inIsEnabled
   	                   isEnabled           (inIsEnabled)
                      ,maxValue            (inMaxValue)
    {
+      value = 0;
       // @todo Validate the object
    }
+
+
+/// Validate the commodity.
+bool Commodity::validate() {
+   if (maxValue < 0)
+      return false;
+   
+   /// @todo More tests
+   
+   // All tests pass
+   return true;
+}
