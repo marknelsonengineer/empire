@@ -11,8 +11,6 @@
 /// @copyright (c) 2021 Mark Nelson
 ///////////////////////////////////////////////////////////////////////////////
 
-export module CommodityType;
-
 #include <cstdint>
 #include <cstdbool>
 #include <cstring>

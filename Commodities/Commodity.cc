@@ -18,10 +18,6 @@
 /// @copyright (c) 2021 Mark Nelson
 ///////////////////////////////////////////////////////////////////////////////
 
-export module Commodity;
-
-import CommodityType;
-
 #include <cstdint>
 #include <cstdbool>
 

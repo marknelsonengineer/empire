@@ -1,18 +1,17 @@
-CXX = clang++
-CXXFLAGS = -Wall -std=c++2a -stdlib=libc++ -c -pedantic -Wno-unused-private-field
+CXX = g++
+CXXFLAGS = -std=c++20 -O2 -Wall -pedantic -Wshadow -Wconversion 
 TARGET = Commodity.o CommodityType.o
-INCLUDE_DIRS = -I /usr/include/c++/10 -I /usr/include/c++/10/x86_64-redhat-linux
 
-CXXSRC = main.cpp World.cpp
+CXXSRC = main.cc World.cc
 CXXHEADERS = World.hpp
 
 all: $(TARGET)
 
-Commodity.o: Commodity.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -c Commodity.cpp
+Commodity.o: Commodity.cc
+	$(CXX) $(CXXFLAGS) -c Commodity.cc
 
-CommodityType.o: CommodityType.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -c CommodityType.cpp
+CommodityType.o: CommodityType.cc
+	$(CXX) $(CXXFLAGS) -c CommodityType.cc
 
 src_docs: doxygen.conf empire
 	doxygen doxygen.conf
