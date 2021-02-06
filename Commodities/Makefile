@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++20 -O2 -Wall -pedantic -Wshadow -Wconversion 
+CXXFLAGS = -std=c++20 -O3 -Wall -pedantic -Wshadow -Wconversion 
 TARGET = Commodity.o CommodityType.o EmpireExceptions.o
 
 CXXSRC = main.cpp World.cpp
