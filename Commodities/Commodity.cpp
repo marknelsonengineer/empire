@@ -27,6 +27,11 @@ Commodity::Commodity( const commodityValue inMaxValue ) : maxValue ( inMaxValue 
 
 
 Commodity Commodity::operator += ( const commodityValue increaseBy ) {
+   
+   if( !isEnabled() ) {
+      throw commodityDisabledException();
+   }
+   
    // These will bound the size of the increase to a small enough 
    // number to prevent any wraparound issues.
    BOOST_ASSERT( increaseBy >= 0 );

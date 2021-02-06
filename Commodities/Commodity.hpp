@@ -49,6 +49,11 @@ typedef boost::error_info<struct tag_requestedValue, commodityValue> errinfo_req
 typedef boost::error_info<struct tag_maxValue, commodityValue> errinfo_maxValue;
 /// @todo Add a reference to the CommodityType when they are wired together
 
+
+/// Thrown when you try to use a += or -= operator on a disabled Commodity.
+struct commodityDisabledException: virtual empireException { };
+
+
 /// Base class for all commodities (food, iron ore, civs, mil, etc.) that keeps
 /// data that varies between instances of a commodity.
 ///
@@ -104,6 +109,9 @@ public:
    /// Override the += operator.  If the Commodity exceeds maxValue, then
    /// throw commodityOverflowException, and leave the Commodity in a 
    /// valid state, with value = maxValue.
+   ///
+   /// Throw commodityDisabledException if you try to modify a disabled
+   /// Commodity.
    Commodity operator +=  ( const commodityValue increaseBy );
 
 private:

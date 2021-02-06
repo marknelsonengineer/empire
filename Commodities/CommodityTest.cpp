@@ -70,11 +70,14 @@ BOOST_AUTO_TEST_CASE( Commodity_constructors ) {
 
 /// Exercise the operator overloads
 BOOST_AUTO_TEST_CASE( Commodity_overloads ) {
+   // Test basic += overload operator
    Commodity testCommodity( 100 );
 
    BOOST_CHECK( testCommodity.getValue() == 0 );
    testCommodity += 100;
    BOOST_CHECK( testCommodity.getValue() == 100 );
+   
+   // Test the overflow exception
    try {
       testCommodity += 1;
       BOOST_CHECK_MESSAGE( false, "The line above should have thrown an exception" );
@@ -94,6 +97,21 @@ BOOST_AUTO_TEST_CASE( Commodity_overloads ) {
    
    BOOST_CHECK( testCommodity.getValue() == 100 );
    BOOST_CHECK_NO_THROW( testCommodity.validate() );
+   
+   
+   /// Bounds check the += increaseBy operator
+   Commodity testCommodity2 ( MAX_COMMODITY_VALUE );
+
+   BOOST_CHECK_THROW( testCommodity2 += -1, assertionException );
+   testCommodity2 += 0;
+   BOOST_CHECK( testCommodity2.getValue() == 0 );
+   testCommodity2 += MAX_COMMODITY_VALUE;
+   BOOST_CHECK_THROW( testCommodity2 += (MAX_COMMODITY_VALUE + 1), assertionException );
+   BOOST_CHECK( testCommodity2.getValue() == MAX_COMMODITY_VALUE );
+
+   /// Test using += on a disabled Commodity
+   Commodity testCommodity3 ( false );
+   BOOST_CHECK_THROW( testCommodity3 += 1, commodityDisabledException );
 }
 
 /// @todo build out the other tests
