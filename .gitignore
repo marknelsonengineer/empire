@@ -28,6 +28,7 @@
 
 # Executables
 empire
+*Tests
 *.exe
 *.out
 *.app
