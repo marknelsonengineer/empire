@@ -23,7 +23,6 @@ namespace empire {
 }  // namespace empire
 
 
-
 namespace boost {
 
 /// Empire specific handler when we fail BOOST_ASSERT().

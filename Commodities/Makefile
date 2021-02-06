@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -std=c++20 -O2 -Wall -pedantic -Wshadow -Wconversion 
-TARGET = Commodity.o CommodityType.o
+TARGET = Commodity.o CommodityType.o EmpireExceptions.o
 
 CXXSRC = main.cpp World.cpp
 CXXHEADERS = World.hpp

@@ -3,6 +3,9 @@
 //
 /// Base class for all of Empire's exceptions.
 ///
+/// Note:      We will declare class-specific exceptions with the classes...
+///            so they won't always be here.
+///
 /// @file      EmpireExceptions.hpp
 /// @version   1.0
 ///
@@ -19,6 +22,9 @@
 namespace empire {
 
 /// Base class for all Empire exceptions
+///
+/// Note:  We will declare class-specific exceptions with the classes...
+///        so they won't always be here.
 struct empireException: virtual std::exception, virtual boost::exception { };
 
 

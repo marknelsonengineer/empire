@@ -15,15 +15,16 @@
 #pragma once
 
 #include <cstdint>
+#include "EmpireExceptions.hpp"
 
 
 namespace empire {
    
 /// Standard signed integer for commodity values.
 ///
-/// Commodities are integers that range from 0 to 1,000.  It's important
-/// that intermediate calculations use signed arithmitic, so I think
-/// commodities should be signed integers.
+/// Commodities are integers that range from 0 to MAX_COMMODITY_VALUE.  
+/// It's important that intermediate calculations use signed arithmitic, 
+/// so I think commodities should be signed integers.
 ///
 /// For efficiency and marshaling purposes, I think it's a good idea to
 /// use a fixed-width integer type.
@@ -34,13 +35,47 @@ typedef std::int16_t commodityValue;
 constexpr commodityValue MAX_COMMODITY_VALUE = 1000;
 
 
+/// Thrown when we overflow a commodity.  This can usually be absorbed.
+/// When this is thown, we are telling the caller that Commodity X went
+/// over by Y and now contains Z.  It's up to the caller to take that 
+/// information and ignore it or take appropriate action.
+/// 
+/// In either case, when this is called, the Commodity is still valid
+/// and will be set to maxValue.
+struct commodityOverflowException: virtual empireException { };
+
+typedef boost::error_info<struct tag_oldValue, commodityValue> errinfo_oldValue;
+typedef boost::error_info<struct tag_requestedValue, commodityValue> errinfo_requestedValue;
+typedef boost::error_info<struct tag_maxValue, commodityValue> errinfo_maxValue;
+/// @todo Add a reference to the CommodityType when they are wired together
+
 /// Base class for all commodities (food, iron ore, civs, mil, etc.) that keeps
 /// data that varies between instances of a commodity.
 ///
-/// @pattern Flyweight:  Commodity and CommodityType work together in a Flyweight pattern.
+/// The management of Commodities is central to Empire.  This class endeavors
+/// to support expressive code in the working logic by allowing expressions
+/// like:
+///
+/// @code
+///    someResource.civ += 10;
+/// @endcode
+///
+/// Essentially, this class is intended to be a "smart integer" in the context
+/// of Empire.  If we overflow (go over maxValue), the class should throw
+/// a commodityOverflowException or commodityUnderflowException.  The exception
+/// will contain information like Commodity X went over by Y and is now Z.  
+/// It's up to the caller to decide weather to ignore it or take appropriate
+/// action.
+///
+/// To this end, many arithmitc operators are disabled.  
+///    += Works as expected:  someResource.civ += 10;
+///    -= Works as expected:  someResource.civ -= 10;
 ///
 /// Commodities must be enabled or disabled (at the time it is constructed) and can't be changed.
 /// Commodities must have a maximum value (at the time it is constructed) and can't be changed.
+///
+///
+/// @pattern Flyweight:  Commodity and CommodityType work together in a Flyweight pattern.
 ///
 /// @internal
 /// This is the "Extrinsic" part of a Flyweight design pattern.
@@ -61,6 +96,15 @@ public:
    /// @endcode
    ///
    Commodity( const commodityValue inMaxValue );
+   
+
+   /// @todo Write the setter and all of the overrides.
+   
+
+   /// Override the += operator.  If the Commodity exceeds maxValue, then
+   /// throw commodityOverflowException, and leave the Commodity in a 
+   /// valid state, with value = maxValue.
+   Commodity operator +=  ( const commodityValue increaseBy );
 
 private:
    /// Holds the maximum value of the commodity.  If the resource can not use
@@ -88,7 +132,9 @@ public:
    const commodityValue getMaxValue();
    
    
-   /// @todo Write the setter and all of the overrides.
+   /// Return the current value of this Commodity.
+   const commodityValue getValue();
+   
    
    /// Validate the commodity.
    bool validate();

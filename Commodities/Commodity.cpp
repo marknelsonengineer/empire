@@ -26,6 +26,31 @@ Commodity::Commodity( const commodityValue inMaxValue ) : maxValue ( inMaxValue 
 }
 
 
+Commodity Commodity::operator += ( const commodityValue increaseBy ) {
+   // These will bound the size of the increase to a small enough 
+   // number to prevent any wraparound issues.
+   BOOST_ASSERT( increaseBy >= 0 );
+   BOOST_ASSERT( increaseBy <= MAX_COMMODITY_VALUE );
+   
+   commodityValue newValue = this->value + increaseBy;
+   
+   if( newValue >= 0 && newValue <= this->maxValue ) {  // Is the new value OK?
+      this->value = newValue;
+      return this->value;
+   }
+   
+   if( newValue > this->maxValue ) {  // If we overflow...
+      this->value = maxValue;         // set value to maxValue and...
+      throw commodityOverflowException() << errinfo_oldValue( this->value ) 
+                                         << errinfo_requestedValue( newValue )
+                                         << errinfo_maxValue( this->maxValue );
+                                         /// @todo Add CommodityType when its wired in
+   }
+   
+   return this->value;
+}
+
+
 bool Commodity::isEnabled() {
    if ( maxValue >= 1 ) 
       return true;
@@ -36,6 +61,11 @@ bool Commodity::isEnabled() {
 
 const commodityValue Commodity::getMaxValue() {
    return maxValue;
+}
+
+
+const commodityValue Commodity::getValue() {
+   return value;
 }
 
 
@@ -55,7 +85,7 @@ bool Commodity::validate() {
       BOOST_ASSERT( value == 0 );
    }
    
-   return true;  /// All tests pass
+   return true;  // All tests pass
 }
 
 
