@@ -14,11 +14,9 @@
 /// @copyright (c) 2021 Mark Nelson
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <cstdbool>
-#include <stdio.h>
-#include <boost/assert.hpp>
-
 #include "Commodity.hpp"
+
+#include <boost/assert.hpp>
 
 namespace empire {
 
@@ -46,13 +44,13 @@ const commodityValue Commodity::getMaxValue() {
 ///            the data structure.  The Unit Test Framework will validate the 
 ///            getters and setters.
 bool Commodity::validate() {
-   if( maxValue >= 1 ) {
+   if( isEnabled() ) {
       BOOST_ASSERT( maxValue <= MAX_COMMODITY_VALUE );
       BOOST_ASSERT( value >= 0 );
       BOOST_ASSERT( value <= maxValue );
    }
 
-   if( maxValue < 1 ) {
+   if( !isEnabled() ) {
       BOOST_ASSERT( maxValue == 0 );
       BOOST_ASSERT( value == 0 );
    }
@@ -62,18 +60,3 @@ bool Commodity::validate() {
 
 
 }  // namespace empire
-
-
-//struct empireException : public boost::exception, public std::exception
-//{
-//  const char *what() const noexcept { return "Empire Exceptio"; }
-//};
-
-
-//namespace boost {
-//    void assertion_failed(char const * expr, char const * function,
-//        char const * file, long line) {
-//         printf( "BOOO!!\n" ) ;
-//          return ;
-//        }
-//}
