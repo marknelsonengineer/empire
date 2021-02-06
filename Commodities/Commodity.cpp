@@ -56,6 +56,35 @@ Commodity Commodity::operator += ( const commodityValue increaseBy ) {
 }
 
 
+Commodity Commodity::operator -= ( const commodityValue decreaseBy ) {
+   
+   if( !isEnabled() ) {
+      throw commodityDisabledException();
+   }
+   
+   // These will bound the size of the decrease to a small enough 
+   // number to prevent any wraparound issues.
+   BOOST_ASSERT( decreaseBy >= 0 );
+   BOOST_ASSERT( decreaseBy <= MAX_COMMODITY_VALUE );
+   
+   commodityValue newValue = this->value - decreaseBy;
+   
+   if( newValue >= 0 && newValue <= this->maxValue ) {  // Is the new value OK?
+      this->value = newValue;
+      return this->value;
+   }
+   
+   if( newValue < 0 ) {               // If we underflow...
+      this->value = 0;                // set value to 0 and...
+      throw commodityUnderflowException() << errinfo_oldValue( this->value ) 
+                                          << errinfo_requestedValue( newValue );
+                                         /// @todo Add CommodityType when its wired in
+   }
+   
+   return this->value;
+}
+
+
 bool Commodity::isEnabled() {
    if ( maxValue >= 1 ) 
       return true;

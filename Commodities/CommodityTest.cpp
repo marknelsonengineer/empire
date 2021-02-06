@@ -44,6 +44,7 @@ BOOST_AUTO_TEST_CASE( Commodity_enabled_constructor ) {
    BOOST_CHECK( testCommodity.getValue() == 0 );
    testCommodity += 100;
    BOOST_CHECK( testCommodity.getValue() == 100 );
+   BOOST_CHECK_NO_THROW( testCommodity.validate() );
 }
 
 
@@ -68,11 +69,15 @@ BOOST_AUTO_TEST_CASE( Commodity_constructors ) {
 }
 
 
-/// Exercise the operator overloads
-BOOST_AUTO_TEST_CASE( Commodity_overloads ) {
+/// Exercise the += operator overloads
+BOOST_AUTO_TEST_CASE( Commodity_overflow ) {
    // Test basic += overload operator
    Commodity testCommodity( 100 );
 
+   BOOST_CHECK( testCommodity.getValue() == 0 );
+   testCommodity += 100;
+   BOOST_CHECK( testCommodity.getValue() == 100 );
+   testCommodity -= 100;
    BOOST_CHECK( testCommodity.getValue() == 0 );
    testCommodity += 100;
    BOOST_CHECK( testCommodity.getValue() == 100 );
@@ -108,10 +113,65 @@ BOOST_AUTO_TEST_CASE( Commodity_overloads ) {
    testCommodity2 += MAX_COMMODITY_VALUE;
    BOOST_CHECK_THROW( testCommodity2 += (MAX_COMMODITY_VALUE + 1), assertionException );
    BOOST_CHECK( testCommodity2.getValue() == MAX_COMMODITY_VALUE );
+   BOOST_CHECK_NO_THROW( testCommodity2.validate() );
+
 
    /// Test using += on a disabled Commodity
    Commodity testCommodity3 ( false );
    BOOST_CHECK_THROW( testCommodity3 += 1, commodityDisabledException );
+   
+   BOOST_CHECK_NO_THROW( testCommodity3.validate() );
+}
+
+
+/// Exercise the -= operator overloads
+BOOST_AUTO_TEST_CASE( Commodity_underflow ) {
+   // Test basic -= overload operator
+   Commodity testCommodity( 100 );
+
+   BOOST_CHECK( testCommodity.getValue() == 0 );
+   
+   // Test the underflow exception
+   try {
+      testCommodity -= 1;
+      BOOST_CHECK_MESSAGE( false, "The line above should have thrown an exception" );
+   }
+   catch( boost::exception & e ) {
+      commodityValue const* oldValue = boost::get_error_info<errinfo_oldValue>( e );
+      BOOST_CHECK( *oldValue == 0 );
+      
+      commodityValue const* requestedValue = boost::get_error_info<errinfo_requestedValue>( e );
+      BOOST_CHECK( *requestedValue == -1 );
+
+      /// @todo Check commodity name when we get that wired in...
+   }
+
+   BOOST_CHECK( testCommodity.getValue() == 0 );
+   BOOST_CHECK_NO_THROW( testCommodity.validate() );
+   
+   
+   /// Bounds check the += increaseBy operator
+   Commodity testCommodity2 ( MAX_COMMODITY_VALUE );
+
+   BOOST_CHECK_THROW( testCommodity2 += -1, assertionException );
+   testCommodity2 -= 0;
+   BOOST_CHECK( testCommodity2.getValue() == 0 );
+   testCommodity2 += MAX_COMMODITY_VALUE;
+   BOOST_CHECK( testCommodity2.getValue() == MAX_COMMODITY_VALUE );
+   testCommodity2 -= MAX_COMMODITY_VALUE;
+   BOOST_CHECK( testCommodity2.getValue() == 0 );
+   testCommodity2 += MAX_COMMODITY_VALUE;
+   BOOST_CHECK( testCommodity2.getValue() == MAX_COMMODITY_VALUE );
+   BOOST_CHECK_THROW( testCommodity2 -= (MAX_COMMODITY_VALUE + 1), assertionException );
+   // The above is an ** illegal ** -= because it's > than MAX_COMMODITY_VALUE, 
+   // so the Commodity should be unchanged.
+   BOOST_CHECK( testCommodity2.getValue() == MAX_COMMODITY_VALUE );
+   BOOST_CHECK_NO_THROW( testCommodity2.validate() );
+
+   /// Test using -= on a disabled Commodity
+   Commodity testCommodity3 ( false );
+   BOOST_CHECK_THROW( testCommodity3 -= 1, commodityDisabledException );
+   BOOST_CHECK_NO_THROW( testCommodity3.validate() );
 }
 
 /// @todo build out the other tests

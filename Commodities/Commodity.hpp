@@ -44,10 +44,29 @@ constexpr commodityValue MAX_COMMODITY_VALUE = 1000;
 /// and will be set to maxValue.
 struct commodityOverflowException: virtual empireException { };
 
+/// On a commodityOverflowException and commodityUnderflowException, this 
+/// holds the original value of the Commodity in the exception.
 typedef boost::error_info<struct tag_oldValue, commodityValue> errinfo_oldValue;
+
+/// On a commodityOverflowException and commodityUnderflowException, this
+/// holds the new/requested value of the Commodity in the exception.
 typedef boost::error_info<struct tag_requestedValue, commodityValue> errinfo_requestedValue;
+   
+/// On a commodityOverfloewException, this holds the maxValue for the Commodity.
 typedef boost::error_info<struct tag_maxValue, commodityValue> errinfo_maxValue;
 /// @todo Add a reference to the CommodityType when they are wired together
+
+
+/// Thrown when we underflow a commodity.  This can usually be absorbed.
+/// When this is thown, we are telling the caller that Commodity X went
+/// under by Y.  It's up to the caller to take that 
+/// information and ignore it or take appropriate action.
+///
+/// oldValue and requestedValue are set.
+/// 
+/// In either case, when this is called, the Commodity is still valid
+/// and will be set to maxValue.
+struct commodityUnderflowException: virtual empireException { };
 
 
 /// Thrown when you try to use a += or -= operator on a disabled Commodity.
@@ -101,10 +120,7 @@ public:
    /// @endcode
    ///
    Commodity( const commodityValue inMaxValue );
-   
-
-   /// @todo Write the setter and all of the overrides.
-   
+      
 
    /// Override the += operator.  If the Commodity exceeds maxValue, then
    /// throw commodityOverflowException, and leave the Commodity in a 
@@ -113,6 +129,15 @@ public:
    /// Throw commodityDisabledException if you try to modify a disabled
    /// Commodity.
    Commodity operator +=  ( const commodityValue increaseBy );
+
+
+   /// Override the -= operator.  If the Commodity goes below 0, then
+   /// throw commodityUnderflowException, and leave the Commodity in a 
+   /// valid state, with value = 0.
+   ///
+   /// Throw commodityDisabledException if you try to modify a disabled
+   /// Commodity.
+   Commodity operator -=  ( const commodityValue decreaseBy );
 
 private:
    /// Holds the maximum value of the commodity.  If the resource can not use
