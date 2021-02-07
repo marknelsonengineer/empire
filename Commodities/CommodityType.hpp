@@ -2,7 +2,7 @@
 //  Empire ][
 //
 /// Helper class that keeps constant values for commodities.
-/// 
+///
 /// @file      CommodityType.hpp
 /// @version   1.0
 ///
@@ -17,10 +17,15 @@
 #include <cstdbool>
 #include <cstring>
 
+
 namespace empire {
 
-/// Identifies the Commodity by type.  Acts as an index into the Commodities array
-enum CommodityEnum {CIV, MIL, SHELL, GUN, PETROL, IRON_ORE, GOLD_DUST, GOLD_BAR, FOOD, OIL, LCM, HCM, UCW, RAD };
+/// Identifies the Commodity by type.  Acts as an index into the Commodities
+/// array and therefore must be a global enum (not an enum class).
+enum CommodityEnum {CIV   =0 ,MIL     =1 ,SHELL    =2 ,GUN     =3
+                   ,PETROL=4 ,IRON_ORE=5 ,GOLD_DUST=6 ,GOLD_BAR=7
+                   ,FOOD  =8 ,OIL     =9 ,LCM     =10 ,HCM    =11
+                   ,UCW  =12 ,RAD    =13                          };
 
 
 
@@ -33,21 +38,21 @@ enum CommodityEnum {CIV, MIL, SHELL, GUN, PETROL, IRON_ORE, GOLD_DUST, GOLD_BAR,
 /// @pattern Flyweight:  Commodity and CommodityType work together in a Flyweight pattern.
 ///
 /// @internal
-/// This is the "Intrinsic" part of a Flyweight design pattern.         
-/// All commodities have a number of variables that are the same, so    
-/// they will be found in here.  Commodity will hold the variables that 
-/// change with each instance.                                          
-/// 
+/// This is the "Intrinsic" part of a Flyweight design pattern.
+/// All commodities have a number of variables that are the same, so
+/// they will be found in here.  Commodity will hold the variables that
+/// change with each instance.
+///
 class CommodityType {
 public:
-   
+
    /// Constructor for CommodityType.
    ///
    /// @internal
    /// Because this class holds all of its members as const, we need to set them
    /// in a constructor and use an initializer list to set them.
    ///
-   CommodityType(const char     inName1 
+   CommodityType(const char     inName1
                 ,const char*    inName3
                 ,const char*    inName8
                 ,const uint16_t inPower
@@ -62,7 +67,7 @@ public:
                 ,const char*    inName32
                 );
 
-private: 
+private:
    /// The 1 character mnemonic for this commodity.
    const char name1;
 
@@ -73,7 +78,7 @@ private:
 
    /// The 8 character name for this commodity.
    const char* name8;
-   
+
 
    /// How much 1000 units of this item contribute to power (see info power).
    const uint16_t power;
@@ -121,7 +126,8 @@ public:
 
    /// Validate the health of the CommodityType
    void validate();
-};
+
+};  // class CommodityType
 
 
 
@@ -130,10 +136,11 @@ public:
 class CommodityTypes {
 private:
    /// Array of CommodityTypes -- the intrinsic values of various Commodities.
+// CommodityType CommodityArray[NUMBER_OF_COMMODITY_TYPES] = {
    CommodityType CommodityArray[9] = {
       //                                  power sellable value weight    packing          long name
       //                                                               in  no  wh  ur  bk
-      CommodityType('c', "civ", "Civilian",  50,   false,    4,     1,  1, 10, 10, 10, 10, "Civilians") 
+      CommodityType('c', "civ", "Civilian",  50,   false,    4,     1,  1, 10, 10, 10, 10, "Civilians")
      ,CommodityType('m', "mil", "Military", 100,    true,   20,     1,  1,  1,  1,  1,  1, "Military")
      ,CommodityType('s', "shl", "Shells",   125,    true,   80,     1,  1,  1, 10,  1,  1, "Shells")
      ,CommodityType('g', "gun", "Guns",     950,    true,  100,    10,  1,  1, 10,  1,  1, "Guns")
@@ -160,7 +167,6 @@ public:
 
    void print();
 
-};
+};  // class CommodityTypes
 
-
-} // namespace empire;
+}   // namespace empire;

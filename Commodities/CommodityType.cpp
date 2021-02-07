@@ -2,7 +2,9 @@
 //  Empire ][
 //
 /// Helper class that keeps constant values for commodities.
-/// 
+///
+//  The documentation for classes in this file are in the .hpp file.
+///
 /// @file      CommodityType.cpp
 /// @version   1.0
 ///
@@ -14,6 +16,8 @@
 #include <cstdint>
 #include <cstdbool>
 #include <cstring>
+#include <boost/assert.hpp>
+
 
 #include "CommodityType.hpp"
 
@@ -65,18 +69,10 @@ const char CommodityType::getName1() {
 
 /// Validate the health of the CommodityType
 void CommodityType::validate() {
-   if( strlen(name3) > 3 ) {
-      /// @todo throw an exception
-   }
-
-   if (strlen(name8) > 8 ) {
-      /// @todo throw an exception
-   }
-
-   if (strlen(name32) > 32 ) {
-      /// @todo throw an exception
-   }
-
+   BOOST_ASSERT( strlen( name3 ) <= 3 );
+   BOOST_ASSERT( strlen( name8 ) <= 8 );
+   BOOST_ASSERT( strlen( name32 ) <= 32 );
+ 
    /// @todo More validations
 }
 
@@ -100,13 +96,8 @@ CommodityType &CommodityTypes::operator[](enum CommodityEnum i) {
 }
 
 
-/// @todo Figure out how to return the number of Commodities... I'm thinking hardcode it for ease
-
-
 void CommodityTypes::validate() {
-   if ( CommodityArray[CIV].getName1() != 'c' ) {
-      /// @todo throw CommodityValidationExceptionb
-   }
+   BOOST_ASSERT( CommodityArray[CIV].getName1() == 'c' );
 }
 
 
