@@ -1,0 +1,7 @@
+README
+
+
+
+Coding Standards
+
+For enums, the last element is called COUNT and has the number of elements in the enum.

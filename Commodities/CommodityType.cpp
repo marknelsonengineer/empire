@@ -15,7 +15,8 @@
 
 #include <cstdint>
 #include <cstdbool>
-#include <cstring>
+// #include <cstring>
+#include <string>
 #include <boost/assert.hpp>
 
 
@@ -30,8 +31,8 @@ namespace empire {
 /// in a constructor and use an initializer list to set them.
 ///
 CommodityType::CommodityType(const char     inName1 
-                            ,const char*    inName3
-                            ,const char*    inName8
+                            ,const string   inName3
+                            ,const string   inName8
                             ,const uint16_t inPower
                             ,const bool     inIsSellable
                             ,const uint16_t inValue
@@ -41,7 +42,7 @@ CommodityType::CommodityType(const char     inName1
                             ,const uint8_t  inPackingWarehouse
                             ,const uint8_t  inPackingUrban
                             ,const uint8_t  inPackingBank
-                            ,const char*    inName32
+                            ,const string   inName32
                             ) : 
                              name1              (inName1)
                             ,name3              (inName3)
@@ -69,9 +70,9 @@ const char CommodityType::getName1() {
 
 /// Validate the health of the CommodityType
 void CommodityType::validate() {
-   BOOST_ASSERT( strlen( name3 ) <= 3 );
-   BOOST_ASSERT( strlen( name8 ) <= 8 );
-   BOOST_ASSERT( strlen( name32 ) <= 32 );
+   BOOST_ASSERT(  name3.length() <=  3 );
+   BOOST_ASSERT(  name8.length() <=  8 );
+   BOOST_ASSERT( name32.length() <= 32 );
  
    /// @todo More validations
 }

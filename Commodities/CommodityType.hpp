@@ -15,23 +15,23 @@
 
 #include <cstdint>
 #include <cstdbool>
-#include <cstring>
+// #include <cstring>
+#include <string>
+
+using namespace std;
 
 
 namespace empire {
 
 /// Identifies the Commodity by type.  Acts as an index into the Commodities
 /// array and therefore must be a global enum (not an enum class).
-enum CommodityEnum {CIV   =0 ,MIL     =1 ,SHELL    =2 ,GUN     =3
-                   ,PETROL=4 ,IRON_ORE=5 ,GOLD_DUST=6 ,GOLD_BAR=7
-                   ,FOOD  =8 ,OIL     =9 ,LCM     =10 ,HCM    =11
-                   ,UCW  =12 ,RAD    =13                          };
-
-
-
-/// The number of commodity types.  Should match the number of elements in the enum and in the CommodityTypes array.
-#define NUMBER_OF_COMMODITY_TYPES (14)
-
+///
+/// The last element is COUNT, which is the number of commodities in the enum.
+enum CommodityEnum { CIV   =0 ,MIL     =1 ,SHELL    =2  ,GUN     =3
+                    ,PETROL=4 ,IRON_ORE=5 ,GOLD_DUST=6  ,GOLD_BAR=7
+                    ,FOOD  =8 ,OIL     =9 ,LCM      =10 ,HCM     =11
+                    ,UCW  =12 ,RAD    =13 ,COUNT    =14              };
+ 
 
 /// Heper class for all commodities (food, iron ore, civs, mil, etc.)
 ///
@@ -53,8 +53,8 @@ public:
    /// in a constructor and use an initializer list to set them.
    ///
    CommodityType(const char     inName1
-                ,const char*    inName3
-                ,const char*    inName8
+                ,const string   inName3
+                ,const string   inName8
                 ,const uint16_t inPower
                 ,const bool     inIsSellable
                 ,const uint16_t inValue
@@ -64,7 +64,7 @@ public:
                 ,const uint8_t  inPackingWarehouse
                 ,const uint8_t  inPackingUrban
                 ,const uint8_t  inPackingBank
-                ,const char*    inName32
+                ,const string   inName32
                 );
 
 private:
@@ -73,11 +73,11 @@ private:
 
 
    /// The 3 character mnemonic for this commodity.
-   const char* name3;
+   const string name3;
 
 
    /// The 8 character name for this commodity.
-   const char* name8;
+   const string name8;
 
 
    /// How much 1000 units of this item contribute to power (see info power).
@@ -117,7 +117,7 @@ private:
 
 
    /// The up-to-32 character name for this commodity.
-   const char* name32;
+   const string name32;
 
 
 public:
