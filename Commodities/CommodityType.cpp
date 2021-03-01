@@ -15,7 +15,7 @@
 
 #include <cstdint>
 #include <cstdbool>
-#include <string>
+#include <string_view>
 #include <boost/assert.hpp>
 
 
@@ -76,6 +76,11 @@ constexpr string_view CommodityType::getName3() {
 /// Return the 8-character mnemonic for this commodity.
 constexpr string_view CommodityType::getName8() {
    return name8;
+}
+
+/// Return the power factor for this commodity
+constexpr uint16_t CommodityType::getPower() {
+	return power;
 }
 
 

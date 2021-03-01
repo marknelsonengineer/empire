@@ -15,7 +15,7 @@
 
 #include <cstdint>
 #include <cstdbool>
-#include <string>
+#include <string_view>
 
 using namespace std;
 
@@ -26,10 +26,13 @@ namespace empire {
 /// array and therefore must be a global enum (not an enum class).
 ///
 /// The last element is COUNT, which is the number of commodities in the enum.
+///
+/// I'm deliberately keeping this in the global namespace for convenience.  I 
+/// want to refer to Commodities by CIV or LCM not CommodityType.CIV
 enum CommodityEnum { CIV   =0 ,MIL     =1 ,SHELL    =2  ,GUN     =3
                     ,PETROL=4 ,IRON_ORE=5 ,GOLD_DUST=6  ,GOLD_BAR=7
                     ,FOOD  =8 ,OIL     =9 ,LCM      =10 ,HCM     =11
-                    ,UCW  =12 ,RAD    =13 ,COUNT    =14              };
+                    ,UCW  =12 ,RAD    =13 ,COMMODITY_COUNT       =14 };
  
 
 /// Heper class for all commodities (food, iron ore, civs, mil, etc.)
@@ -44,7 +47,7 @@ enum CommodityEnum { CIV   =0 ,MIL     =1 ,SHELL    =2  ,GUN     =3
 ///
 class CommodityType {
 public:
-
+	
    /// Constructor for CommodityType.
    ///
    /// @internal
@@ -52,8 +55,8 @@ public:
    /// in a constructor and use an initializer list to set them.
    ///
    CommodityType(const char        inName1
-                ,const string_view inName3
-                ,const string_view inName8
+                ,const std::string_view inName3
+                ,const std::string_view inName8
                 ,const uint16_t    inPower
                 ,const bool        inIsSellable
                 ,const uint16_t    inValue
@@ -63,7 +66,7 @@ public:
                 ,const uint8_t     inPackingWarehouse
                 ,const uint8_t     inPackingUrban
                 ,const uint8_t     inPackingBank
-                ,const string_view inName32
+                ,const std::string_view inName32
                 );
 
 private:
@@ -72,11 +75,11 @@ private:
 
 
    /// The 3 character mnemonic for this commodity.
-   const string_view name3;
+   const std::string_view name3;
 
 
    /// The 8 character name for this commodity.
-   const string_view name8;
+   const std::string_view name8;
 
 
    /// How much 1000 units of this item contribute to power (see info power).
@@ -116,7 +119,7 @@ private:
 
 
    /// The up-to-32 character name for this commodity.
-   const string_view name32;
+   const std::string_view name32;
 
 
 public:
@@ -124,10 +127,13 @@ public:
    constexpr char getName1();
 
    /// Return the 3-character mnemonic for this commodity.
-   constexpr string_view getName3();
+   constexpr std::string_view getName3();
 
    /// Return the 8-character mnemonic for this commodity.
-   constexpr string_view getName8();
+   constexpr std::string_view getName8();
+
+	/// Return the power factor for this commodity
+	constexpr uint16_t getPower();
 
    /// Validate the health of the CommodityType
    void validate();
@@ -141,7 +147,7 @@ public:
 class CommodityTypes {
 private:
    /// Array of CommodityTypes -- the intrinsic values of various Commodities.
-   CommodityType CommodityArray[COUNT] = {
+   CommodityType CommodityArray[COMMODITY_COUNT] = {
       //                                  power sellable value weight    packing          long name
       //                                                               in  no  wh  ur  bk
       CommodityType( 'c', "civ", "Civilian",  50,   false,    4,     1,  1, 10, 10, 10, 10, "Civilians" )

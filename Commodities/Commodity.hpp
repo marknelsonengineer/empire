@@ -15,7 +15,9 @@
 #pragma once
 
 #include <cstdint>
+
 #include "EmpireExceptions.hpp"
+#include "CommodityType.hpp"
 
 
 namespace empire {
@@ -95,9 +97,10 @@ struct commodityDisabledException: virtual empireException { };
 ///    += Works as expected:  someResource.civ += 10;
 ///    -= Works as expected:  someResource.civ -= 10;
 ///
-/// Commodities must be enabled or disabled (at the time it is constructed) and can't be changed.
-/// Commodities must have a maximum value (at the time it is constructed) and can't be changed.
-///
+/// Commodities must have a maximum value (at the time it is constructed) and 
+/// can't be changed.  If the Commodity needs to exist (for inheritance
+/// and reference purposes) but is not actually used, then construct it
+/// with a maxValue of 0 or false.
 ///
 /// @pattern Flyweight:  Commodity and CommodityType work together in a Flyweight pattern.
 ///

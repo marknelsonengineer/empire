@@ -7,7 +7,7 @@ CXXHEADERS = World.hpp
 
 all: $(TARGET)
 
-Commodity.o: Commodity.cpp Commodity.hpp
+Commodity.o: Commodity.cpp Commodity.hpp EmpireExceptions.hpp CommodityType.hpp
 	$(CXX) $(CXXFLAGS) -DBOOST_ENABLE_ASSERT_HANDLER -c Commodity.cpp
 
 CommodityType.o: CommodityType.cpp CommodityType.hpp
@@ -22,11 +22,11 @@ src_docs: doxygen.conf empire
 clean:
 	rm -fr $(TARGET) CommodityTests
 
-CommodityTest.o: CommodityTest.cpp
-	$(CXX) -c CommodityTest.cpp -DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN -DBOOST_ENABLE_ASSERT_HANDLER
+CommodityTest.o: CommodityTest.cpp EmpireExceptions.hpp Commodity.hpp
+	$(CXX) $(CXXFLAGS) -c CommodityTest.cpp -DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN -DBOOST_ENABLE_ASSERT_HANDLER
 
 CommodityTests: CommodityTest.o Commodity.o EmpireExceptions.o
-	$(CXX) -o CommodityTests Commodity.o CommodityTest.o EmpireExceptions.o -lboost_unit_test_framework -DBOOST_TEST_DYN_LINK -DBOOST_ENABLE_ASSERT_HANDLER
+	$(CXX) $(CXXFLAGS) -o CommodityTests Commodity.o CommodityTest.o EmpireExceptions.o -lboost_unit_test_framework -DBOOST_TEST_DYN_LINK -DBOOST_ENABLE_ASSERT_HANDLER
 
 test: CommodityTests Commodity.o EmpireExceptions.o CommodityType.o
 	./CommodityTests
