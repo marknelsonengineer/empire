@@ -126,6 +126,9 @@ public:
    /// Return the 3-character mnemonic for this commodity.
    constexpr string_view getName3();
 
+   /// Return the 8-character mnemonic for this commodity.
+   constexpr string_view getName8();
+
    /// Validate the health of the CommodityType
    void validate();
 
@@ -138,20 +141,23 @@ public:
 class CommodityTypes {
 private:
    /// Array of CommodityTypes -- the intrinsic values of various Commodities.
-// CommodityType CommodityArray[NUMBER_OF_COMMODITY_TYPES] = {
-   CommodityType CommodityArray[9] = {
+   CommodityType CommodityArray[COUNT] = {
       //                                  power sellable value weight    packing          long name
       //                                                               in  no  wh  ur  bk
-      CommodityType('c', "civ", "Civilian",  50,   false,    4,     1,  1, 10, 10, 10, 10, "Civilians")
-     ,CommodityType('m', "mil", "Military", 100,    true,   20,     1,  1,  1,  1,  1,  1, "Military")
-     ,CommodityType('s', "shl", "Shells",   125,    true,   80,     1,  1,  1, 10,  1,  1, "Shells")
-     ,CommodityType('g', "gun", "Guns",     950,    true,  100,    10,  1,  1, 10,  1,  1, "Guns")
-     ,CommodityType('p', "pet", "Petrol",     7,    true,   50,     1,  1,  1, 10,  1,  1, "Petrolium")
-     ,CommodityType('i', "ore", "Ore",       10,    true,  100,     1,  1,  1, 10,  1,  1, "Iron ore")
-     ,CommodityType('d', "gld", "Dust",     200,    true,  100,     5,  1,  1, 10,  1,  1, "Gold dust")
-     ,CommodityType('b', "bar", "Bars",    2500,    true,  200,    50,  1,  1,  5,  1,  4, "Bars of gold")
-     ,CommodityType('f', "eat", "Food",       0,    true,    2,     1,  1,  1, 10,  1,  1, "Food")
-     /// @todo the rest of the commodities
+      CommodityType( 'c', "civ", "Civilian",  50,   false,    4,     1,  1, 10, 10, 10, 10, "Civilians" )
+     ,CommodityType( 'm', "mil", "Military", 100,    true,   20,     1,  1,  1,  1,  1,  1, "Military" )
+     ,CommodityType( 's', "shl", "Shells",   125,    true,   80,     1,  1,  1, 10,  1,  1, "Shells" )
+     ,CommodityType( 'g', "gun", "Guns",     950,    true,  100,    10,  1,  1, 10,  1,  1, "Guns" )
+     ,CommodityType( 'p', "pet", "Petrol",     7,    true,   50,     1,  1,  1, 10,  1,  1, "Petrolium" )
+     ,CommodityType( 'i', "ore", "Ore",       10,    true,  100,     1,  1,  1, 10,  1,  1, "Iron ore" )
+     ,CommodityType( 'd', "gld", "Dust",     200,    true,  100,     5,  1,  1, 10,  1,  1, "Gold dust" )
+     ,CommodityType( 'b', "bar", "Bars",    2500,    true,  200,    50,  1,  1,  5,  1,  4, "Bars of gold" )
+     ,CommodityType( 'f', "eat", "Food",       0,    true,    2,     1,  1,  1, 10,  1,  1, "Food" )
+     ,CommodityType( 'o', "oil", "Oil",       50,    true,   50,     1,  1,  1, 10,  1,  1, "Oil" )
+     ,CommodityType( 'l', "lcm", "LCM",       20,    true,  100,     1,  1,  1, 10,  1,  1, "Light products" )
+     ,CommodityType( 'h', "hcm", "HCM",       40,    true,  100,     1,  1,  1, 10,  1,  1, "Heavy products" )
+     ,CommodityType( 'u', "ucw", "UCW",       50,    true,    2,     2,  1,  1, 10,  1,  1, "Uncompensated workers" )
+     ,CommodityType( 'r', "rad", "RAD",       50,    true, 1000,     8,  1,  1, 10,  1,  1, "Radioactive material" )
 };
 
 

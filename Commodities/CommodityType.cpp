@@ -73,6 +73,12 @@ constexpr string_view CommodityType::getName3() {
 }
 
 
+/// Return the 8-character mnemonic for this commodity.
+constexpr string_view CommodityType::getName8() {
+   return name8;
+}
+
+
 /// Validate the health of the CommodityType
 void CommodityType::validate() {
    BOOST_ASSERT(  name3.length() <=  3 );
@@ -103,7 +109,20 @@ CommodityType &CommodityTypes::operator[](enum CommodityEnum i) {
 
 
 void CommodityTypes::validate() {
-   BOOST_ASSERT( CommodityArray[CIV].getName1() == 'c' );
+   BOOST_ASSERT( CommodityArray[CIV].getName1()       == 'c' );
+   BOOST_ASSERT( CommodityArray[MIL].getName1()       == 'm' );
+   BOOST_ASSERT( CommodityArray[SHELL].getName1()     == 's' );
+   BOOST_ASSERT( CommodityArray[GUN].getName1()       == 'g' );
+   BOOST_ASSERT( CommodityArray[PETROL].getName1()    == 'p' );
+   BOOST_ASSERT( CommodityArray[IRON_ORE].getName1()  == 'i' );
+   BOOST_ASSERT( CommodityArray[GOLD_DUST].getName1() == 'd' );
+   BOOST_ASSERT( CommodityArray[GOLD_BAR].getName1()  == 'b' );
+   BOOST_ASSERT( CommodityArray[FOOD].getName1()      == 'f' );
+   BOOST_ASSERT( CommodityArray[OIL].getName1()       == 'o' );
+   BOOST_ASSERT( CommodityArray[LCM].getName1()       == 'l' );
+   BOOST_ASSERT( CommodityArray[HCM].getName1()       == 'h' );
+   BOOST_ASSERT( CommodityArray[UCW].getName1()       == 'u' );
+   BOOST_ASSERT( CommodityArray[RAD].getName1()       == 'r' );
 }
 
 
