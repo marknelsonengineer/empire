@@ -15,7 +15,6 @@
 
 #include <cstdint>
 #include <cstdbool>
-// #include <cstring>
 #include <string>
 #include <boost/assert.hpp>
 
@@ -30,19 +29,19 @@ namespace empire {
 /// Because this class holds all of its members as const, we need to set them
 /// in a constructor and use an initializer list to set them.
 ///
-CommodityType::CommodityType(const char     inName1 
-                            ,const string   inName3
-                            ,const string   inName8
-                            ,const uint16_t inPower
-                            ,const bool     inIsSellable
-                            ,const uint16_t inValue
-                            ,const uint8_t  inWeight
-                            ,const uint8_t  inPackingInefficient
-                            ,const uint8_t  inPackingNormal
-                            ,const uint8_t  inPackingWarehouse
-                            ,const uint8_t  inPackingUrban
-                            ,const uint8_t  inPackingBank
-                            ,const string   inName32
+CommodityType::CommodityType(const char        inName1 
+                            ,const string_view inName3
+                            ,const string_view inName8
+                            ,const uint16_t    inPower
+                            ,const bool        inIsSellable
+                            ,const uint16_t    inValue
+                            ,const uint8_t     inWeight
+                            ,const uint8_t     inPackingInefficient
+                            ,const uint8_t     inPackingNormal
+                            ,const uint8_t     inPackingWarehouse
+                            ,const uint8_t     inPackingUrban
+                            ,const uint8_t     inPackingBank
+                            ,const string_view inName32
                             ) : 
                              name1              (inName1)
                             ,name3              (inName3)
@@ -63,8 +62,14 @@ CommodityType::CommodityType(const char     inName1
    
 
 /// Return the 1-character mnemonic for this commodity.
-const char CommodityType::getName1() {
+constexpr char CommodityType::getName1() {
    return name1;
+}
+
+
+/// Return the 3-character mnemonic for this commodity.
+constexpr string_view CommodityType::getName3() {
+   return name3;
 }
 
 

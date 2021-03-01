@@ -15,7 +15,6 @@
 
 #include <cstdint>
 #include <cstdbool>
-// #include <cstring>
 #include <string>
 
 using namespace std;
@@ -52,19 +51,19 @@ public:
    /// Because this class holds all of its members as const, we need to set them
    /// in a constructor and use an initializer list to set them.
    ///
-   CommodityType(const char     inName1
-                ,const string   inName3
-                ,const string   inName8
-                ,const uint16_t inPower
-                ,const bool     inIsSellable
-                ,const uint16_t inValue
-                ,const uint8_t  inWeight
-                ,const uint8_t  inPackingInefficient
-                ,const uint8_t  inPackingNormal
-                ,const uint8_t  inPackingWarehouse
-                ,const uint8_t  inPackingUrban
-                ,const uint8_t  inPackingBank
-                ,const string   inName32
+   CommodityType(const char        inName1
+                ,const string_view inName3
+                ,const string_view inName8
+                ,const uint16_t    inPower
+                ,const bool        inIsSellable
+                ,const uint16_t    inValue
+                ,const uint8_t     inWeight
+                ,const uint8_t     inPackingInefficient
+                ,const uint8_t     inPackingNormal
+                ,const uint8_t     inPackingWarehouse
+                ,const uint8_t     inPackingUrban
+                ,const uint8_t     inPackingBank
+                ,const string_view inName32
                 );
 
 private:
@@ -73,11 +72,11 @@ private:
 
 
    /// The 3 character mnemonic for this commodity.
-   const string name3;
+   const string_view name3;
 
 
    /// The 8 character name for this commodity.
-   const string name8;
+   const string_view name8;
 
 
    /// How much 1000 units of this item contribute to power (see info power).
@@ -117,12 +116,15 @@ private:
 
 
    /// The up-to-32 character name for this commodity.
-   const string name32;
+   const string_view name32;
 
 
 public:
    /// Return the 1-character mnemonic for this commodity.
-   const char getName1();
+   constexpr char getName1();
+
+   /// Return the 3-character mnemonic for this commodity.
+   constexpr string_view getName3();
 
    /// Validate the health of the CommodityType
    void validate();
