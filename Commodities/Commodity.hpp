@@ -17,8 +17,6 @@
 #include <cstdint>
 
 #include "EmpireExceptions.hpp"
-#include "CommodityType.hpp"
-
 
 namespace empire {
    
@@ -37,6 +35,20 @@ typedef std::int16_t commodityValue;
 constexpr commodityValue MAX_COMMODITY_VALUE = 1000;
 
 
+/// Identifies the Commodity by type.  Acts as an index into the Commodities
+/// array and therefore must be a global enum (not an enum class).
+///
+/// The last element is COUNT, which is the number of commodities in the enum.
+///
+/// I'm deliberately keeping this in the global namespace for convenience.  I 
+/// want to refer to Commodities by CIV or LCM not CommodityType.CIV
+///
+enum CommodityEnum { CIV   =0 ,MIL     =1 ,SHELL    =2  ,GUN     =3
+                    ,PETROL=4 ,IRON_ORE=5 ,GOLD_DUST=6  ,GOLD_BAR=7
+                    ,FOOD  =8 ,OIL     =9 ,LCM      =10 ,HCM     =11
+                    ,UCW  =12 ,RAD    =13 ,COMMODITY_COUNT       =14 };
+ 
+ 
 /// Thrown when we overflow a commodity.  This can usually be absorbed.
 /// When this is thown, we are telling the caller that Commodity X went
 /// over by Y and now contains Z.  It's up to the caller to take that 
@@ -74,6 +86,20 @@ struct commodityUnderflowException: virtual empireException { };
 /// Thrown when you try to use a += or -= operator on a disabled Commodity.
 struct commodityDisabledException: virtual empireException { };
 
+
+/// Heper class for all commodities (food, iron ore, civs, mil, etc.)
+///
+/// This instance is forward-declared here
+///
+/// @pattern Flyweight:  Commodity and CommodityType work together in a Flyweight pattern.
+///
+/// @internal
+/// This is the "Intrinsic" part of a Flyweight design pattern.
+/// All commodities have a number of variables that are the same, so
+/// they will be found in here.  Commodity will hold the variables that
+/// change with each instance.
+///
+class CommodityType;
 
 /// Base class for all commodities (food, iron ore, civs, mil, etc.) that keeps
 /// data that varies between instances of a commodity.
@@ -177,9 +203,45 @@ public:
    /// Return the current value of this Commodity.
    const commodityValue getValue() const;
    
-   
    /// Return the 1-character mnemonic for this commodity.
-//   constexpr char getName1();
+   const char getName1() const;
+
+   /// Return the 3-character mnemonic for this commodity.
+   const std::string_view getName3() const;
+
+   /// Return the 8-character mnemonic for this commodity.
+   const std::string_view getName8() const;
+
+	/// Return the power factor for this commodity
+	const uint16_t getPower() const;
+	
+	/// Return weather you can sell the item on the market.
+	const bool getIsSellable() const;
+	
+   /// Return the price if the item is mortgaged.  Also known as the "Melt Denominator".
+	const uint16_t getPrice() const;
+	
+   /// Return the weight of the item, which determines how much mobility it takes to move it.
+	const uint8_t getWeight() const;
+	
+   /// Return the packing bonus the item receives in inefficient (<60%) sectors.
+	const uint8_t getPackingInefficient() const;
+	
+   /// Return the packing bonus the item receives in normal sectors.
+	const uint8_t getPackingNormal() const;
+	
+   /// Return the packing bonus the item receives in warehouse sectors.
+	const uint8_t getPackingWarehouse() const;
+	
+   /// Return the packing bonus the item receives in urban sectors.
+	const uint8_t getPackingUrban() const;
+	
+   /// Return the packing bonus the item receives in bank sectors.
+	const uint8_t getPackingBank() const;
+	
+   /// Return the up-to-32 character name for this commodity.
+	const std::string_view getName32() const;
+
 
    
    /// Validate the commodity.

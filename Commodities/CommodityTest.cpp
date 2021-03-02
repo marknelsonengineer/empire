@@ -176,6 +176,14 @@ BOOST_AUTO_TEST_CASE( Commodity_underflow ) {
    BOOST_CHECK_NO_THROW( testCommodity3.validate() );
 }
 
+
+/// Exercise the -= operator overloads
+BOOST_AUTO_TEST_CASE( CommodityType_Basics ) {
+//	const CommodityType a = CommodityTypes::CommodityArray[CIV];
+//	const CommodityType b = CommodityTypes::CommodityArray[MIL];
+//	CommodityTypes::CommodityArray[CIV] = b;
+}
+
 /// @todo build out the other tests
 
 

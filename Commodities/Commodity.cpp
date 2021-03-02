@@ -15,6 +15,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "Commodity.hpp"
+#include "CommodityType.hpp"
+
 
 #include <boost/assert.hpp>
 
@@ -103,10 +105,69 @@ const commodityValue Commodity::getValue() const {
 }
 
 
-//constexpr char Commodity::getName1() {
-//   return CommodityTypes::CommodityArray[commodityType].getName1();
-//}
+const char Commodity::getName1() const {
+   return commodityType.getName1();
+}
 
+
+const string_view Commodity::getName3() const {
+   return commodityType.getName3();
+}
+
+
+const string_view Commodity::getName8() const {
+   return commodityType.getName8();
+}
+
+
+const uint16_t Commodity::getPower() const {
+   return commodityType.getPower();
+}
+
+
+const bool Commodity::getIsSellable() const {
+   return commodityType.getIsSellable();
+}
+
+
+const uint16_t Commodity::getPrice() const { 
+   return commodityType.getPrice();
+}
+
+
+const uint8_t Commodity::getWeight() const {
+   return commodityType.getWeight();
+}
+
+
+const uint8_t Commodity::getPackingInefficient() const {
+   return commodityType.getPackingInefficient();
+}
+
+
+const uint8_t Commodity::getPackingNormal() const {
+   return commodityType.getPackingNormal();
+}
+
+
+const uint8_t Commodity::getPackingWarehouse() const {
+   return commodityType.getPackingWarehouse();
+}
+
+
+const uint8_t Commodity::getPackingUrban() const {
+   return commodityType.getPackingUrban();
+}
+
+
+const uint8_t Commodity::getPackingBank() const {
+   return commodityType.getPackingBank();
+}
+
+
+const string_view Commodity::getName32() const {
+   return commodityType.getName32();
+}
 
 
 /// @todo Create an appropriate function for Boost's "void assertion_failed"
@@ -125,7 +186,8 @@ bool Commodity::validate() const {
       BOOST_ASSERT( value == 0 );
    }
    
-   // @todo:  Add validation to CommodityType reference
+   commodityType.validate();
+
    return true;  // All tests pass
 }
 
