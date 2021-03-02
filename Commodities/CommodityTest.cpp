@@ -45,6 +45,8 @@ BOOST_AUTO_TEST_CASE( Commodity_enabled_constructor ) {
    testCommodity += 100;
    BOOST_CHECK( testCommodity.getValue() == 100 );
    BOOST_CHECK_NO_THROW( testCommodity.validate() );
+   
+   // BOOST_CHECK( testCommodity.getName1() == 'c' );
 }
 
 

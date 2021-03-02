@@ -29,6 +29,7 @@ namespace empire {
 ///
 /// I'm deliberately keeping this in the global namespace for convenience.  I 
 /// want to refer to Commodities by CIV or LCM not CommodityType.CIV
+///
 enum CommodityEnum { CIV   =0 ,MIL     =1 ,SHELL    =2  ,GUN     =3
                     ,PETROL=4 ,IRON_ORE=5 ,GOLD_DUST=6  ,GOLD_BAR=7
                     ,FOOD  =8 ,OIL     =9 ,LCM      =10 ,HCM     =11
@@ -122,7 +123,8 @@ private:
    const std::string_view name32;
 
 
-public:
+public:  /////////////////////////// Getters //////////////////////////////////
+	
    /// Return the 1-character mnemonic for this commodity.
    constexpr char getName1();
 
@@ -134,6 +136,36 @@ public:
 
 	/// Return the power factor for this commodity
 	constexpr uint16_t getPower();
+	
+	/// Return weather you can sell the item on the market.
+	constexpr bool getIsSellable();
+	
+   /// Return the value if the item is mortgaged.  Also known as the "Melt Denominator".
+	constexpr uint16_t getValueXXX();  /// @TODO Need to rename Value!!!  COnflicts with Commodty::getValue
+	
+   /// Return the weight of the item, which determines how much mobility it takes to move it.
+	constexpr uint8_t getWeight();
+	
+   /// Return the packing bonus the item receives in inefficient (<60%) sectors.
+	constexpr uint8_t getPackingInefficient();
+	
+   /// Return the packing bonus the item receives in normal sectors.
+	constexpr uint8_t getPackingNormal();
+	
+   /// Return the packing bonus the item receives in warehouse sectors.
+	constexpr uint8_t getPackingWarehouse();
+	
+   /// Return the packing bonus the item receives in urban sectors.
+	constexpr uint8_t getPackingUrban();
+	
+   /// Return the packing bonus the item receives in bank sectors.
+	constexpr uint8_t getPackingBank();
+	
+   /// Return the up-to-32 character name for this commodity.
+	constexpr std::string_view getName32();
+ 
+
+public:  /////////////////////////// Methods /////////////////////////////////
 
    /// Validate the health of the CommodityType
    void validate();
@@ -143,39 +175,24 @@ public:
 
 
 /// Container class of CommodityType
-/// This should use the Singleton design pattern??
+///
+/// The commodityArray will be held as a static, so it's easy to get to
+///
 class CommodityTypes {
 private:
-   /// Array of CommodityTypes -- the intrinsic values of various Commodities.
-   CommodityType CommodityArray[COMMODITY_COUNT] = {
-      //                                  power sellable value weight    packing          long name
-      //                                                               in  no  wh  ur  bk
-      CommodityType( 'c', "civ", "Civilian",  50,   false,    4,     1,  1, 10, 10, 10, 10, "Civilians" )
-     ,CommodityType( 'm', "mil", "Military", 100,    true,   20,     1,  1,  1,  1,  1,  1, "Military" )
-     ,CommodityType( 's', "shl", "Shells",   125,    true,   80,     1,  1,  1, 10,  1,  1, "Shells" )
-     ,CommodityType( 'g', "gun", "Guns",     950,    true,  100,    10,  1,  1, 10,  1,  1, "Guns" )
-     ,CommodityType( 'p', "pet", "Petrol",     7,    true,   50,     1,  1,  1, 10,  1,  1, "Petrolium" )
-     ,CommodityType( 'i', "ore", "Ore",       10,    true,  100,     1,  1,  1, 10,  1,  1, "Iron ore" )
-     ,CommodityType( 'd', "gld", "Dust",     200,    true,  100,     5,  1,  1, 10,  1,  1, "Gold dust" )
-     ,CommodityType( 'b', "bar", "Bars",    2500,    true,  200,    50,  1,  1,  5,  1,  4, "Bars of gold" )
-     ,CommodityType( 'f', "eat", "Food",       0,    true,    2,     1,  1,  1, 10,  1,  1, "Food" )
-     ,CommodityType( 'o', "oil", "Oil",       50,    true,   50,     1,  1,  1, 10,  1,  1, "Oil" )
-     ,CommodityType( 'l', "lcm", "LCM",       20,    true,  100,     1,  1,  1, 10,  1,  1, "Light products" )
-     ,CommodityType( 'h', "hcm", "HCM",       40,    true,  100,     1,  1,  1, 10,  1,  1, "Heavy products" )
-     ,CommodityType( 'u', "ucw", "UCW",       50,    true,    2,     2,  1,  1, 10,  1,  1, "Uncompensated workers" )
-     ,CommodityType( 'r', "rad", "RAD",       50,    true, 1000,     8,  1,  1, 10,  1,  1, "Radioactive material" )
-};
-
+   
 
 public:
+   /// Static srray of CommodityTypes -- the intrinsic values of various Commodities.
+   static CommodityType CommodityArray[COMMODITY_COUNT];
+
+
    /// Disallow access by anything other than via enum.
    /// <span style="color:red"> Calling this operator will throw an exception! </span>
-   CommodityType &operator[] (int i);
+//   CommodityType &operator[] (int i);
 
    /// Use the CommodityEnum as the index to retrieve elements from CommodityArray.
-   CommodityType &operator[] (enum CommodityEnum i);
-
-/// @todo Figure out how to return the number of Commodities... I'm thinking hardcode it for ease
+//   CommodityType &operator[] (enum CommodityEnum i);
 
    void validate();
 

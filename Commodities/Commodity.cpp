@@ -103,6 +103,12 @@ const commodityValue Commodity::getValue() {
 }
 
 
+//constexpr char Commodity::getName1() {
+//   return CommodityTypes::CommodityArray[commodityType].getName1();
+//}
+
+
+
 /// @todo Create an appropriate function for Boost's "void assertion_failed"
 /// @internal  It's OK to directly access member values here as we are validating
 ///            the data structure.  The Unit Test Framework will validate the 

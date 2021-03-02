@@ -83,12 +83,59 @@ constexpr uint16_t CommodityType::getPower() {
 	return power;
 }
 
+/// Return weather you can sell the item on the market.
+constexpr bool CommodityType::getIsSellable() {
+	return isSellable;
+}
+
+/// Return the value if the item is mortgaged.  Also known as the "Melt Denominator".
+constexpr uint16_t CommodityType::getValueXXX() {  /// @TODO Need to rename Value!!!  COnflicts with Commodty::getValue
+	return value;
+}
+
+/// Return the weight of the item, which determines how much mobility it takes to move it.
+constexpr uint8_t CommodityType::getWeight() {
+	return weight;
+}
+
+/// Return the packing bonus the item receives in inefficient (<60%) sectors.
+constexpr uint8_t CommodityType::getPackingInefficient() {
+	return packingInefficient;
+}
+
+/// Return the packing bonus the item receives in normal sectors.
+constexpr uint8_t CommodityType::getPackingNormal() {
+	return packingNormal;
+}
+
+/// Return the packing bonus the item receives in warehouse sectors.
+constexpr uint8_t CommodityType::getPackingWarehouse() {
+	return packingWarehouse;
+}
+
+/// Return the packing bonus the item receives in urban sectors.
+constexpr uint8_t CommodityType::getPackingUrban() {
+	return packingUrban;
+}
+
+/// Return the packing bonus the item receives in bank sectors.
+constexpr uint8_t CommodityType::getPackingBank() {
+	return packingBank;
+}
+
+/// Return the up-to-32 character name for this commodity.
+constexpr std::string_view CommodityType::getName32() {
+	return name32;
+}
+
 
 /// Validate the health of the CommodityType
 void CommodityType::validate() {
    BOOST_ASSERT(  name3.length() <=  3 );
    BOOST_ASSERT(  name8.length() <=  8 );
    BOOST_ASSERT( name32.length() <= 32 );
+   BOOST_ASSERT( power >=0 && power <=2500 );
+   BOOST_ASSERT( value >= 2 && value <= 1000 );
  
    /// @todo More validations
 }
@@ -99,18 +146,40 @@ void CommodityType::validate() {
 //                             Commodity Types
 ///////////////////////////////////////////////////////////////////////////////
 
+
+/// Static srray of CommodityTypes -- the intrinsic values of various Commodities.
+CommodityType CommodityTypes::CommodityArray[COMMODITY_COUNT] = {
+   //                                    power sellable value weight    packing          long name
+   //                                                                 in  no  wh  ur  bk
+    CommodityType( 'c', "civ", "Civilian",  50,   false,    4,     1,  1, 10, 10, 10, 10, "Civilians" )
+   ,CommodityType( 'm', "mil", "Military", 100,    true,   20,     1,  1,  1,  1,  1,  1, "Military" )
+   ,CommodityType( 's', "shl", "Shells",   125,    true,   80,     1,  1,  1, 10,  1,  1, "Shells" )
+   ,CommodityType( 'g', "gun", "Guns",     950,    true,  100,    10,  1,  1, 10,  1,  1, "Guns" )
+   ,CommodityType( 'p', "pet", "Petrol",     7,    true,   50,     1,  1,  1, 10,  1,  1, "Petrolium" )
+   ,CommodityType( 'i', "ore", "Ore",       10,    true,  100,     1,  1,  1, 10,  1,  1, "Iron ore" )
+   ,CommodityType( 'd', "gld", "Dust",     200,    true,  100,     5,  1,  1, 10,  1,  1, "Gold dust" )
+   ,CommodityType( 'b', "bar", "Bars",    2500,    true,  200,    50,  1,  1,  5,  1,  4, "Bars of gold" )
+   ,CommodityType( 'f', "eat", "Food",       0,    true,    2,     1,  1,  1, 10,  1,  1, "Food" )
+   ,CommodityType( 'o', "oil", "Oil",       50,    true,   50,     1,  1,  1, 10,  1,  1, "Oil" )
+   ,CommodityType( 'l', "lcm", "LCM",       20,    true,  100,     1,  1,  1, 10,  1,  1, "Light products" )
+   ,CommodityType( 'h', "hcm", "HCM",       40,    true,  100,     1,  1,  1, 10,  1,  1, "Heavy products" )
+   ,CommodityType( 'u', "ucw", "UCW",       50,    true,    2,     2,  1,  1, 10,  1,  1, "Uncompensated workers" )
+   ,CommodityType( 'r', "rad", "RAD",       50,    true, 1000,     8,  1,  1, 10,  1,  1, "Radioactive material" )
+};
+
+
 /// Disallow access by anything other than via enum.
 /// <span style="color:red"> Calling this operator will throw an exception! </span>
-CommodityType &CommodityTypes::operator[] (int i) {
+//CommodityType &CommodityTypes::operator[] (int i) {
    /// @todo Throw exception...
-   return CommodityArray[i];  // Will never get here
-}
+//   return CommodityArray[i];  // Will never get here
+//}
 
 
 /// Use the CommodityEnum as the index to retrieve elements from CommodityArray.
-CommodityType &CommodityTypes::operator[](enum CommodityEnum i) {
-   return CommodityArray[i];
-}
+//CommodityType &CommodityTypes::operator[](enum CommodityEnum i) {
+//   return CommodityArray[i];
+//}
 
 
 void CommodityTypes::validate() {

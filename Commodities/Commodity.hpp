@@ -154,6 +154,11 @@ private:
    /// for a given instance of a Commodity.
    /// The default value is 0.
    commodityValue value = 0;
+   
+   
+   /// Holds the type of commodity.  This is the reference into the Flyweight
+   /// intrinsic data.
+//   enum CommodityEnum commodityType;
 
 public:
    /// True if this Commodity is enabled... sometimes, we have Resources which
@@ -171,6 +176,10 @@ public:
    /// Return the current value of this Commodity.
    const commodityValue getValue();
    
+   
+   /// Return the 1-character mnemonic for this commodity.
+//   constexpr char getName1();
+
    
    /// Validate the commodity.
    bool validate();
