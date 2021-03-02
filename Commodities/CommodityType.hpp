@@ -60,7 +60,7 @@ public:
                 ,const std::string_view inName8
                 ,const uint16_t    inPower
                 ,const bool        inIsSellable
-                ,const uint16_t    inValue
+                ,const uint16_t    inPrice
                 ,const uint8_t     inWeight
                 ,const uint8_t     inPackingInefficient
                 ,const uint8_t     inPackingNormal
@@ -91,8 +91,8 @@ private:
    const bool isSellable;
 
 
-   /// The value if the item is mortgaged.  Also known as the "Melt Denominator".
-   const uint16_t value;
+   /// The price if the item is mortgaged.  Also known as the "Melt Denominator".
+   const uint16_t price;
 
 
    /// The weight of the item, which determines how much mobility it takes to move it.
@@ -126,43 +126,43 @@ private:
 public:  /////////////////////////// Getters //////////////////////////////////
 	
    /// Return the 1-character mnemonic for this commodity.
-   constexpr char getName1();
+   constexpr char getName1() const;
 
    /// Return the 3-character mnemonic for this commodity.
-   constexpr std::string_view getName3();
+   constexpr std::string_view getName3() const;
 
    /// Return the 8-character mnemonic for this commodity.
-   constexpr std::string_view getName8();
+   constexpr std::string_view getName8() const;
 
 	/// Return the power factor for this commodity
-	constexpr uint16_t getPower();
+	constexpr uint16_t getPower() const;
 	
 	/// Return weather you can sell the item on the market.
-	constexpr bool getIsSellable();
+	constexpr bool getIsSellable() const;
 	
-   /// Return the value if the item is mortgaged.  Also known as the "Melt Denominator".
-	constexpr uint16_t getValueXXX();  /// @TODO Need to rename Value!!!  COnflicts with Commodty::getValue
+   /// Return the price if the item is mortgaged.  Also known as the "Melt Denominator".
+	constexpr uint16_t getPrice() const;
 	
    /// Return the weight of the item, which determines how much mobility it takes to move it.
-	constexpr uint8_t getWeight();
+	constexpr uint8_t getWeight() const;
 	
    /// Return the packing bonus the item receives in inefficient (<60%) sectors.
-	constexpr uint8_t getPackingInefficient();
+	constexpr uint8_t getPackingInefficient() const;
 	
    /// Return the packing bonus the item receives in normal sectors.
-	constexpr uint8_t getPackingNormal();
+	constexpr uint8_t getPackingNormal() const;
 	
    /// Return the packing bonus the item receives in warehouse sectors.
-	constexpr uint8_t getPackingWarehouse();
+	constexpr uint8_t getPackingWarehouse() const;
 	
    /// Return the packing bonus the item receives in urban sectors.
-	constexpr uint8_t getPackingUrban();
+	constexpr uint8_t getPackingUrban() const;
 	
    /// Return the packing bonus the item receives in bank sectors.
-	constexpr uint8_t getPackingBank();
+	constexpr uint8_t getPackingBank() const;
 	
    /// Return the up-to-32 character name for this commodity.
-	constexpr std::string_view getName32();
+	constexpr std::string_view getName32() const;
  
 
 public:  /////////////////////////// Methods /////////////////////////////////
@@ -184,7 +184,7 @@ private:
 
 public:
    /// Static srray of CommodityTypes -- the intrinsic values of various Commodities.
-   static CommodityType CommodityArray[COMMODITY_COUNT];
+   static const CommodityType CommodityArray[COMMODITY_COUNT];
 
 
    /// Disallow access by anything other than via enum.

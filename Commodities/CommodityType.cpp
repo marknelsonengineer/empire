@@ -34,7 +34,7 @@ CommodityType::CommodityType(const char        inName1
                             ,const string_view inName8
                             ,const uint16_t    inPower
                             ,const bool        inIsSellable
-                            ,const uint16_t    inValue
+                            ,const uint16_t    inPrice
                             ,const uint8_t     inWeight
                             ,const uint8_t     inPackingInefficient
                             ,const uint8_t     inPackingNormal
@@ -48,7 +48,7 @@ CommodityType::CommodityType(const char        inName1
                             ,name8              (inName8) 
                             ,power              (inPower)
                             ,isSellable         (inIsSellable)
-                            ,value              (inValue)
+                            ,price              (inPrice)
                             ,weight             (inWeight)
                             ,packingInefficient (inPackingInefficient)
                             ,packingNormal      (inPackingNormal)
@@ -62,69 +62,69 @@ CommodityType::CommodityType(const char        inName1
    
 
 /// Return the 1-character mnemonic for this commodity.
-constexpr char CommodityType::getName1() {
+constexpr char CommodityType::getName1() const {
    return name1;
 }
 
 
 /// Return the 3-character mnemonic for this commodity.
-constexpr string_view CommodityType::getName3() {
+constexpr string_view CommodityType::getName3() const {
    return name3;
 }
 
 
 /// Return the 8-character mnemonic for this commodity.
-constexpr string_view CommodityType::getName8() {
+constexpr string_view CommodityType::getName8() const {
    return name8;
 }
 
 /// Return the power factor for this commodity
-constexpr uint16_t CommodityType::getPower() {
+constexpr uint16_t CommodityType::getPower() const {
 	return power;
 }
 
 /// Return weather you can sell the item on the market.
-constexpr bool CommodityType::getIsSellable() {
+constexpr bool CommodityType::getIsSellable() const {
 	return isSellable;
 }
 
-/// Return the value if the item is mortgaged.  Also known as the "Melt Denominator".
-constexpr uint16_t CommodityType::getValueXXX() {  /// @TODO Need to rename Value!!!  COnflicts with Commodty::getValue
-	return value;
+/// Return the price if the item is mortgaged.  Also known as the "Melt Denominator".
+constexpr uint16_t CommodityType::getPrice() const { 
+	return price;
 }
 
 /// Return the weight of the item, which determines how much mobility it takes to move it.
-constexpr uint8_t CommodityType::getWeight() {
+constexpr uint8_t CommodityType::getWeight() const {
 	return weight;
 }
 
 /// Return the packing bonus the item receives in inefficient (<60%) sectors.
-constexpr uint8_t CommodityType::getPackingInefficient() {
+constexpr uint8_t CommodityType::getPackingInefficient() const {
 	return packingInefficient;
 }
 
 /// Return the packing bonus the item receives in normal sectors.
-constexpr uint8_t CommodityType::getPackingNormal() {
+constexpr uint8_t CommodityType::getPackingNormal() const {
 	return packingNormal;
 }
 
 /// Return the packing bonus the item receives in warehouse sectors.
-constexpr uint8_t CommodityType::getPackingWarehouse() {
+constexpr uint8_t CommodityType::getPackingWarehouse() const {
 	return packingWarehouse;
 }
 
 /// Return the packing bonus the item receives in urban sectors.
-constexpr uint8_t CommodityType::getPackingUrban() {
+constexpr uint8_t CommodityType::getPackingUrban() const {
 	return packingUrban;
 }
 
 /// Return the packing bonus the item receives in bank sectors.
-constexpr uint8_t CommodityType::getPackingBank() {
+constexpr uint8_t CommodityType::getPackingBank() const {
 	return packingBank;
 }
 
 /// Return the up-to-32 character name for this commodity.
-constexpr std::string_view CommodityType::getName32() {
+constexpr std::string_view CommodityType::getName32() const {
 	return name32;
 }
 
@@ -135,7 +135,7 @@ void CommodityType::validate() {
    BOOST_ASSERT(  name8.length() <=  8 );
    BOOST_ASSERT( name32.length() <= 32 );
    BOOST_ASSERT( power >=0 && power <=2500 );
-   BOOST_ASSERT( value >= 2 && value <= 1000 );
+   BOOST_ASSERT( price >= 2 && price <= 1000 );
  
    /// @todo More validations
 }
@@ -148,8 +148,8 @@ void CommodityType::validate() {
 
 
 /// Static srray of CommodityTypes -- the intrinsic values of various Commodities.
-CommodityType CommodityTypes::CommodityArray[COMMODITY_COUNT] = {
-   //                                    power sellable value weight    packing          long name
+const CommodityType CommodityTypes::CommodityArray[COMMODITY_COUNT] = {
+   //                                    power sellable price weight    packing           long name
    //                                                                 in  no  wh  ur  bk
     CommodityType( 'c', "civ", "Civilian",  50,   false,    4,     1,  1, 10, 10, 10, 10, "Civilians" )
    ,CommodityType( 'm', "mil", "Military", 100,    true,   20,     1,  1,  1,  1,  1,  1, "Military" )
@@ -196,7 +196,7 @@ void CommodityTypes::validate() {
    BOOST_ASSERT( CommodityArray[LCM].getName1()       == 'l' );
    BOOST_ASSERT( CommodityArray[HCM].getName1()       == 'h' );
    BOOST_ASSERT( CommodityArray[UCW].getName1()       == 'u' );
-   BOOST_ASSERT( CommodityArray[RAD].getName1()       == 'r' );
+   BOOST_ASSERT( CommodityArray[RAD].getName1()       == 'r' ); 
 }
 
 
