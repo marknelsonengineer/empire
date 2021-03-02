@@ -130,7 +130,7 @@ constexpr std::string_view CommodityType::getName32() const {
 
 
 /// Validate the health of the CommodityType
-void CommodityType::validate() {
+void CommodityType::validate() const {
    BOOST_ASSERT(  name3.length() <=  3 );
    BOOST_ASSERT(  name8.length() <=  8 );
    BOOST_ASSERT( name32.length() <= 32 );
@@ -182,7 +182,7 @@ const CommodityType CommodityTypes::CommodityArray[COMMODITY_COUNT] = {
 //}
 
 
-void CommodityTypes::validate() {
+void CommodityTypes::validate() const {
    BOOST_ASSERT( CommodityArray[CIV].getName1()       == 'c' );
    BOOST_ASSERT( CommodityArray[MIL].getName1()       == 'm' );
    BOOST_ASSERT( CommodityArray[SHELL].getName1()     == 's' );
@@ -200,7 +200,7 @@ void CommodityTypes::validate() {
 }
 
 
-void CommodityTypes::print() {
+void CommodityTypes::print() const {
    /// @todo Print the commodity type list
 }
 

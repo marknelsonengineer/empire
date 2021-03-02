@@ -122,7 +122,7 @@ public:
    /// Commodity submarineRad( false );  // Subs can't carry rad
    /// @endcode
    ///
-   Commodity( const commodityValue inMaxValue );
+   Commodity( const enum CommodityEnum inCommodityEnum, const commodityValue inMaxValue );
       
 
    /// Override the += operator.  If the Commodity exceeds maxValue, then
@@ -131,7 +131,7 @@ public:
    ///
    /// Throw commodityDisabledException if you try to modify a disabled
    /// Commodity.
-   Commodity operator +=  ( const commodityValue increaseBy );
+   Commodity& operator += ( const commodityValue increaseBy );
 
 
    /// Override the -= operator.  If the Commodity goes below 0, then
@@ -140,9 +140,15 @@ public:
    ///
    /// Throw commodityDisabledException if you try to modify a disabled
    /// Commodity.
-   Commodity operator -=  ( const commodityValue decreaseBy );
+   Commodity& operator -= ( const commodityValue decreaseBy );
 
 private:
+   /// Holds the type of commodity.  This is the reference into the Flyweight
+   /// intrinsic data.
+   const CommodityType &commodityType;
+   // const enum CommodityEnum commodityEnum;
+
+
    /// Holds the maximum value of the commodity.  If the resource can not use
    /// the commodity, then set it to 0 (or false).  
    /// This can range from 0 to MAX_COMMODITY_VALUE.  Once set, it can't be changed.
@@ -154,27 +160,22 @@ private:
    /// for a given instance of a Commodity.
    /// The default value is 0.
    commodityValue value = 0;
-   
-   
-   /// Holds the type of commodity.  This is the reference into the Flyweight
-   /// intrinsic data.
-//   enum CommodityEnum commodityType;
-
+      
 public:
    /// True if this Commodity is enabled... sometimes, we have Resources which
    /// not be allowed to have a certain Commodity, so it will be disabled in
    /// which case, this method will return false.
    ///
    /// @internal return true if maxValue is > 0
-   bool isEnabled();
+   const bool isEnabled() const;
    
    
    /// Return the maximum allowed value for this Commodity.
-   const commodityValue getMaxValue();
+   const commodityValue getMaxValue() const;
    
    
    /// Return the current value of this Commodity.
-   const commodityValue getValue();
+   const commodityValue getValue() const;
    
    
    /// Return the 1-character mnemonic for this commodity.
@@ -182,7 +183,7 @@ public:
 
    
    /// Validate the commodity.
-   bool validate();
+   bool validate() const;
 };
 
 

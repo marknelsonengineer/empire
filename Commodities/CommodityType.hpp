@@ -168,7 +168,7 @@ public:  /////////////////////////// Getters //////////////////////////////////
 public:  /////////////////////////// Methods /////////////////////////////////
 
    /// Validate the health of the CommodityType
-   void validate();
+   void validate() const;
 
 };  // class CommodityType
 
@@ -194,9 +194,9 @@ public:
    /// Use the CommodityEnum as the index to retrieve elements from CommodityArray.
 //   CommodityType &operator[] (enum CommodityEnum i);
 
-   void validate();
+   void validate() const;
 
-   void print();
+   void print() const;
 
 };  // class CommodityTypes
 

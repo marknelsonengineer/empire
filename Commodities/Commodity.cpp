@@ -21,12 +21,12 @@
 namespace empire {
 
 
-Commodity::Commodity( const commodityValue inMaxValue ) : maxValue ( inMaxValue ) {
+Commodity::Commodity( const enum CommodityEnum inCommodityEnum, const commodityValue inMaxValue ) : commodityType (CommodityTypes::CommodityArray[inCommodityEnum]), maxValue ( inMaxValue ) {
    this->validate();
 }
 
 
-Commodity Commodity::operator += ( const commodityValue increaseBy ) {
+Commodity& Commodity::operator += ( const commodityValue increaseBy ) {
    
    if( !isEnabled() ) {
       throw commodityDisabledException();
@@ -41,7 +41,7 @@ Commodity Commodity::operator += ( const commodityValue increaseBy ) {
    
    if( newValue >= 0 && newValue <= this->maxValue ) {  // Is the new value OK?
       this->value = newValue;
-      return this->value;
+      return *this;
    }
    
    if( newValue > this->maxValue ) {  // If we overflow...
@@ -52,11 +52,11 @@ Commodity Commodity::operator += ( const commodityValue increaseBy ) {
                                          /// @todo Add CommodityType when its wired in
    }
    
-   return this->value;
+   return *this;
 }
 
 
-Commodity Commodity::operator -= ( const commodityValue decreaseBy ) {
+Commodity& Commodity::operator -= ( const commodityValue decreaseBy ) {
    
    if( !isEnabled() ) {
       throw commodityDisabledException();
@@ -71,7 +71,7 @@ Commodity Commodity::operator -= ( const commodityValue decreaseBy ) {
    
    if( newValue >= 0 && newValue <= this->maxValue ) {  // Is the new value OK?
       this->value = newValue;
-      return this->value;
+      return *this;
    }
    
    if( newValue < 0 ) {               // If we underflow...
@@ -81,11 +81,11 @@ Commodity Commodity::operator -= ( const commodityValue decreaseBy ) {
                                          /// @todo Add CommodityType when its wired in
    }
    
-   return this->value;
+   return *this;
 }
 
 
-bool Commodity::isEnabled() {
+const bool Commodity::isEnabled() const {
    if ( maxValue >= 1 ) 
       return true;
    
@@ -93,12 +93,12 @@ bool Commodity::isEnabled() {
 }
 
 
-const commodityValue Commodity::getMaxValue() {
+const commodityValue Commodity::getMaxValue() const {
    return maxValue;
 }
 
 
-const commodityValue Commodity::getValue() {
+const commodityValue Commodity::getValue() const {
    return value;
 }
 
@@ -113,7 +113,7 @@ const commodityValue Commodity::getValue() {
 /// @internal  It's OK to directly access member values here as we are validating
 ///            the data structure.  The Unit Test Framework will validate the 
 ///            getters and setters.
-bool Commodity::validate() {
+bool Commodity::validate() const {
    if( isEnabled() ) {
       BOOST_ASSERT( maxValue <= MAX_COMMODITY_VALUE );
       BOOST_ASSERT( value >= 0 );
@@ -125,6 +125,7 @@ bool Commodity::validate() {
       BOOST_ASSERT( value == 0 );
    }
    
+   // @todo:  Add validation to CommodityType reference
    return true;  // All tests pass
 }
 
