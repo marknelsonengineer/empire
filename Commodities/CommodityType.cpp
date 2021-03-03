@@ -30,33 +30,34 @@ namespace empire {
 /// Because this class holds all of its members as const, we need to set them
 /// in a constructor and use an initializer list to set them.
 ///
-CommodityType::CommodityType(const char        inName1 
-                            ,const string_view inName3
-                            ,const string_view inName8
-                            ,const uint16_t    inPower
-                            ,const bool        inIsSellable
-                            ,const uint16_t    inPrice
-                            ,const uint8_t     inWeight
-                            ,const uint8_t     inPackingInefficient
-                            ,const uint8_t     inPackingNormal
-                            ,const uint8_t     inPackingWarehouse
-                            ,const uint8_t     inPackingUrban
-                            ,const uint8_t     inPackingBank
-                            ,const string_view inName32
-                            ) : 
-                             name1              (inName1)
-                            ,name3              (inName3)
-                            ,name8              (inName8) 
-                            ,power              (inPower)
-                            ,isSellable         (inIsSellable)
-                            ,price              (inPrice)
-                            ,weight             (inWeight)
-                            ,packingInefficient (inPackingInefficient)
-                            ,packingNormal      (inPackingNormal)
-                            ,packingWarehouse   (inPackingWarehouse)
-                            ,packingUrban       (inPackingUrban)
-                            ,packingBank        (inPackingBank)
-                            ,name32             (inName32)
+constexpr CommodityType::CommodityType(
+	const char        inName1 
+  ,const string_view inName3
+  ,const string_view inName8
+  ,const uint16_t    inPower
+  ,const bool        inIsSellable
+  ,const uint16_t    inPrice
+  ,const uint8_t     inWeight
+  ,const uint8_t     inPackingInefficient
+  ,const uint8_t     inPackingNormal
+  ,const uint8_t     inPackingWarehouse
+  ,const uint8_t     inPackingUrban
+  ,const uint8_t     inPackingBank
+  ,const string_view inName32
+  ) : 
+   name1              (inName1)
+  ,name3              (inName3)
+  ,name8              (inName8) 
+  ,power              (inPower)
+  ,isSellable         (inIsSellable)
+  ,price              (inPrice)
+  ,weight             (inWeight)
+  ,packingInefficient (inPackingInefficient)
+  ,packingNormal      (inPackingNormal)
+  ,packingWarehouse   (inPackingWarehouse)
+  ,packingUrban       (inPackingUrban)
+  ,packingBank        (inPackingBank)
+  ,name32             (inName32)
 {
    validate();
 }
@@ -77,10 +78,12 @@ const string_view CommodityType::getName8() const {
    return name8;
 }
 
+
 /// Return the power factor for this commodity
 const uint16_t CommodityType::getPower() const {
 	return power;
 }
+
 
 /// Return weather you can sell the item on the market.
 const bool CommodityType::getIsSellable() const {
@@ -128,24 +131,6 @@ const std::string_view CommodityType::getName32() const {
 }
 
 
-/// Validate the health of the CommodityType
-/// 
-/// This is a little pointless as these are locked down pretty tight via 
-/// const.
-void CommodityType::validate() const {
-   BOOST_ASSERT( name3.length()  <=  3 );
-   BOOST_ASSERT( name8.length()  <=  8 );
-   BOOST_ASSERT( name32.length() <= 32 );
-   BOOST_ASSERT( power  >= 0           && power  <= 2500 );
-   BOOST_ASSERT( price  >= 2           && price  <= 1000 );
-   BOOST_ASSERT( weight >= 1           && weight <=   50 );
-   BOOST_ASSERT( packingInefficient == 1 );
-   BOOST_ASSERT( packingNormal    >= 1 && packingNormal    <= 10 );
-   BOOST_ASSERT( packingWarehouse >= 1 && packingWarehouse <= 10 );
-   BOOST_ASSERT( packingUrban     >= 1 && packingUrban     <= 10 );
-   BOOST_ASSERT( packingBank      >= 1 && packingBank      <= 10 );
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////
 //                             Commodity Types
@@ -156,7 +141,7 @@ void CommodityType::validate() const {
 ///
 /// Because it's a static array, it needs to be set here.  It's actually built
 /// at runtime, so we can't use constexpr for any of these (bummer).
-const CommodityType CommodityTypes::CommodityArray[COMMODITY_COUNT] = {
+constinit const CommodityType CommodityTypes::CommodityArray[COMMODITY_COUNT] = {
    //                                    power sellable price weight    packing           long name
    //                                                                 in  no  wh  ur  bk
     CommodityType( 'c', "civ", "Civilian",  50,   false,    4,     1,  1, 10, 10, 10, 10, "Civilians" )

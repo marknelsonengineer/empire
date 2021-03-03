@@ -242,11 +242,9 @@ public:
    /// Return the up-to-32 character name for this commodity.
 	const std::string_view getName32() const;
 
-
    
    /// Validate the commodity.
    bool validate() const;
 };
-
 
 } // namespace empire;
