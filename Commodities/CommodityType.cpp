@@ -18,8 +18,9 @@
 #include <string_view>
 #include <boost/assert.hpp>
 
-#include "Commodity.hpp"
-#include "CommodityType.hpp"
+#include "Commodity.hpp"      // Can be used througout the codebase
+#include "CommodityType.hpp"  // This is internal to Commodity, so it should 
+                              // only be used here and in Commodity.cpp
 
 namespace empire {
    
@@ -66,12 +67,10 @@ const char CommodityType::getName1() const {
    return name1;
 }
 
-
 /// Return the 3-character mnemonic for this commodity.
 const string_view CommodityType::getName3() const {
    return name3;
 }
-
 
 /// Return the 8-character mnemonic for this commodity.
 const string_view CommodityType::getName8() const {
@@ -134,8 +133,8 @@ const std::string_view CommodityType::getName32() const {
 /// This is a little pointless as these are locked down pretty tight via 
 /// const.
 void CommodityType::validate() const {
-   BOOST_ASSERT(  name3.length() <=  3 );
-   BOOST_ASSERT(  name8.length() <=  8 );
+   BOOST_ASSERT( name3.length()  <=  3 );
+   BOOST_ASSERT( name8.length()  <=  8 );
    BOOST_ASSERT( name32.length() <= 32 );
    BOOST_ASSERT( power  >= 0           && power  <= 2500 );
    BOOST_ASSERT( price  >= 2           && price  <= 1000 );
@@ -153,7 +152,10 @@ void CommodityType::validate() const {
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/// Static srray of CommodityTypes -- the intrinsic values of various Commodities.
+/// Static array of CommodityTypes -- the intrinsic values of various Commodities.
+///
+/// Because it's a static array, it needs to be set here.  It's actually built
+/// at runtime, so we can't use constexpr for any of these (bummer).
 const CommodityType CommodityTypes::CommodityArray[COMMODITY_COUNT] = {
    //                                    power sellable price weight    packing           long name
    //                                                                 in  no  wh  ur  bk
@@ -174,21 +176,7 @@ const CommodityType CommodityTypes::CommodityArray[COMMODITY_COUNT] = {
 };
 
 
-/// Disallow access by anything other than via enum.
-/// <span style="color:red"> Calling this operator will throw an exception! </span>
-//CommodityType &CommodityTypes::operator[] (int i) {
-   /// @todo Throw exception...
-//   return CommodityArray[i];  // Will never get here
-//}
-
-
-/// Use the CommodityEnum as the index to retrieve elements from CommodityArray.
-//CommodityType &CommodityTypes::operator[](enum CommodityEnum i) {
-//   return CommodityArray[i];
-//}
-
-
-void CommodityTypes::validate() const {
+void CommodityTypes::validate() {
    BOOST_ASSERT( CommodityArray[CIV].getName1()       == 'c' );
    BOOST_ASSERT( CommodityArray[MIL].getName1()       == 'm' );
    BOOST_ASSERT( CommodityArray[SHELL].getName1()     == 's' );
@@ -202,11 +190,26 @@ void CommodityTypes::validate() const {
    BOOST_ASSERT( CommodityArray[LCM].getName1()       == 'l' );
    BOOST_ASSERT( CommodityArray[HCM].getName1()       == 'h' );
    BOOST_ASSERT( CommodityArray[UCW].getName1()       == 'u' );
-   BOOST_ASSERT( CommodityArray[RAD].getName1()       == 'r' ); 
+   BOOST_ASSERT( CommodityArray[RAD].getName1()       == 'r' );
+   
+   CommodityArray[CIV].validate();
+   CommodityArray[MIL].validate();
+   CommodityArray[SHELL].validate();
+   CommodityArray[GUN].validate();
+   CommodityArray[PETROL].validate();
+   CommodityArray[IRON_ORE].validate();
+   CommodityArray[GOLD_DUST].validate();
+   CommodityArray[GOLD_BAR].validate();
+   CommodityArray[FOOD].validate();
+   CommodityArray[OIL].validate();
+   CommodityArray[LCM].validate();
+   CommodityArray[HCM].validate();
+   CommodityArray[UCW].validate();
+   CommodityArray[RAD].validate();
 }
 
 
-void CommodityTypes::print() const {
+void CommodityTypes::print() {
    /// @todo Print the commodity type list
 }
 

@@ -41,25 +41,24 @@ namespace empire {
 ///
 class CommodityType final {
 public:
-	
    /// Constructor for CommodityType.
    ///
    /// @internal
    /// Because this class holds all of its members as const, we need to set them
    /// in a constructor and use an initializer list to set them.
    ///
-   CommodityType(const char        inName1
+   CommodityType(const char             inName1
                 ,const std::string_view inName3
                 ,const std::string_view inName8
-                ,const uint16_t    inPower
-                ,const bool        inIsSellable
-                ,const uint16_t    inPrice
-                ,const uint8_t     inWeight
-                ,const uint8_t     inPackingInefficient
-                ,const uint8_t     inPackingNormal
-                ,const uint8_t     inPackingWarehouse
-                ,const uint8_t     inPackingUrban
-                ,const uint8_t     inPackingBank
+                ,const uint16_t         inPower
+                ,const bool             inIsSellable
+                ,const uint16_t         inPrice
+                ,const uint8_t          inWeight
+                ,const uint8_t          inPackingInefficient
+                ,const uint8_t          inPackingNormal
+                ,const uint8_t          inPackingWarehouse
+                ,const uint8_t          inPackingUrban
+                ,const uint8_t          inPackingBank
                 ,const std::string_view inName32
                 ) ;
 
@@ -67,50 +66,38 @@ private:
    /// The 1 character mnemonic for this commodity.
    const char name1;
 
-
    /// The 3 character mnemonic for this commodity.
    const std::string_view name3;
-
 
    /// The 8 character name for this commodity.
    const std::string_view name8;
 
-
    /// How much 1000 units of this item contribute to power (see info power).
    const uint16_t power;
-
 
    /// Whether you can sell the item on the market.
    const bool isSellable;
 
-
    /// The price if the item is mortgaged.  Also known as the "Melt Denominator".
    const uint16_t price;
-
 
    /// The weight of the item, which determines how much mobility it takes to move it.
    const uint8_t weight;
 
-
    /// The packing bonus the item receives in inefficient (<60%) sectors.
    const uint8_t packingInefficient;
-
 
    /// The packing bonus the item receives in normal sectors.
    const uint8_t packingNormal;
 
-
    /// The packing bonus the item receives in warehouse sectors.
    const uint8_t packingWarehouse;
-
 
    /// The packing bonus the item receives in urban sectors.
    const uint8_t packingUrban;
 
-
    /// The packing bonus the item receives in bank sectors.
    const uint8_t packingBank;
-
 
    /// The up-to-32 character name for this commodity.
    const std::string_view name32;
@@ -179,9 +166,9 @@ public:
    /// Static srray of CommodityTypes -- the intrinsic values of various Commodities.
    static const CommodityType CommodityArray[COMMODITY_COUNT];
 
-   void validate() const;
+   static void validate();
 
-   void print() const;
+   static void print();
 
 };  // class CommodityTypes
 

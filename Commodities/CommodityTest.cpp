@@ -20,6 +20,8 @@
 
 #include "EmpireExceptions.hpp"
 #include "Commodity.hpp"
+#include "CommodityType.hpp"   // This is just to be able to test CommodityType
+
 
 using namespace empire;
 
@@ -177,11 +179,9 @@ BOOST_AUTO_TEST_CASE( Commodity_underflow ) {
 }
 
 
-/// Exercise the -= operator overloads
+/// Exercise the CommodityTypes validate function
 BOOST_AUTO_TEST_CASE( CommodityType_Basics ) {
-//	const CommodityType a = CommodityTypes::CommodityArray[CIV];
-//	const CommodityType b = CommodityTypes::CommodityArray[MIL];
-//	CommodityTypes::CommodityArray[CIV] = b;
+	CommodityTypes::validate();
 }
 
 /// @todo build out the other tests
