@@ -22,6 +22,8 @@
 #include "CommodityType.hpp"  // This is internal to Commodity, so it should 
                               // only be used here and in Commodity.cpp
 
+using namespace std;
+
 namespace empire {
    
 /// Constructor for CommodityType.
