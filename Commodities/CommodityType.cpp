@@ -79,10 +79,7 @@ const string_view CommodityType::getName8() const {
 }
 
 
-/// Return the power factor for this commodity
-const uint16_t CommodityType::getPower() const {
-	return power;
-}
+
 
 
 /// Return weather you can sell the item on the market.

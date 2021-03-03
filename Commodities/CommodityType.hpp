@@ -24,7 +24,7 @@
 #include <cstdbool>
 #include <string_view>
 
-using namespace std;
+using namespace std;   // @TODO:  Need to remove this
 
 
 namespace empire {
@@ -105,7 +105,7 @@ private:
 
 
 public:  /////////////////////////// Getters //////////////////////////////////
-	
+
    /// Return the 1-character mnemonic for this commodity.
    const char getName1() const;
 
@@ -116,7 +116,7 @@ public:  /////////////////////////// Getters //////////////////////////////////
    const std::string_view getName8() const;
 
 	/// Return the power factor for this commodity
-	const uint16_t getPower() const;
+	consteval const uint16_t getPower() const;
 	
 	/// Return weather you can sell the item on the market.
 	const bool getIsSellable() const;
@@ -154,8 +154,19 @@ public:  /////////////////////////// Methods /////////////////////////////////
 };  // class CommodityType
 
 
-/// Validate the health of the CommodityType
+////////////////////////  Inline Consteval Getters  ////////////////////////
+
+/// Return the power factor for this commodity
+consteval const uint16_t CommodityType::getPower() const {
+	return power;
+}
+
+
+/// Validate the health of the CommodityTyp     
 /// 
+/// @internal This is declared as an inline constexpr in order to allow 
+///           the constinit CommodityType constructor to call it.
+//
 /// This is a little pointless as these are locked down pretty tight via 
 /// const.
 constexpr void CommodityType::validate() const {
@@ -187,6 +198,7 @@ public:
    /// Static srray of CommodityTypes -- the intrinsic values of various Commodities.
    static constinit const CommodityType CommodityArray[COMMODITY_COUNT];
 
+   /// Validate the health of the CommodityTypes class
    static void validate();
 
    static void print();

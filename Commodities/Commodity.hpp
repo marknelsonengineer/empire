@@ -213,7 +213,7 @@ public:
    const std::string_view getName8() const;
 
 	/// Return the power factor for this commodity
-	const uint16_t getPower() const;
+	consteval const uint16_t getPower() const;
 	
 	/// Return weather you can sell the item on the market.
 	const bool getIsSellable() const;
@@ -246,5 +246,11 @@ public:
    /// Validate the commodity.
    bool validate() const;
 };
+
+
+consteval const uint16_t Commodity::getPower() const {
+   return commodityType.getPower();
+}
+
 
 } // namespace empire;

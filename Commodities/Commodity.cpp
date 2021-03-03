@@ -120,11 +120,6 @@ const string_view Commodity::getName8() const {
 }
 
 
-const uint16_t Commodity::getPower() const {
-   return commodityType.getPower();
-}
-
-
 const bool Commodity::getIsSellable() const {
    return commodityType.getIsSellable();
 }

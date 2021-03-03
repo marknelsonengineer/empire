@@ -48,7 +48,19 @@ BOOST_AUTO_TEST_CASE( Commodity_enabled_constructor ) {
    BOOST_CHECK( testCommodity.getValue() == 100 );
    BOOST_CHECK_NO_THROW( testCommodity.validate() );
    
-   // BOOST_CHECK( testCommodity.getName1() == 'c' );
+   BOOST_CHECK( testCommodity.getName1() == 'c' );
+   BOOST_CHECK( testCommodity.getName3() == "civ" );
+   BOOST_CHECK( testCommodity.getName8() == "Civilian" );
+   BOOST_CHECK( testCommodity.getPower() == 50 );
+   BOOST_CHECK( testCommodity.getIsSellable() == false );
+   BOOST_CHECK( testCommodity.getPrice() == 4 );
+   BOOST_CHECK( testCommodity.getWeight() == 1 );
+   BOOST_CHECK( testCommodity.getPackingInefficient() == 1 );
+   BOOST_CHECK( testCommodity.getPackingNormal() == 10 );
+   BOOST_CHECK( testCommodity.getPackingWarehouse() == 10 );
+   BOOST_CHECK( testCommodity.getPackingUrban() == 10 );
+   BOOST_CHECK( testCommodity.getPackingBank() == 10 );
+   BOOST_CHECK( testCommodity.getName32() == "Civilians" );
 }
 
 
