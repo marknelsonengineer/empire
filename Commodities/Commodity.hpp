@@ -369,11 +369,11 @@ public:  /////////////////////////////  Methods  /////////////////////////////
    /// which case, this method will return false.
    ///
    /// @internal return true if maxValue is > 0
-   const bool isEnabled() const;
+   constexpr const bool isEnabled() const;
 
 
    /// Return the maximum allowed value for this Commodity.
-   const commodityValue getMaxValue() const;
+   constexpr const commodityValue getMaxValue() const;
 
 
    /// Return the current value of this Commodity.
@@ -648,7 +648,7 @@ inline Commodity& Commodity::operator -= ( const commodityValue decreaseBy ) {
 }
 
 
-inline const bool Commodity::isEnabled() const {
+constexpr const bool Commodity::isEnabled() const {
    if ( maxValue >= 1 )
       return true;
 
@@ -656,7 +656,7 @@ inline const bool Commodity::isEnabled() const {
 }
 
 
-inline const commodityValue Commodity::getMaxValue() const {
+constexpr const commodityValue Commodity::getMaxValue() const {
    return maxValue;
 }
 
