@@ -20,7 +20,6 @@
 
 #include "EmpireExceptions.hpp"
 #include "Commodity.hpp"
-#include "CommodityType.hpp"   // This is just to be able to test CommodityType
 
 
 using namespace empire;

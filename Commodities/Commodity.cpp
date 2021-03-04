@@ -7,7 +7,9 @@
 //  The documentation for classes in this file are in the .hpp file.
 ///
 /// @file      Commodity.cpp
-/// @version   1.0
+/// @version   1.0 - Initial version
+/// @version   1.1 - Combined with CommodityTest to support inlining,
+///                  constinit and constexpr
 ///
 /// @author    Mark Nelson <mr_nelson@icloud.com>
 /// @date      29 Jan 2021
@@ -15,7 +17,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "Commodity.hpp"
-// #include "CommodityType.hpp"
 
 #include <boost/assert.hpp>
 
@@ -23,6 +24,9 @@ using namespace std;
 
 namespace empire {
 
+/////////////////////////                             /////////////////////////
+/////////////////////////  CommodityType Definitions  /////////////////////////
+/////////////////////////                             /////////////////////////
 
 /// Constructor for CommodityType.
 ///
@@ -31,7 +35,7 @@ namespace empire {
 /// in a constructor and use an initializer list to set them.
 ///
 constexpr CommodityType::CommodityType(
-	const char        inName1 
+	const char        inName1
   ,const string_view inName3
   ,const string_view inName8
   ,const uint16_t    inPower
@@ -44,10 +48,10 @@ constexpr CommodityType::CommodityType(
   ,const uint8_t     inPackingUrban
   ,const uint8_t     inPackingBank
   ,const string_view inName32
-  ) : 
+  ) :
    name1              (inName1)
   ,name3              (inName3)
-  ,name8              (inName8) 
+  ,name8              (inName8)
   ,power              (inPower)
   ,isSellable         (inIsSellable)
   ,price              (inPrice)
@@ -61,77 +65,11 @@ constexpr CommodityType::CommodityType(
 {
    validate();
 }
-   
-
-/// Return the 1-character mnemonic for this commodity.
-const char CommodityType::getName1() const {
-   return name1;
-}
-
-/// Return the 3-character mnemonic for this commodity.
-const string_view CommodityType::getName3() const {
-   return name3;
-}
-
-/// Return the 8-character mnemonic for this commodity.
-const string_view CommodityType::getName8() const {
-   return name8;
-}
 
 
-
-
-
-/// Return weather you can sell the item on the market.
-const bool CommodityType::getIsSellable() const {
-	return isSellable;
-}
-
-/// Return the price if the item is mortgaged.  Also known as the "Melt Denominator".
-const uint16_t CommodityType::getPrice() const { 
-	return price;
-}
-
-/// Return the weight of the item, which determines how much mobility it takes to move it.
-const uint8_t CommodityType::getWeight() const {
-	return weight;
-}
-
-/// Return the packing bonus the item receives in inefficient (<60%) sectors.
-const uint8_t CommodityType::getPackingInefficient() const {
-	return packingInefficient;
-}
-
-/// Return the packing bonus the item receives in normal sectors.
-const uint8_t CommodityType::getPackingNormal() const {
-	return packingNormal;
-}
-
-/// Return the packing bonus the item receives in warehouse sectors.
-const uint8_t CommodityType::getPackingWarehouse() const {
-	return packingWarehouse;
-}
-
-/// Return the packing bonus the item receives in urban sectors.
-const uint8_t CommodityType::getPackingUrban() const {
-	return packingUrban;
-}
-
-/// Return the packing bonus the item receives in bank sectors.
-const uint8_t CommodityType::getPackingBank() const {
-	return packingBank;
-}
-
-/// Return the up-to-32 character name for this commodity.
-const std::string_view CommodityType::getName32() const {
-	return name32;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-//                             Commodity Types
-///////////////////////////////////////////////////////////////////////////////
-
+////////////////////////                              ////////////////////////
+////////////////////////  CommodityTypes Definitions  ////////////////////////
+////////////////////////                              ////////////////////////
 
 /// Static array of CommodityTypes -- the intrinsic values of various Commodities.
 ///
@@ -172,7 +110,7 @@ void CommodityTypes::validate() {
    BOOST_ASSERT( CommodityArray[HCM].getName1()       == 'h' );
    BOOST_ASSERT( CommodityArray[UCW].getName1()       == 'u' );
    BOOST_ASSERT( CommodityArray[RAD].getName1()       == 'r' );
-   
+
    CommodityArray[CIV].validate();
    CommodityArray[MIL].validate();
    CommodityArray[SHELL].validate();
@@ -190,79 +128,87 @@ void CommodityTypes::validate() {
 }
 
 
+/// Print the CommodityTypes array
 void CommodityTypes::print() {
    /// @todo Print the commodity type list
 }
 
 
-Commodity::Commodity( const enum CommodityEnum inCommodityEnum, const commodityValue inMaxValue ) : commodityType (CommodityTypes::CommodityArray[inCommodityEnum]), maxValue ( inMaxValue ) {
+///////////////////////////                         ///////////////////////////
+///////////////////////////  Commodity Definitions  ///////////////////////////
+///////////////////////////                         ///////////////////////////
+
+Commodity::Commodity( const enum CommodityEnum inCommodityEnum
+	                  ,const commodityValue inMaxValue          )
+	                 : commodityType ( CommodityTypes::CommodityArray[inCommodityEnum])
+	                  ,maxValue ( inMaxValue ) {
    this->validate();
 }
 
 
 Commodity& Commodity::operator += ( const commodityValue increaseBy ) {
-   
+
    if( !isEnabled() ) {
       throw commodityDisabledException();
    }
-   
-   // These will bound the size of the increase to a small enough 
+
+   // These will bound the size of the increase to a small enough
    // number to prevent any wraparound issues.
    BOOST_ASSERT( increaseBy >= 0 );
    BOOST_ASSERT( increaseBy <= MAX_COMMODITY_VALUE );
-   
+
    commodityValue newValue = this->value + increaseBy;
-   
+
    if( newValue >= 0 && newValue <= this->maxValue ) {  // Is the new value OK?
       this->value = newValue;
       return *this;
    }
-   
+
    if( newValue > this->maxValue ) {  // If we overflow...
       this->value = maxValue;         // set value to maxValue and...
-      throw commodityOverflowException() << errinfo_oldValue( this->value ) 
+      throw commodityOverflowException() << errinfo_oldValue( this->value )
                                          << errinfo_requestedValue( newValue )
                                          << errinfo_maxValue( this->maxValue );
                                          /// @todo Add CommodityType when its wired in
    }
-   
+
    return *this;
 }
 
 
 Commodity& Commodity::operator -= ( const commodityValue decreaseBy ) {
-   
+
    if( !isEnabled() ) {
       throw commodityDisabledException();
    }
-   
-   // These will bound the size of the decrease to a small enough 
+
+   // These will bound the size of the decrease to a small enough
    // number to prevent any wraparound issues.
    BOOST_ASSERT( decreaseBy >= 0 );
    BOOST_ASSERT( decreaseBy <= MAX_COMMODITY_VALUE );
-   
+
    commodityValue newValue = this->value - decreaseBy;
-   
+
    if( newValue >= 0 && newValue <= this->maxValue ) {  // Is the new value OK?
       this->value = newValue;
       return *this;
    }
-   
+
    if( newValue < 0 ) {               // If we underflow...
       this->value = 0;                // set value to 0 and...
-      throw commodityUnderflowException() << errinfo_oldValue( this->value ) 
+      throw commodityUnderflowException() << errinfo_oldValue( this->value )
                                           << errinfo_requestedValue( newValue );
                                          /// @todo Add CommodityType when its wired in
    }
-   
+
    return *this;
 }
 
 
 const bool Commodity::isEnabled() const {
-   if ( maxValue >= 1 ) 
+   if ( maxValue >= 1 )
       return true;
-   
+
    return false;
 }
 
@@ -277,69 +223,9 @@ const commodityValue Commodity::getValue() const {
 }
 
 
-const char Commodity::getName1() const {
-   return commodityType.getName1();
-}
-
-
-const string_view Commodity::getName3() const {
-   return commodityType.getName3();
-}
-
-
-const string_view Commodity::getName8() const {
-   return commodityType.getName8();
-}
-
-
-const bool Commodity::getIsSellable() const {
-   return commodityType.getIsSellable();
-}
-
-
-const uint16_t Commodity::getPrice() const { 
-   return commodityType.getPrice();
-}
-
-
-const uint8_t Commodity::getWeight() const {
-   return commodityType.getWeight();
-}
-
-
-const uint8_t Commodity::getPackingInefficient() const {
-   return commodityType.getPackingInefficient();
-}
-
-
-const uint8_t Commodity::getPackingNormal() const {
-   return commodityType.getPackingNormal();
-}
-
-
-const uint8_t Commodity::getPackingWarehouse() const {
-   return commodityType.getPackingWarehouse();
-}
-
-
-const uint8_t Commodity::getPackingUrban() const {
-   return commodityType.getPackingUrban();
-}
-
-
-const uint8_t Commodity::getPackingBank() const {
-   return commodityType.getPackingBank();
-}
-
-
-const string_view Commodity::getName32() const {
-   return commodityType.getName32();
-}
-
-
 /// @todo Create an appropriate function for Boost's "void assertion_failed"
 /// @internal  It's OK to directly access member values here as we are validating
-///            the data structure.  The Unit Test Framework will validate the 
+///            the data structure.  The Unit Test Framework will validate the
 ///            getters and setters.
 const bool Commodity::validate() const {
    if( isEnabled() ) {
@@ -352,7 +238,7 @@ const bool Commodity::validate() const {
       BOOST_ASSERT( maxValue == 0 );
       BOOST_ASSERT( value == 0 );
    }
-   
+
    commodityType.validate();
 
    return true;  // All tests pass
