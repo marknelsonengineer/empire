@@ -52,11 +52,13 @@ constexpr commodityValue MAX_COMMODITY_VALUE = 1000;
 /// I'm deliberately keeping this in the global namespace for convenience.  I
 /// want to refer to Commodities by CIV or LCM not CommodityType.CIV
 ///
-enum CommodityEnum { CIV   =0 ,MIL     =1 ,SHELL    =2  ,GUN     =3
-                    ,PETROL=4 ,IRON_ORE=5 ,GOLD_DUST=6  ,GOLD_BAR=7
-                    ,FOOD  =8 ,OIL     =9 ,LCM      =10 ,HCM     =11
-                    ,UCW  =12 ,RAD    =13 ,COMMODITY_COUNT       =14 };
+enum CommodityEnum_ { CIV   =0 ,MIL     =1 ,SHELL    =2  ,GUN     =3
+                     ,PETROL=4 ,IRON_ORE=5 ,GOLD_DUST=6  ,GOLD_BAR=7
+                     ,FOOD  =8 ,OIL     =9 ,LCM      =10 ,HCM     =11
+                     ,UCW  =12 ,RAD    =13 ,COMMODITY_COUNT       =14 };
 
+/// Identifies the Commodity by type.
+typedef enum CommodityEnum_ CommodityEnum;
 
 ///////////////////////////                        ///////////////////////////
 ///////////////////////////  Commodity Exceptions  ///////////////////////////
@@ -308,7 +310,7 @@ public:  ////////////////  Constructor and Operator Overrides  ////////////////
    /// Commodity submarineRad( false );  // Subs can't carry rad
    /// @endcode
    ///
-   Commodity( const enum CommodityEnum inCommodityEnum, const commodityValue inMaxValue );
+   Commodity( const CommodityEnum inCommodityEnum, const commodityValue inMaxValue );
 
 
    /// Override the += operator.  If the Commodity exceeds maxValue, then

@@ -130,7 +130,7 @@ void CommodityTypes::validate() {
 
 /// Print the CommodityTypes array
 void CommodityTypes::print() {
-   /// @todo Print the commodity type list
+   /// @todo Print the CommodityTypes list
 }
 
 
@@ -138,7 +138,7 @@ void CommodityTypes::print() {
 ///////////////////////////  Commodity Definitions  ///////////////////////////
 ///////////////////////////                         ///////////////////////////
 
-Commodity::Commodity( const enum CommodityEnum inCommodityEnum
+Commodity::Commodity( const CommodityEnum inCommodityEnum
 	                  ,const commodityValue inMaxValue          )
 	                 : commodityType ( CommodityTypes::CommodityArray[inCommodityEnum])
 	                  ,maxValue ( inMaxValue ) {
@@ -219,6 +219,7 @@ const commodityValue Commodity::getMaxValue() const {
 
 
 const commodityValue Commodity::getValue() const {
+	// @TODO throw an exception if the value is not enabled?
    return value;
 }
 
