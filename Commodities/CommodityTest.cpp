@@ -70,15 +70,14 @@ BOOST_AUTO_TEST_CASE( Commodity_disabled_constructor ) {
    BOOST_CHECK_NO_THROW( testCommodity.validate() );
    BOOST_CHECK( testCommodity.isEnabled() == false );
    BOOST_CHECK( testCommodity.getMaxValue() == 0 );
-   // BOOST_CHECK( testCommodity.getValue() == 0 );
-   ///@todo test getValue()
+   BOOST_CHECK_THROW( testCommodity.getValue(), commodityDisabledException );
 }
 
 
 /// Bounds test all possible constructors
 BOOST_AUTO_TEST_CASE( Commodity_constructors ) {
-   BOOST_CHECK_THROW(    new Commodity( SHELL, -1 )                     , assertionException );
-   BOOST_CHECK_NO_THROW( new Commodity( GUN, 0                       ) );
+   BOOST_CHECK_THROW(    new Commodity( SHELL, -1 )                        , assertionException );
+   BOOST_CHECK_NO_THROW( new Commodity( GUN, 0                          ) );
    // ...
    BOOST_CHECK_NO_THROW( new Commodity( PETROL, MAX_COMMODITY_VALUE     ) );
    BOOST_CHECK_THROW(    new Commodity( IRON_ORE, MAX_COMMODITY_VALUE + 1 ), assertionException );
@@ -104,14 +103,17 @@ BOOST_AUTO_TEST_CASE( Commodity_overflow ) {
       BOOST_CHECK_MESSAGE( false, "The line above should have thrown an exception" );
    }
    catch( boost::exception & e ) {
-      commodityValue const* oldValue = boost::get_error_info<errinfo_oldValue>( e );
+      const commodityValue* oldValue = boost::get_error_info<errinfo_oldValue>( e );
       BOOST_CHECK( *oldValue == 100 );
 
-      commodityValue const* requestedValue = boost::get_error_info<errinfo_requestedValue>( e );
+      const commodityValue* requestedValue = boost::get_error_info<errinfo_requestedValue>( e );
       BOOST_CHECK( *requestedValue == 101 );
 
-      commodityValue const* maxValue = boost::get_error_info<errinfo_maxValue>( e );
+      const commodityValue* maxValue = boost::get_error_info<errinfo_maxValue>( e );
       BOOST_CHECK( *maxValue == 100 );
+      
+      char const* commodityName1 = boost::get_error_info<errinfo_commodityType>( e );
+      BOOST_CHECK( *commodityName1 == 'd' );
    }
 
    BOOST_CHECK( testCommodity.getValue() == 100 );
@@ -151,11 +153,14 @@ BOOST_AUTO_TEST_CASE( Commodity_underflow ) {
       BOOST_CHECK_MESSAGE( false, "The line above should have thrown an exception" );
    }
    catch( boost::exception & e ) {
-      commodityValue const* oldValue = boost::get_error_info<errinfo_oldValue>( e );
+      const commodityValue* oldValue = boost::get_error_info<errinfo_oldValue>( e );
       BOOST_CHECK( *oldValue == 0 );
 
-      commodityValue const* requestedValue = boost::get_error_info<errinfo_requestedValue>( e );
+      const commodityValue* requestedValue = boost::get_error_info<errinfo_requestedValue>( e );
       BOOST_CHECK( *requestedValue == -1 );
+      
+		const char* commodityName1 = boost::get_error_info<errinfo_commodityType>( e );
+      BOOST_CHECK( *commodityName1 == 'o' );
    }
 
    BOOST_CHECK( testCommodity.getValue() == 0 );

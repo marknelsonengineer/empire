@@ -81,9 +81,13 @@ typedef boost::error_info<struct tag_oldValue, commodityValue> errinfo_oldValue;
 /// holds the new/requested value of the Commodity in the exception.
 typedef boost::error_info<struct tag_requestedValue, commodityValue> errinfo_requestedValue;
 
-/// On a commodityOverfloewException, this holds the maxValue for the Commodity.
+/// On a commodityOverflowException, this holds the maxValue for the Commodity.
 typedef boost::error_info<struct tag_maxValue, commodityValue> errinfo_maxValue;
-/// @todo Add a reference to the CommodityType when they are wired together
+
+/// On a commodityOverflowException and commodityUnderflowException, this
+/// holds the commodity type as a character.
+typedef boost::error_info<struct tag_commodityType, char> errinfo_commodityType;
+
 
 
 /// Thrown when we underflow a commodity.  This can usually be absorbed.
@@ -246,6 +250,11 @@ public:
    /// Static srray of CommodityTypes -- the intrinsic values of various Commodities.
    static constinit const CommodityType CommodityArray[COMMODITY_COUNT];
 
+	// @todo:  When the need arises, make a lookup method:
+	//         At a minimum, this will be used by the Commodity Exceptions
+	// static const CommodityType getCommodity( const char name1 );
+
+
    /// Validate the health of the CommodityTypes class
    static void validate();
 
@@ -368,6 +377,8 @@ public:  /////////////////////////////  Methods  /////////////////////////////
 
 
    /// Return the current value of this Commodity.
+   ///
+   /// Throw commodityDisabledException if the commodity is disabled.
    const commodityValue getValue() const;
 
     /// Validate the commodity.
@@ -576,6 +587,88 @@ constexpr const uint8_t Commodity::getPackingBank() const {
 constexpr const std::string_view Commodity::getName32() const {
    return commodityType.getName32();
 }
+
+
+inline Commodity& Commodity::operator += ( const commodityValue increaseBy ) {
+
+   if( !isEnabled() ) {
+      throw commodityDisabledException();
+   }
+
+   // These will bound the size of the increase to a small enough
+   // number to prevent any wraparound issues.
+   BOOST_ASSERT( increaseBy >= 0 );
+   BOOST_ASSERT( increaseBy <= MAX_COMMODITY_VALUE );
+
+   commodityValue newValue = value + increaseBy;
+
+   if( newValue >= 0 && newValue <= maxValue ) {  // Is the new value OK?
+      value = newValue;
+      return *this;
+   }
+
+   if( newValue > maxValue ) {  // If we overflow...
+      value = maxValue;         // set value to maxValue and...
+      throw commodityOverflowException() << errinfo_oldValue( value )
+                                         << errinfo_requestedValue( newValue )
+                                         << errinfo_maxValue( maxValue )
+                                         << errinfo_commodityType( commodityType.getName1() );
+   }
+
+   return *this;
+}
+
+
+inline Commodity& Commodity::operator -= ( const commodityValue decreaseBy ) {
+
+   if( !isEnabled() ) {
+      throw commodityDisabledException();
+   }
+
+   // These will bound the size of the decrease to a small enough
+   // number to prevent any wraparound issues.
+   BOOST_ASSERT( decreaseBy >= 0 );
+   BOOST_ASSERT( decreaseBy <= MAX_COMMODITY_VALUE );
+
+   commodityValue newValue = value - decreaseBy;
+
+   if( newValue >= 0 && newValue <= maxValue ) {  // Is the new value OK?
+      value = newValue;
+      return *this;
+   }
+
+   if( newValue < 0 ) {               // If we underflow...
+      value = 0;                // set value to 0 and...
+      throw commodityUnderflowException() << errinfo_oldValue( value )
+                                          << errinfo_requestedValue( newValue )
+                                          << errinfo_commodityType( commodityType.getName1() );
+   }
+
+   return *this;
+}
+
+
+inline const bool Commodity::isEnabled() const {
+   if ( maxValue >= 1 )
+      return true;
+
+   return false;
+}
+
+
+inline const commodityValue Commodity::getMaxValue() const {
+   return maxValue;
+}
+
+
+inline const commodityValue Commodity::getValue() const {
+   if( !isEnabled() ) {
+      throw commodityDisabledException();
+   }
+
+   return value;
+}
+
 
 
 } // namespace empire;
