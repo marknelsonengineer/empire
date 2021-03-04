@@ -482,7 +482,7 @@ constexpr const uint8_t CommodityType::getPackingWarehouse() const {
 	return packingWarehouse;
 }
 
-/// Return the packing bonus the item receives in bank sectors.
+/// Return the packing bonus the item receives in urban sectors.
 constexpr const uint8_t CommodityType::getPackingUrban() const {
 	return packingUrban;
 }
@@ -573,7 +573,7 @@ constexpr const uint8_t Commodity::getPackingWarehouse() const {
    return commodityType.getPackingWarehouse();
 }
 
-/// Return the packing bonus the item receives in bank sectors.
+/// Return the packing bonus the item receives in urban sectors.
 constexpr const uint8_t Commodity::getPackingUrban() const {
    return commodityType.getPackingUrban();
 }
