@@ -24,9 +24,9 @@ namespace empire {
 /////////////////////////////  Nation Definitions  ////////////////////////////
 /////////////////////////////                      ////////////////////////////
 
-constexpr Nation::Nation( const uint8_t inNumber ) : number (inNumber) {
+consteval Nation::Nation( const Nation_ID inNumber ) : number (inNumber) {
 	
-	// name = "nation_xx";
+	name = "Unknown"; //to_string( inNumber );
 	
 	status = NEW;
 	
@@ -34,13 +34,20 @@ constexpr Nation::Nation( const uint8_t inNumber ) : number (inNumber) {
 }
 
 
-///@TODO:  Make a decision:  Do validate() fail a BOOST_ASSERT or do they
+constexpr const Nation_ID Nation::getID() const {
+	return number;
+}
+
+
+///@todo:  Make a decision:  Do validate() fail a BOOST_ASSERT or do they
 ///        return false?
 constexpr bool Nation::validate() const {
 	BOOST_ASSERT( number >= 0 );
 	BOOST_ASSERT( number <= MAX_NATIONS );
 	
-	/// @TODO Build validation for all members
+	BOOST_ASSERT( name.size() <= MAX_NAME );
+	
+	/// @todo Build validation for all members
 	return true;  // All tests pass
 }
 
@@ -54,14 +61,19 @@ constexpr bool Nation::validate() const {
 ///
 /// Because it's a static array, it needs to be set here.
 constinit const Nation Nations::nations[MAX_NATIONS] = {
-	Nation(0), Nation(1), Nation(2), Nation(3) 
+	Nation( 0), Nation( 1), Nation( 2), Nation( 3), Nation( 4)
+  ,Nation( 5), Nation( 6), Nation( 7), Nation( 8), Nation( 9)
+  ,Nation(10), Nation(11), Nation(12), Nation(13), Nation(14)
+  ,Nation(15), Nation(16), Nation(17), Nation(18), Nation(19) 
+  ,Nation(20), Nation(21), Nation(22), Nation(23), Nation(24) 
 };
 
 
 /// @todo Create an appropriate function for Boost's "void assertion_failed"
 bool Nations::validate() {
-	///@ TODO Build validation
-	for( int i = 0 ; i < MAX_NATIONS ; i++ ) { /// @TODO:  Convert to a proper iterator
+	///@todo Build validation
+	for( Nation_ID i = 0 ; i < MAX_NATIONS ; i++ ) {
+		BOOST_ASSERT( i == nations[i].getID() );
 		nations[i].validate();
 	}
 	

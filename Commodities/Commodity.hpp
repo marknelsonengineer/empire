@@ -44,7 +44,7 @@ typedef std::int16_t commodityValue;
 
 
 /// Absolute maximum value for any and all Commodities.
-constexpr commodityValue MAX_COMMODITY_VALUE = 1000;
+constinit const commodityValue MAX_COMMODITY_VALUE = 1000;
 
 
 /// Identifies the Commodity by type.  Acts as an index into the Commodities

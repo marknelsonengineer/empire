@@ -21,9 +21,17 @@
 #include <boost/chrono.hpp>  // For time_point
 
 namespace empire {
-	
+
+/// The standard datatype for a Nation's ID number.	
+typedef uint8_t Nation_ID;
+
+
 /// Maximum number of Nations.
-constexpr uint8_t MAX_NATIONS = 4;  // @TODO Increase to 100
+///
+/// @internal This is closely tied to the `Nations::nations[MAX_NATIONS]` 
+///           definition in Nation.cpp.  The number of Nations must be
+///           hand-created in there -- as they are done at compile time.
+constinit const Nation_ID MAX_NATIONS = 25;  // @TODO Increase to 100
 
 
 //////////////////////////                            /////////////////////////
@@ -33,6 +41,10 @@ constexpr uint8_t MAX_NATIONS = 4;  // @TODO Increase to 100
 
 /// Concrete class for Nations.
 ///
+///
+/// Nation's constructor is a consteval.  This means it is created at compile 
+/// time and there is no other way to instantiate a nation.
+///
 /// By convention, in Empire, we will call Countries, Territories, Soverign
 /// States... collectively "Nation".
 ///
@@ -40,7 +52,7 @@ class Nation {
 public:  ////////////////  Constructor and Operator Overrides  ////////////////
 	
 	/// Creates a new Nation.
-	constexpr Nation( const uint8_t inNumber );
+	consteval Nation( const Nation_ID inNumber );
 
 
 public:  ///////////////////////////  Enumerations  ///////////////////////////
@@ -58,19 +70,25 @@ public:  ///////////////////////////  Enumerations  ///////////////////////////
    typedef enum Status Status;
    
    /// Maximum length of a nation's name
-   static const uint8_t MAX_NAME = 20;
+   static constinit const uint8_t MAX_NAME = 20;
 
 
 private:  /////////////////////////////  Members  /////////////////////////////
 
 	/// The Nation ID, Nation UID and/or Nation Number...  all the same.
-	const uint8_t number;
+	const Nation_ID number;
 
 	/// The name of our nation, up to Nation::MAX_NAME
-	// std::string_view name;
+	std::string_view name;
 
 	/// The status of the nation
 	Status status;
+
+
+public:  /////////////////////////// Getters //////////////////////////////////
+	/// Get the ID of the nation.
+   constexpr const Nation_ID getID() const;
+
 
 public:  //////////////////////////// Methods /////////////////////////////////
 	
