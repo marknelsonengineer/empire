@@ -21,6 +21,9 @@
 
 #pragma once
 
+#include <cstdint>        // For the int16_t datatypes
+#include <string_view>
+
 #include "EmpireExceptions.hpp"
 
 namespace empire {
