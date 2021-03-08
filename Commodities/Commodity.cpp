@@ -73,8 +73,8 @@ constexpr CommodityType::CommodityType(
 
 /// Static array of CommodityTypes -- the intrinsic values of various Commodities.
 ///
-/// Because it's a static array, it needs to be set here.  It's actually built
-/// at runtime, so we can't use constexpr for any of these (bummer).
+/// Because it's a static array, it needs to be set here.  It's built at 
+/// compile-time.
 constinit const CommodityType CommodityTypes::CommodityArray[COMMODITY_COUNT] = {
    //                                    power sellable price weight    packing           long name
    //                                                                 in  no  wh  ur  bk

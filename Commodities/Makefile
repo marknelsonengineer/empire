@@ -33,5 +33,5 @@ CommodityTest.o: CommodityTest.cpp EmpireExceptions.hpp Commodity.hpp
 CommodityTests: CommodityTest.o $(TARGET) 
 	$(CXX) $(CXXFLAGS) -o CommodityTests CommodityTest.o $(TARGET) -lboost_unit_test_framework -DBOOST_TEST_DYN_LINK -DBOOST_ENABLE_ASSERT_HANDLER
 
-test: CommodityTests Commodity.o EmpireExceptions.o
+test: CommodityTests $(TARGET)
 	./CommodityTests

@@ -27,7 +27,7 @@ using namespace empire;
 
 /// @internal  Name the test suite after the directory that it's in.  Also,
 /// the name should not conflict with other objects in the test suite.
-BOOST_AUTO_TEST_SUITE( Commodities )
+BOOST_AUTO_TEST_SUITE( Commodities_test_suite )
 
 
 /// @internal Assume that the validate() function will verify the state of
