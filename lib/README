@@ -1,0 +1,5 @@
+# Empire ][ Library
+
+There's a need for some common functionality between all of the Empire programs.  For
+the sake of efficiency, I am making them static libraries for now.
+

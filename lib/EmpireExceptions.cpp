@@ -5,7 +5,7 @@
 ///
 //  The documentation for classes in this file are in the .hpp file.
 ///
-/// @file      EmpireExceptions.cpp
+/// @file      lib/EmpireExceptions.cpp
 /// @version   1.0
 ///
 /// @author    Mark Nelson <mr_nelson@icloud.com>

@@ -1,7 +1,7 @@
 ###############################################################################
 # Empire ][
 #
-# @file    Makefile
+# @file    Commodities/Makefile
 # @version 1.0 - Initial implementation
 #
 # @author Mark Nelson <marknels@hawaii.edu>
@@ -17,12 +17,6 @@ all: $(TARGET)
 
 Commodity.o: Commodity.cpp Commodity.hpp EmpireExceptions.hpp
 	$(CXX) $(CXXFLAGS) -DBOOST_ENABLE_ASSERT_HANDLER -c Commodity.cpp
-
-EmpireExceptions.o: EmpireExceptions.cpp EmpireExceptions.hpp
-	$(CXX) $(CXXFLAGS) -DBOOST_ENABLE_ASSERT_HANDLER -c EmpireExceptions.cpp
-
-src_docs: doxygen.conf empire
-	doxygen doxygen.conf
 
 clean:
 	rm -fr $(TARGET) CommodityTests

@@ -16,9 +16,8 @@
 
 #pragma once
 
-#include <cstdint>           // For the int8_t datatypes
-#include <string_view>
-#include <boost/chrono.hpp>  // For time_point
+#include <cstdint>  // For the int8_t datatypes
+#include <string>   // For the nation's name
 
 namespace empire {
 
@@ -30,8 +29,8 @@ typedef uint8_t Nation_ID;
 ///
 /// @internal This is closely tied to the `Nations::nations[MAX_NATIONS]` 
 ///           definition in Nation.cpp.  The number of Nations must be
-///           hand-created in there -- as they are done at compile time.
-constinit const Nation_ID MAX_NATIONS = 25;  // @TODO Increase to 100
+///           hand-created in there -- as they are static.
+constinit static const Nation_ID MAX_NATIONS = 25;  // @TODO Increase to 100
 
 
 //////////////////////////                            /////////////////////////
@@ -52,7 +51,10 @@ class Nation {
 public:  ////////////////  Constructor and Operator Overrides  ////////////////
 	
 	/// Creates a new Nation.
-	consteval Nation( const Nation_ID inNumber );
+	/// 
+	/// The default name is inNumber
+	/// The default status is NEW
+	Nation( const Nation_ID inNumber );
 
 
 public:  ///////////////////////////  Enumerations  ///////////////////////////
@@ -70,16 +72,16 @@ public:  ///////////////////////////  Enumerations  ///////////////////////////
    typedef enum Status Status;
    
    /// Maximum length of a nation's name
-   static constinit const uint8_t MAX_NAME = 20;
+   constinit static const uint8_t MAX_NAME = 20;
 
 
 private:  /////////////////////////////  Members  /////////////////////////////
 
 	/// The Nation ID, Nation UID and/or Nation Number...  all the same.
-	const Nation_ID number;
+	const Nation_ID id;
 
 	/// The name of our nation, up to Nation::MAX_NAME
-	std::string_view name;
+	std::string name;
 
 	/// The status of the nation
 	Status status;
@@ -93,7 +95,7 @@ public:  /////////////////////////// Getters //////////////////////////////////
 public:  //////////////////////////// Methods /////////////////////////////////
 	
    /// Validate the health of the Nation
-   constexpr bool validate() const ;
+   const bool validate() const ;
 
 };  // class Nation
 

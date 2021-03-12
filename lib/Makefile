@@ -1,7 +1,7 @@
 ###############################################################################
 # Empire ][
 #
-# @file    Nations/Makefile
+# @file    lib/Makefile
 # @version 1.0 - Initial implementation
 #
 # @author Mark Nelson <marknels@hawaii.edu>
@@ -17,11 +17,9 @@ CXXFLAGS = -std=c++20    \
            -Wshadow      \
            -Wconversion
 
-TARGET   = Nation.o
-TEST     = NationTest
+AR       = ar
+TARGET   = libempire.a
 
-LDFLAGS  = -L../lib      \
-           -lempire
 
 BOOST_FLAGS          = -DBOOST_ENABLE_ASSERT_HANDLER
 BOOST_TEST_CXX_FLAGS = -DBOOST_TEST_DYN_LINK          \
@@ -34,17 +32,20 @@ CXX_TEST_FLAGS       = $(CXXFLAGS) $(BOOST_FLAGS) $(BOOST_TEST_CXX_FLAGS)
 
 all: $(TARGET)
 
-Nation.o: Nation.cpp Nation.hpp
-	$(CXX) $(CXXFLAGS) $(BOOST_FLAGS) -c Nation.cpp
+EmpireExceptions.o: EmpireExceptions.cpp EmpireExceptions.hpp
+	$(CXX) $(CXXFLAGS) -c EmpireExceptions.cpp
 
-NationTest.o: NationTest.cpp Nation.hpp
-	$(CXX) $(CXX_TEST_FLAGS) -c NationTest.cpp 
+EmpireExceptionsTest.o: EmpireExceptionsTest.cpp EmpireExceptions.hpp
+	$(CXX) $(CXX_TEST_FLAGS) -c EmpireExceptionsTest.cpp
 
-$(TEST): NationTest.o $(TARGET) 
-	$(CXX) $(CXX_TEST_FLAGS) -o $(TEST) $^ $(LDFLAGS) $(BOOST_TEST_LD_FLAGS)
+EmpireExceptionsTest: EmpireExceptions.o EmpireExceptionsTest.o
+	$(CXX) $(CXX_TEST_FLAGS) $(BOOST_TEST_LD_FLAGS) -o EmpireExceptionsTest $^ 
 
-test: $(TEST) $(TARGET)
-	./$(TEST)
+$(TARGET): EmpireExceptions.o
+	$(AR) -rsv $(TARGET) $^
 
+test: EmpireExceptionsTest $(TARGET)
+	./EmpireExceptionsTest
+	
 clean:
-	rm -fr *.o $(TARGET) $(TEST)
+	rm -fr *.o $(TARGET) EmpireExceptionsTest

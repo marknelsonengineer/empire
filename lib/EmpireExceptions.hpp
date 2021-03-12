@@ -6,7 +6,7 @@
 /// Note:      We will declare class-specific exceptions with the classes...
 ///            so they won't always be here.
 ///
-/// @file      EmpireExceptions.hpp
+/// @file      lib/EmpireExceptions.hpp
 /// @version   1.0
 ///
 /// @author    Mark Nelson <mr_nelson@icloud.com>
