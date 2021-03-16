@@ -31,7 +31,6 @@ Nation_ID Nation::nationCounter = 0;
 
 
 Nation::Nation() {
-
 	if( nationCounter < MAX_NATIONS ) {
 		id = nationCounter++;
 	} else { // ...then we have too many Nations
@@ -49,6 +48,26 @@ Nation::Nation() {
 
 constexpr const Nation_ID Nation::getID() const {
 	return id;
+}
+
+
+const string_view Nation::getName() const {
+	return string_view( name );
+}
+
+
+void Nation::rename( std::string_view newName ) {
+	if( newName.length() <= 0 ) {
+		throw invalid_argument( "A nation must have a name" );
+	}
+	
+	if( newName.length() > Nation::MAX_NAME ) {
+		throw length_error( "newName" );
+	}
+
+	Nations::renameNation( newName, id );
+
+	name = newName;
 }
 
 
@@ -76,13 +95,31 @@ const bool Nation::validate() const {
 /// Static array of Nations -- we will never have more or less Nation objects.
 ///
 /// Because it's a static array, it needs to be set here.
-const Nation Nations::nations[MAX_NATIONS] = {
+Nation Nations::nations[MAX_NATIONS] = {
 	Nation(), Nation(), Nation(), Nation(), Nation()
   ,Nation(), Nation(), Nation(), Nation(), Nation()
   ,Nation(), Nation(), Nation(), Nation(), Nation()
   ,Nation(), Nation(), Nation(), Nation(), Nation()
   ,Nation(), Nation(), Nation(), Nation(), Nation()
 };
+
+
+Nation& Nations::get ( const Nation_ID index ) {
+	if( index >= MAX_NATIONS ) {
+		throw out_of_range( "index" );
+	}
+
+	return nations[index];
+}
+
+
+void Nations::renameNation( std::string_view newName, Nation_ID nationToRename ) {
+	if( newName.length() > Nation::MAX_NAME ) {
+		throw length_error( "newName" );
+	}
+	
+	
+}
 
 
 /// @todo Create an appropriate function for Boost's "void assertion_failed"

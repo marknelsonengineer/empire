@@ -16,6 +16,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/execution_monitor.hpp>
+#include <string>
 
 //#include "EmpireExceptions.hpp"
 #include "Nation.hpp"
@@ -28,9 +29,12 @@ using namespace empire;
 /// the name should not conflict with other objects in the test suite.
 BOOST_AUTO_TEST_SUITE( Nations_test_suite )
 
-/// Test an enabled Commodity constructor
+/// Basic test of Nations static
 BOOST_AUTO_TEST_CASE( Nations_getter ) {
 	Nations::validate();
+		
+	Nation nation = Nations::get(0);
+	nation.validate();
 }
 
 
@@ -51,6 +55,38 @@ BOOST_AUTO_TEST_CASE( Nations_exceeded ) {
       const Nation_ID* currentValue = boost::get_error_info<errinfo_currentNationCounter>( e );
       BOOST_CHECK( *currentValue == 25 );
    }
+}
+
+
+/// Test Nations.get( id ) bounds
+BOOST_AUTO_TEST_CASE( Nations_get_bounds_on_index ) {
+	BOOST_CHECK_THROW( Nations::get( -1 ), std::out_of_range );
+	BOOST_CHECK_NO_THROW( Nations::get( 0 ));
+	BOOST_CHECK_NO_THROW( Nations::get( MAX_NATIONS - 1 ) );
+	BOOST_CHECK_THROW( Nations::get( MAX_NATIONS ), std::out_of_range );
+}
+
+
+
+BOOST_AUTO_TEST_CASE( Nation_rename ) {
+	Nation nation = Nations::get(0);
+	
+	// Basic rename
+	nation.rename( "Sam" );
+	BOOST_CHECK( nation.getName() == "Sam" );
+	
+	// Rename to ""
+	BOOST_CHECK_THROW( nation.rename(""), std::invalid_argument );
+
+	// Rename to largest possible name
+	std::string newName = std::string( Nation::MAX_NAME, 'x' );
+	nation.rename( newName );
+	BOOST_CHECK( nation.getName() == newName );
+
+	newName += "X";  // Add one more characrter...
+	BOOST_CHECK_THROW( nation.rename(newName), std::length_error );
+
+	// std::cout << newName;
 }
 
 

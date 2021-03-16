@@ -16,8 +16,10 @@
 
 #pragma once
 
-#include <cstdint>  // For the int8_t datatypes
-#include <string>   // For the nation's name
+#include <cstdint>      // For the int8_t datatypes
+#include <string>       // For the nation's name
+#include <map>
+#include <string_view>  // For the map
 
 #include "../lib/EmpireExceptions.hpp"
 
@@ -125,9 +127,17 @@ private:  /////////////////////////////  Members  /////////////////////////////
 public:  /////////////////////////// Getters //////////////////////////////////
 	/// Get the ID of the nation.
    constexpr const Nation_ID getID() const;
+   
+   const std::string_view getName() const;
 
 
 public:  //////////////////////////// Methods /////////////////////////////////
+	/// Rename a Nation.  The name must be unique.
+	///
+	/// @throws std::invalid_argument if newName is 0 length
+	/// @throws std::length_error if newName exceeds Nation::MAX_NAME
+	void rename( std::string_view newName );
+
 
    /// Validate the health of the Nation
    const bool validate() const ;
@@ -135,13 +145,31 @@ public:  //////////////////////////// Methods /////////////////////////////////
 };  // class Nation
 
 
+
+//////////////////////////                             ////////////////////////
+//////////////////////////  Nations Class Declaration  ////////////////////////
+//////////////////////////                             ////////////////////////
+
 /// Container holding all of the Nation objects.
 class Nations final {
 private:  /////////////////////////////  Members  /////////////////////////////
-	static constinit const Nation nations[MAX_NATIONS];
+	static constinit Nation nations[MAX_NATIONS];
+	
+	static std::map<std::string_view, Nation_ID> nameMap;
 
 
 public:  //////////////////////////// Methods /////////////////////////////////
+	
+	/// Get a Nation (by Nation ID)
+	///
+	/// @throws std::out_of_range if index >= MAX_NATIONS
+	static Nation& get ( const Nation_ID index ); 
+	
+	/// Rename a Nation.  The name must be unique.
+	///
+	/// @throws std::length_error if newName exceeds Nation::MAX_NAME
+	static void renameNation( std::string_view newName, Nation_ID nationToRename );
+	
    /// Validate the health of the Nations container
    static bool validate() ;
 

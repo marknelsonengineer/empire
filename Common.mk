@@ -44,7 +44,6 @@ $(TARGETS): %.o: %.cpp
 # If we ever build a combined test, we can incorporate all of the .o files
 # into one combined test.
 $(TESTS): %: %.cpp $(TARGETS)
-	$(CXX) -c -o $@.o $(CXX_TEST_FLAGS) $<
 	$(CXX)    -o $@   $(CXX_TEST_FLAGS) $< $(TARGETS) $(LDFLAGS) $(BOOST_TEST_LD_FLAGS)
 
 test: $(TARGETS) $(TARGET) $(TESTS)
