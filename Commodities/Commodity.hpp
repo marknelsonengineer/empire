@@ -24,7 +24,7 @@
 #include <cstdint>        // For the int16_t datatypes
 #include <string_view>
 
-#include "EmpireExceptions.hpp"
+#include "../lib/EmpireExceptions.hpp"
 
 namespace empire {
 

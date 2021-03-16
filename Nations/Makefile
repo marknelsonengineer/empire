@@ -9,42 +9,9 @@
 # @copyright (c) 2021 Mark Nelson
 ###############################################################################
 
-CXX      = g++
-CXXFLAGS = -std=c++20    \
-           -O3           \
-           -Wall         \
-           -pedantic     \
-           -Wshadow      \
-           -Wconversion
+TARGETS = Nation.o
+TESTS   = NationTest
 
-TARGET   = Nation.o
-TEST     = NationTest
+all: $(TARGETS)
 
-LDFLAGS  = -L../lib      \
-           -lempire
-
-BOOST_FLAGS          = -DBOOST_ENABLE_ASSERT_HANDLER
-BOOST_TEST_CXX_FLAGS = -DBOOST_TEST_DYN_LINK          \
-                       -DBOOST_TEST_MAIN
-BOOST_TEST_LD_FLAGS  = -lboost_unit_test_framework    \
-                       -DBOOST_TEST_DYN_LINK          \
-                       -DBOOST_ENABLE_ASSERT_HANDLER
-CXX_TEST_FLAGS       = $(CXXFLAGS) $(BOOST_FLAGS) $(BOOST_TEST_CXX_FLAGS)
-
-
-all: $(TARGET)
-
-Nation.o: Nation.cpp Nation.hpp
-	$(CXX) $(CXXFLAGS) $(BOOST_FLAGS) -c Nation.cpp
-
-NationTest.o: NationTest.cpp Nation.hpp
-	$(CXX) $(CXX_TEST_FLAGS) -c NationTest.cpp 
-
-$(TEST): NationTest.o $(TARGET) 
-	$(CXX) $(CXX_TEST_FLAGS) -o $(TEST) $^ $(LDFLAGS) $(BOOST_TEST_LD_FLAGS)
-
-test: $(TEST) $(TARGET)
-	./$(TEST)
-
-clean:
-	rm -fr *.o $(TARGET) $(TEST)
+include ../Common.mk

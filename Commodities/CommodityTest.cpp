@@ -18,7 +18,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/execution_monitor.hpp>
 
-#include "EmpireExceptions.hpp"
+#include "../lib/EmpireExceptions.hpp"
 #include "Commodity.hpp"
 
 
