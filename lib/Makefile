@@ -12,11 +12,11 @@
 TARGETS = EmpireExceptions.o
 TESTS   = EmpireExceptionsTest
 
-TARGET   = libempire.a
+TARGET  = libempire.a
 
 all: $(TARGET)
 
-$(TARGET): EmpireExceptions.o
+$(TARGET): $(TARGETS)
 	$(AR) -rsv $(TARGET) $^
 
 include ../Common.mk

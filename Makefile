@@ -23,3 +23,7 @@ DOXYGEN_CONF = ./doxygen/doxygen.conf
 src_docs: $(DOXYGEN_CONF)
 	doxygen $(DOXYGEN_CONF)
 	# clear && make src_docs 2>&1 | fgrep "Commodity.cpp"
+
+test:
+	echo blob
+	

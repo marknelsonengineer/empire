@@ -47,13 +47,13 @@ $(TESTS): %: %.cpp $(TARGETS)
 	$(CXX) -c -o $@.o $(CXX_TEST_FLAGS) $<
 	$(CXX)    -o $@   $(CXX_TEST_FLAGS) $< $(TARGETS) $(LDFLAGS) $(BOOST_TEST_LD_FLAGS)
 
-test: $(TESTS) $(TARGET)
+test: $(TARGETS) $(TARGET) $(TESTS) 
 	@ for t in $(TESTS);  do \
 		./$$t;                \
 	done
 
 clean:
-	rm -fr *.o $(TARGET) $(TESTS)
+	rm -fr *.o $(TARGETS) $(TARGET) $(TESTS) 
 
 .PHONY: all
 .PHONY: test
