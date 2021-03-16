@@ -26,12 +26,23 @@ namespace empire {
 /////////////////////////////  Nation Definitions  ////////////////////////////
 /////////////////////////////                      ////////////////////////////
 
-Nation::Nation( const Nation_ID inNumber ) : id (inNumber) {
-	
-	name = to_string( inNumber );
-	
+// Define & initialize the nationCounter static variable
+Nation_ID Nation::nationCounter = 0;
+
+
+Nation::Nation() {
+
+	if( nationCounter < MAX_NATIONS ) {
+		id = nationCounter++;
+	} else { // ...then we have too many Nations
+		throw nationLimitExceededException() << errinfo_currentNationCounter( nationCounter )
+		                                     << errinfo_maxNations( MAX_NATIONS ) ;
+	}
+
+	name = to_string( id );
+
 	status = NEW;
-	
+
 	validate();
 }
 
@@ -46,9 +57,12 @@ constexpr const Nation_ID Nation::getID() const {
 const bool Nation::validate() const {
 	BOOST_ASSERT( id >= 0 );
 	BOOST_ASSERT( id <= MAX_NATIONS );
-	
+
+	BOOST_ASSERT( nationCounter >= 0 );
+	BOOST_ASSERT( nationCounter <= MAX_NATIONS );
+
 	BOOST_ASSERT( name.size() <= MAX_NAME );
-	
+
 	/// @todo Build validation for all members
 	return true;  // All tests pass
 }
@@ -63,11 +77,11 @@ const bool Nation::validate() const {
 ///
 /// Because it's a static array, it needs to be set here.
 const Nation Nations::nations[MAX_NATIONS] = {
-	Nation( 0), Nation( 1), Nation( 2), Nation( 3), Nation( 4)
-  ,Nation( 5), Nation( 6), Nation( 7), Nation( 8), Nation( 9)
-  ,Nation(10), Nation(11), Nation(12), Nation(13), Nation(14)
-  ,Nation(15), Nation(16), Nation(17), Nation(18), Nation(19) 
-  ,Nation(20), Nation(21), Nation(22), Nation(23), Nation(24) 
+	Nation(), Nation(), Nation(), Nation(), Nation()
+  ,Nation(), Nation(), Nation(), Nation(), Nation()
+  ,Nation(), Nation(), Nation(), Nation(), Nation()
+  ,Nation(), Nation(), Nation(), Nation(), Nation()
+  ,Nation(), Nation(), Nation(), Nation(), Nation()
 };
 
 
@@ -78,7 +92,7 @@ bool Nations::validate() {
 		BOOST_ASSERT( i == nations[i].getID() );
 		nations[i].validate();
 	}
-	
+
 	return true;  // All tests pass
 }
 

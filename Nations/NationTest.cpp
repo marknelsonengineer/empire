@@ -34,4 +34,25 @@ BOOST_AUTO_TEST_CASE( Nations_getter ) {
 }
 
 
+/// Test that an attempt to create another Nation (beyond MAX_NATIONS) will
+/// throw an exception
+BOOST_AUTO_TEST_CASE( Nations_exceeded ) {
+   BOOST_CHECK_THROW( Nation(), nationLimitExceededException );
+
+   // Test the overflow exception
+   try {
+		Nation illegalNation;
+      BOOST_CHECK_MESSAGE( false, "The line above should have thrown an exception" );
+   }
+   catch( boost::exception & e ) {
+      const Nation_ID* maxValue = boost::get_error_info<errinfo_maxNations>( e );
+      BOOST_CHECK( *maxValue == MAX_NATIONS );
+
+      const Nation_ID* currentValue = boost::get_error_info<errinfo_currentNationCounter>( e );
+      BOOST_CHECK( *currentValue == 25 );
+   }
+}
+
+
+
 BOOST_AUTO_TEST_SUITE_END()

@@ -39,7 +39,7 @@ CXX_TEST_FLAGS       = $(CXXFLAGS) $(BOOST_FLAGS) $(BOOST_TEST_CXX_FLAGS)
 
 $(TARGETS): %.o: %.cpp
 	$(CXX) -c $(CXXFLAGS) $(BOOST_FLAGS) -o $@ $<
-	
+
 # For each Boost Test target, there is one .cpp.  Create one .o and one executable.
 # If we ever build a combined test, we can incorporate all of the .o files
 # into one combined test.
@@ -47,13 +47,13 @@ $(TESTS): %: %.cpp $(TARGETS)
 	$(CXX) -c -o $@.o $(CXX_TEST_FLAGS) $<
 	$(CXX)    -o $@   $(CXX_TEST_FLAGS) $< $(TARGETS) $(LDFLAGS) $(BOOST_TEST_LD_FLAGS)
 
-test: $(TARGETS) $(TARGET) $(TESTS) 
+test: $(TARGETS) $(TARGET) $(TESTS)
 	@ for t in $(TESTS);  do \
 		./$$t;                \
 	done
 
 clean:
-	rm -fr *.o $(TARGETS) $(TARGET) $(TESTS) 
+	rm -fr *.o $(TARGETS) $(TARGET) $(TESTS)
 
 .PHONY: all
 .PHONY: test
