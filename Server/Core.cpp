@@ -16,21 +16,28 @@
 #include <iostream>  // REMOVE
 
 #include "Core.hpp"
+#include "Log.hpp"
+
 
 using namespace std;
 
 namespace empire {
 
+
+
+
 Core::Core(token) {
-	cout << "Core constructed" << endl;
+	// This has the benefit of initializing the logger
+	LOG_INFO << "Empire core services starting";
+
 }
 
 
 Core::~Core() {
-	cout << "Core destroyed" << endl;
+	LOG_INFO << "Empire core services shutting down";
 }
 
-	
+
 void Core::use() const {
 	cout << "Core in use" << endl;
 }

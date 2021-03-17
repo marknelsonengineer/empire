@@ -9,7 +9,7 @@
 # @copyright (c) 2021 Mark Nelson
 ###############################################################################
 
-TARGETS = Core.o
+TARGETS = Core.o Log.o
 TESTS   = CoreTest
 
 all: $(TARGETS)

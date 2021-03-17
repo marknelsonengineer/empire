@@ -4,7 +4,6 @@
 /// The Core services of the Empire ][ server.
 ///
 //  The documentation for classes in this file are in the .hpp file.
-/// data that varies between instances of a commodity.
 ///
 /// @file      Server/Core.hpp
 /// @version   1.0 - Initial version
@@ -19,11 +18,18 @@
 #include "../lib/EmpireExceptions.hpp"
 #include "../lib/Singleton.hpp"
 
+
 namespace empire {
-	
+
 /// This is the core services class for Empire.  It's intended to hold a number
-/// of Singletons and to correctly initialize the game.  For example, it should
-/// setup the logger, create Nations, create Sectors, etc.  
+/// of Singletons and to correctly initialize the game.  Some of its tasks include
+/// For example, it should:
+///     - Setup the logger
+///     - Create Nations
+///     - Create Sectors
+///     - Unmartial saved game state
+///     - Initiate timed activities such as updates
+///     - Start the network server
 ///
 /// In a Model-View-Controller architecture, this would be a Controller class
 /// for Empire.
@@ -31,12 +37,25 @@ namespace empire {
 /// @pattern Singleton:  There can be only one Core...
 ///
 class Core final : public Singleton<Core> {
-public:
+public:  ////////////////////  Constructors / Destructors  ////////////////////
+	/// Startup the game core.  Token is private to the Singleton so others
+	/// can't call it.
+	///
+	/// It does the following:
+	///    - Initialize the logger
 	Core(token) ;
-	~Core();
-	
+
+	/// Shutdown the core.
+	~Core() ;
+
 	void use() const;
-		
+
+
+private:  /////////////////////////////  Members  /////////////////////////////
+
+
+private:  /////////////////////////////  Methods  /////////////////////////////
+
 }; // class Core
 
 }  // namespace empire

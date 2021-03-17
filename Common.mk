@@ -24,12 +24,18 @@ LDFLAGS  = -L../lib      \
 
 AR       = ar
 
-BOOST_FLAGS          = -DBOOST_ENABLE_ASSERT_HANDLER
+BOOST_FLAGS          = -DBOOST_ENABLE_ASSERT_HANDLER  \
+                       -DBOOST_LOG_DYN_LINK
 BOOST_TEST_CXX_FLAGS = -DBOOST_TEST_DYN_LINK          \
                        -DBOOST_TEST_MAIN
 BOOST_TEST_LD_FLAGS  = -lboost_unit_test_framework    \
                        -DBOOST_TEST_DYN_LINK          \
-                       -DBOOST_ENABLE_ASSERT_HANDLER
+                       -DBOOST_ENABLE_ASSERT_HANDLER  \
+                       -lboost_system                 \
+                       -lboost_thread                 \
+                       -lpthread                      \
+                       -lboost_log_setup              \
+                       -lboost_log
 CXX_TEST_FLAGS       = $(CXXFLAGS) $(BOOST_FLAGS) $(BOOST_TEST_CXX_FLAGS)
 
 
@@ -58,7 +64,7 @@ test: $(TARGETS) $(TARGET) $(TESTS)
 	done
 
 clean:
-	rm -fr *.o $(TARGETS) $(TARGET) $(TESTS)
+	rm -fr *.o $(TARGETS) $(TARGET) $(TESTS) empire.log
 
 .PHONY: all
 .PHONY: test
