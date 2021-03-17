@@ -9,7 +9,7 @@
 ///            into inlining functions and getting the Flyweight class to be
 ///            built statically at compile-time and elidgable for inlining.
 ///
-/// @file      Commodity.hpp
+/// @file      Commodities/Commodity.hpp
 /// @version   1.0 - Initial version
 /// @version   1.1 - Combined with CommodityTest to support inlining,
 ///                  constinit and constexpr

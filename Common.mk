@@ -44,10 +44,16 @@ $(TARGETS): %.o: %.cpp
 # If we ever build a combined test, we can incorporate all of the .o files
 # into one combined test.
 $(TESTS): %: %.cpp $(TARGETS)
-	$(CXX)    -o $@   $(CXX_TEST_FLAGS) $< $(TARGETS) $(LDFLAGS) $(BOOST_TEST_LD_FLAGS)
+	@ for t in $(TESTS);  do                                                                          \
+		echo $(CXX) -c -o $$t.o $(CXX_TEST_FLAGS) $$t.cpp ;                                            \
+		     $(CXX) -c -o $$t.o $(CXX_TEST_FLAGS) $$t.cpp ;                                            \
+		echo $(CXX)    -o $$t   $(CXX_TEST_FLAGS) $$t.o $(TARGETS) $(LDFLAGS) $(BOOST_TEST_LD_FLAGS) ; \
+		     $(CXX)    -o $$t   $(CXX_TEST_FLAGS) $$t.o $(TARGETS) $(LDFLAGS) $(BOOST_TEST_LD_FLAGS) ; \
+	done
 
 test: $(TARGETS) $(TARGET) $(TESTS)
 	@ for t in $(TESTS);  do \
+		echo ./$$t;           \
 		./$$t;                \
 	done
 

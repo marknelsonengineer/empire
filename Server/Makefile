@@ -1,22 +1,17 @@
 ###############################################################################
 # Empire ][
 #
-# @file    lib/Makefile
+# @file    Server/Makefile
 # @version 1.0 - Initial implementation
 #
 # @author Mark Nelson <marknels@hawaii.edu>
-# @date   29 Jan 2021
+# @date   16 Mar 2021
 # @copyright (c) 2021 Mark Nelson
 ###############################################################################
 
-TARGETS = EmpireExceptions.o   Singleton.o
-TESTS   = EmpireExceptionsTest SingletonTest
+TARGETS = Core.o
+TESTS   = CoreTest
 
-TARGET  = libempire.a
-
-all: $(TARGET)
-
-$(TARGET): $(TARGETS)
-	$(AR) -rsv $(TARGET) $^
+all: $(TARGETS)
 
 include ../Common.mk

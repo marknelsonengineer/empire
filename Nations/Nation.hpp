@@ -6,7 +6,7 @@
 //  The documentation for classes in this file are in the .hpp file.
 /// data that varies between instances of a commodity.
 ///
-/// @file      Nation.hpp
+/// @file      Nation/Nation.hpp
 /// @version   1.0 - Initial version
 ///
 /// @author    Mark Nelson <mr_nelson@icloud.com>
