@@ -19,5 +19,8 @@ empire
 # Directories
 doxygen/generated_docs/*
 
+# Logfiles
+empire.log
+
 # Apple Filesystem files
 .DS_Store
