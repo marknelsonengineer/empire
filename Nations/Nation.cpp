@@ -14,6 +14,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <boost/assert.hpp>
+#include <boost/algorithm/string/trim_all.hpp>
+#include <iostream> //REMOVE
 
 #include "Nation.hpp"
 
@@ -38,7 +40,8 @@ Nation::Nation() {
 		                                     << errinfo_maxNations( MAX_NATIONS ) ;
 	}
 
-	name = to_string( id );
+	cout << to_string(id) << endl;
+	rename( to_string( id ));  // Set the name
 
 	status = NEW;
 
@@ -56,18 +59,50 @@ const string_view Nation::getName() const {
 }
 
 
-void Nation::rename( std::string_view newName ) {
-	if( newName.length() <= 0 ) {
+void Nation::rename( const std::string_view newName ) {
+	
+	string trimmedNewName = string( newName );
+	// Map any non-alphanumeric characters to a space
+	for( auto &c : trimmedNewName) {
+		if( !isalnum( c ) ) {
+			c = ' ';
+		}
+	}
+	// Trim whitespace before & after the string
+	// Collapse repeating interior whitespace into one ' '
+	boost::trim_all( trimmedNewName );
+	
+	if( trimmedNewName.length() <= 0 ) {
 		throw invalid_argument( "A nation must have a name" );
 	}
 	
-	if( newName.length() > Nation::MAX_NAME ) {
-		throw length_error( "newName" );
+	if( trimmedNewName.length() > Nation::MAX_NAME ) {
+		throw length_error( "Requested name is greater than the maximum of " + to_string( Nation::MAX_NAME ) + " characters" );
+	}
+	
+	// At this point, trimmedNewName is the new, candidate name
+	
+	// Iterate over nameMap and see if there are any duplicates (other than our own)
+	for( auto &nation : Nations::nameMap ) {
+		if( nation.first == trimmedNewName ) {
+			if( nation.second == id ) { // We are about to rename a nation to the same name... whatever
+				continue;
+			} else {
+				throw nationNameTakenException() << errinfo_NationID( nation.second )
+				                                 << errinfo_NationName( nation.first );
+			}
+		}
 	}
 
-	Nations::renameNation( newName, id );
-
-	name = newName;
+	// Nations::nameMap.empty();
+	Nations::nameMap.erase( trimmedNewName );
+	Nations::nameMap.emplace( trimmedNewName, id );
+	name = trimmedNewName;
+	
+	/// @todo Implement logging
+	/// @todo Implement nameMap validation
+	
+	// BOOST_LOG_TRIVIAL(info) << "Nation [" << id << "] renamed from [" << "XXX" << "] to [" << trimmedNewName << "]" ;
 }
 
 
@@ -104,21 +139,16 @@ Nation Nations::nations[MAX_NATIONS] = {
 };
 
 
+// Allocate nameMap
+map<std::string_view, Nation_ID> Nations::nameMap = map<std::string_view, Nation_ID>();
+
+
 Nation& Nations::get ( const Nation_ID index ) {
 	if( index >= MAX_NATIONS ) {
 		throw out_of_range( "index" );
 	}
 
 	return nations[index];
-}
-
-
-void Nations::renameNation( std::string_view newName, Nation_ID nationToRename ) {
-	if( newName.length() > Nation::MAX_NAME ) {
-		throw length_error( "newName" );
-	}
-	
-	
 }
 
 

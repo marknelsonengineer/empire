@@ -54,11 +54,23 @@ constinit static const Nation_ID MAX_NATIONS = 25;  // @TODO Increase to 100
 /// Nations object/array.  Any other Nations should not be permitted.
 struct nationLimitExceededException: virtual empireException { };
 
+/// Thrown when someone tries to copy another Nation's name.
+struct nationNameTakenException: virtual empireException { };
+
 /// On a NationLimitExceededException, this holds the MAX_NATIONS limit.
 typedef boost::error_info<struct tag_maxNations, Nation_ID> errinfo_maxNations;
 
 /// On a NationLimitExceededException, this holds the current nationCounter.
 typedef boost::error_info<struct tag_requestedId, Nation_ID> errinfo_currentNationCounter;
+	
+/// On a nationNameTakenException, this holds the ID of a duplicate nation
+typedef boost::error_info<struct tag_requestedId, Nation_ID> errinfo_NationID;
+
+/// On a nationNameTakenException, this holds the name of the nation
+typedef boost::error_info<struct tag_requestedId, std::string_view> errinfo_NationName;
+
+	
+
 
 
 
@@ -136,7 +148,7 @@ public:  //////////////////////////// Methods /////////////////////////////////
 	///
 	/// @throws std::invalid_argument if newName is 0 length
 	/// @throws std::length_error if newName exceeds Nation::MAX_NAME
-	void rename( std::string_view newName );
+	void rename( const std::string_view newName );
 
 
    /// Validate the health of the Nation
@@ -155,8 +167,12 @@ class Nations final {
 private:  /////////////////////////////  Members  /////////////////////////////
 	static constinit Nation nations[MAX_NATIONS];
 	
+	/// Map of Nation names to Index.
 	static std::map<std::string_view, Nation_ID> nameMap;
 
+	/// Declare Nation::rename() to be a friend of Nations... so it can directly
+	/// access nameMap;
+	friend void Nation::rename( std::string_view newName );
 
 public:  //////////////////////////// Methods /////////////////////////////////
 	
@@ -164,11 +180,6 @@ public:  //////////////////////////// Methods /////////////////////////////////
 	///
 	/// @throws std::out_of_range if index >= MAX_NATIONS
 	static Nation& get ( const Nation_ID index ); 
-	
-	/// Rename a Nation.  The name must be unique.
-	///
-	/// @throws std::length_error if newName exceeds Nation::MAX_NAME
-	static void renameNation( std::string_view newName, Nation_ID nationToRename );
 	
    /// Validate the health of the Nations container
    static bool validate() ;

@@ -17,6 +17,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/execution_monitor.hpp>
 #include <string>
+#include <string_view>
 
 //#include "EmpireExceptions.hpp"
 #include "Nation.hpp"
@@ -85,8 +86,39 @@ BOOST_AUTO_TEST_CASE( Nation_rename ) {
 
 	newName += "X";  // Add one more characrter...
 	BOOST_CHECK_THROW( nation.rename(newName), std::length_error );
-
 	// std::cout << newName;
+
+	// Test the trim_all functionality
+	nation.rename( "  Sam   I\t\t am  " );
+	BOOST_CHECK( nation.getName() == "Sam I am" );
+	std::cout << "The new name is [" << nation.getName() << "]";
+
+	// Test renaming a nation to itself
+	nation.rename( "Sam" );
+	BOOST_CHECK( nation.getName() == "Sam" );
+	nation.rename( "Sam" );
+	BOOST_CHECK( nation.getName() == "Sam" );
+
+	// Test duplicate naming
+	
+	Nation nation5 = Nations::get(5);
+	Nation nation7 = Nations::get(7);
+		
+	nation7.rename( "Popular" );
+   // Test renaming a "later" Nation
+   try {
+		Nation nation9 = Nations::get(9);
+		nation9.rename( "Popular" );
+      BOOST_CHECK_MESSAGE( false, "The line above should have thrown an exception" );
+   }
+   catch( boost::exception & e ) {
+      const Nation_ID* nationID = boost::get_error_info<errinfo_NationID>( e );
+      BOOST_CHECK( *nationID == 7 );
+
+      const std::string_view* nationName = boost::get_error_info<errinfo_NationName>( e );
+      BOOST_CHECK( *nationName == "Popular" );
+   }
+
 }
 
 
