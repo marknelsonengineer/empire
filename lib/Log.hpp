@@ -20,35 +20,35 @@
 /// @copyright (c) 2021 Mark Nelson
 ///////////////////////////////////////////////////////////////////////////////
 
-//#include <iostream>
-//#include <boost/log/expressions.hpp>
-//#include <boost/log/sources/severity_channel_logger.hpp>
-//#include <boost/log/sources/record_ostream.hpp>
-//#include <boost/log/utility/setup/console.hpp>
-//#include <boost/log/utility/setup/common_attributes.hpp>
-//#include <boost/log/utility/setup/file.hpp>
-//#include <boost/log/sinks.hpp>
-
-//#include <boost/log/sources/severity_channel_logger.hpp>  // For BOOST_LOG_CHANNEL_SEV
 #include <boost/log/common.hpp>
 
-/// Empire-specific severity levels
+
+/// Empire-specific severity levels.  
+///
+/// This list is in order of severity (from lowest to highest).
 enum severity_level {
-    normal,
-    notification,
-    warning,
-    error,
-    critical
+	trace,
+	debug,
+	info,
+	warning,
+	error,
+	critical,
+	fatal
 };
 
 
 /// Narrow-char, thread-safe logger w/ severity and channel
 typedef boost::log::sources::severity_channel_logger_mt< severity_level, std::string > logger_t;
 
-extern void init();
+
+/// A Boost global logger
+BOOST_LOG_GLOBAL_LOGGER(empireLogger, logger_t)
+
+
 
 
 namespace empire {
 
+extern void init();
 
 } // namespace empire

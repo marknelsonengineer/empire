@@ -42,11 +42,13 @@ BOOST_AUTO_TEST_CASE( Log_general ) {
 	
 	logger_t lg;
 	
-	BOOST_LOG_CHANNEL_SEV(lg, __FILE__, normal) << "A normal severity level message";
-	BOOST_LOG_CHANNEL_SEV(lg, __FILE__, notification) << "A notification severity level message";
-	BOOST_LOG_CHANNEL_SEV(lg, __FILE__, warning) << "A warning severity level message";
-	BOOST_LOG_CHANNEL_SEV(lg, __FILE__, error) << "An error severity level message";
+	BOOST_LOG_CHANNEL_SEV(lg, __FILE__, trace) << "A trace severity level message";
+	BOOST_LOG_CHANNEL_SEV(lg, __FILE__, debug) << "A debug severity level message";
+	BOOST_LOG_CHANNEL_SEV(lg, __FILE__, info) << "A info severity level message";
+	BOOST_LOG_CHANNEL_SEV(lg, __FILE__, warning) << "An warning severity level message";
+	BOOST_LOG_CHANNEL_SEV(lg, __FILE__, error) << "A error severity level message";
 	BOOST_LOG_CHANNEL_SEV(lg, __FILE__, critical) << "A critical severity level message";
+	BOOST_LOG_CHANNEL_SEV(lg, __FILE__, fatal) << "A fatal severity level message";
 }
 
 BOOST_AUTO_TEST_SUITE_END()

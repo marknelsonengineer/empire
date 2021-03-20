@@ -37,31 +37,25 @@ namespace src = boost::log::sources;
 namespace expr = boost::log::expressions;
 namespace keywords = boost::log::keywords;
 namespace sinks = boost::log::sinks;
-//[ example_expressions_channel_severity_filter
-// We define our own severity levels
-//enum severity_level
-//{
-//    normal,
-//    notification,
-//    warning,
-//    error,
-//    critical
-//};
 
-// Define the attribute keywords
-BOOST_LOG_ATTRIBUTE_KEYWORD(line_id  ,"LineID", unsigned int)
-BOOST_LOG_ATTRIBUTE_KEYWORD(severity ,"Severity", severity_level)
-BOOST_LOG_ATTRIBUTE_KEYWORD(channel  ,"Channel", std::string)
 
-//<-
+
+
+
+/// Define an override for the << operator that will map
+/// severity_level to a text description.
+///
+/// @implementation This list must match (in the same order) as
+///                 the severity_level enum.
 std::ostream& operator<< (std::ostream& strm, severity_level level) {
-    static const char* strings[] =
-    {
-        "normal",
-        "notification",
-        "warning",
-        "error",
-        "critical"
+	static const char* strings[] = {
+		"trace"
+	  ,"debug"
+	  ,"info"
+	  ,"warning"
+	  ,"error"
+	  ,"critical"
+	  ,"fatal"
     };
 
     if (static_cast< std::size_t >(level) < sizeof(strings) / sizeof(*strings))
@@ -71,25 +65,25 @@ std::ostream& operator<< (std::ostream& strm, severity_level level) {
 
     return strm;
 }
-//->
+
+namespace empire {
+
+// Define the attribute keywords
+BOOST_LOG_ATTRIBUTE_KEYWORD(line_id  ,"LineID", unsigned int)
+BOOST_LOG_ATTRIBUTE_KEYWORD(severity ,"Severity", severity_level)
+BOOST_LOG_ATTRIBUTE_KEYWORD(channel  ,"Channel", std::string)
+
 
 void init()
 {
-    // Create a minimal severity table filter
-    typedef expr::channel_severity_filter_actor< std::string, severity_level > min_severity_filter;
-    min_severity_filter min_severity = expr::channel_severity_filter(channel, severity);
-
-    // Set up the minimum severity levels for different channels
-    min_severity["general"] = notification;
-    min_severity["network"] = warning;
-    min_severity["gui"] = error;
-
+	severity_level default_severity_level = trace;
+	
     logging::add_file_log
     (
         keywords::file_name = "sample_%N.log",
         keywords::rotation_size = 10 * 1024 * 1024,
         keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0),
-        keywords::filter = min_severity || severity >= critical,
+        keywords::filter = severity >= default_severity_level,
         keywords::format =
         (
             expr::stream
@@ -104,7 +98,7 @@ void init()
     logging::add_console_log
     (
         std::clog,
-        keywords::filter = min_severity || severity >= critical,
+        keywords::filter = severity >= default_severity_level,
         keywords::format =
         (
             expr::stream
@@ -118,3 +112,5 @@ void init()
 	boost::log::add_common_attributes();
 
 }
+
+} // namespace empire

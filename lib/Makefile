@@ -9,8 +9,10 @@
 # @copyright (c) 2021 Mark Nelson
 ###############################################################################
 
-TARGETS = EmpireExceptions.o   Singleton.o
-TESTS   = EmpireExceptionsTest SingletonTest
+# TARGETS = EmpireExceptions.o   Singleton.o   Log.o
+# TESTS   = EmpireExceptionsTest SingletonTest LogTest
+TARGETS = EmpireExceptions.o Log.o
+TESTS   = LogTest
 
 TARGET  = libempire.a
 
