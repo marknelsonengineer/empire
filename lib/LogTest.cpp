@@ -38,13 +38,13 @@ BOOST_AUTO_TEST_SUITE( Log_test_suite )
 
 /// Test an enabled Commodity constructor
 BOOST_AUTO_TEST_CASE( Log_general ) {
-	BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, trace) << "A trace severity level message";
-	BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, debug) << "A debug severity level message";
-	BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, info) << "A info severity level message";
-	BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, warning) << "An warning severity level message";
-	BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, error) << "A error severity level message";
-	BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, critical) << "A critical severity level message";
-	BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, fatal) << "A fatal severity level message";
+	LOG_TRACE    << "A trace message";
+	LOG_DEBUG    << "A debug message";
+	LOG_INFO     << "An info message";
+	LOG_WARN     << "A warning message";
+	LOG_ERROR    << "An error message";
+	LOG_CRITICAL << "A critical message";
+	LOG_FATAL    << "A fatal message";
 }
 
 BOOST_AUTO_TEST_SUITE_END()

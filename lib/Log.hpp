@@ -54,16 +54,43 @@ enum severity_level {
 /// Define a default log severity level.  Logs at or above
 /// this level will be printed.  Logs below this level
 /// will be suppressed.
-constinit const severity_level default_log_severity_level = debug;
-
+///
+/// This default severity level is the same for both console
+/// and file-based logging.  Furthermore, it's the same for 
+/// all channels.  Future programmers may want to create 
+/// custom log levels for different sinks and/or channels.
+constinit const severity_level default_log_severity_level = trace;
 
 
 /// Narrow-char, thread-safe logger w/ severity and channel
-typedef boost::log::sources::severity_channel_logger_mt< severity_level, std::string > logger_t;
+typedef boost::log::sources::severity_channel_logger_mt<
+	severity_level // The type of severity
+  ,std::string    // The channel name
+> logger_t;
 
 
 /// A Boost global logger
+///
+/// This defines the BOOST_LOG_GLOBAL_LOGGER_INIT function in Log.cpp
+/// 
+/// This function gets automatically called the first time a log is 
+/// generated.
 BOOST_LOG_GLOBAL_LOGGER(empireLogger, logger_t)
+
+	// BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, trace) << "A trace severity level message";
+
+/// Define the Log sinks...
+///
+/// @usage
+///     LOG_INFO << "Empire core services starting";
+///
+#define LOG_TRACE    BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, trace)
+#define LOG_DEBUG    BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, debug)
+#define LOG_INFO     BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, info)
+#define LOG_WARN     BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, warning)
+#define LOG_ERROR    BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, error)
+#define LOG_CRITICAL BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, critical)
+#define LOG_FATAL    BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, fatal)
 
 
 } // namespace empire
