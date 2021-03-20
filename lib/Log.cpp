@@ -79,6 +79,7 @@ BOOST_LOG_ATTRIBUTE_KEYWORD(channel  ,"Channel", std::string)
 ///       filename of the source of the log, which is a good proxy for channel.
 /// @todo Create a custom log sink for testing log messages (consider unbounded_fifo_queue)
 /// @todo Implement a log-level API to change the log level in realtime
+/// @todo Implement a log_channel name through a Makefile
 ///
 BOOST_LOG_GLOBAL_LOGGER_INIT(empireLogger, logger_t) {
 	logger_t lg;
@@ -112,5 +113,6 @@ BOOST_LOG_GLOBAL_LOGGER_INIT(empireLogger, logger_t) {
 
 	return lg;
 }
+
 
 } // namespace empire

@@ -27,18 +27,18 @@ namespace empire {
 
 /// Define the name of the logfile
 ///
-/// Allowed date and time placeholders conform to the ones specified by 
+/// Allowed date and time placeholders conform to the ones specified by
 /// Boost.DateTime library.
 /// @see https://www.boost.org/doc/libs/1_75_0/doc/html/date_time/date_time_io.html#date_time.format_flags
 /// ...and...
-/// File counter (%N) with an optional width specification (%3N) in a 
-/// printf-like format. The file counter will always be decimal, zero filled 
+/// File counter (%N) with an optional width specification (%3N) in a
+/// printf-like format. The file counter will always be decimal, zero filled
 /// to the specified width.
 /// ...or a percent sign (%%).
 constinit const char LOGFILE[] = "./empire_%Y%m%d_%H%M.log";
 
 
-/// Empire-specific severity levels.  
+/// Empire-specific severity levels.
 ///
 /// This list is in order of severity (from lowest to highest).
 enum severity_level {
@@ -57,8 +57,8 @@ enum severity_level {
 /// will be suppressed.
 ///
 /// This default severity level is the same for both console
-/// and file-based logging.  Furthermore, it's the same for 
-/// all channels.  Future programmers may want to create 
+/// and file-based logging.  Furthermore, it's the same for
+/// all channels.  Future programmers may want to create
 /// custom log levels for different sinks and/or channels.
 constinit const severity_level default_log_severity_level = trace;
 
@@ -73,20 +73,26 @@ typedef boost::log::sources::severity_channel_logger_mt<
 /// A Boost global logger
 ///
 /// This defines the BOOST_LOG_GLOBAL_LOGGER_INIT function in Log.cpp
-/// 
-/// This function gets automatically called the first time a log is 
+///
+/// This function gets automatically called the first time a log is
 /// generated.
 BOOST_LOG_GLOBAL_LOGGER(empireLogger, logger_t)
 
 
-consteval const std::string_view fixup( const std::string_view x );
+consteval const char* fixup( const char* x ) {
+	if( strcmp( x, "LogTest.cpp" ) == 0 ) return "LogTest";
+	if( strcmp( x, "EmpireExceptions.cpp" ) == 0 ) return "EmpireExceptions";
+	if( strcmp( x, "Singleton.cpp" ) == 0 ) return "Singleton";
+
+	return "Unregistered";
+}
 
 /// Define the Log sinks...
 ///
 /// @usage
 ///     LOG_INFO << "Empire core services starting";
 ///
-#define LOG_TRACE    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, trace)
+#define LOG_TRACE    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), fixup(__FILE__), trace)
 #define LOG_DEBUG    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, debug)
 #define LOG_INFO     BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, info)
 #define LOG_WARN     BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, warning)
