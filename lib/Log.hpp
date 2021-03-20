@@ -83,6 +83,7 @@ consteval const char* fixup( const char* x ) {
 	if( strcmp( x, "LogTest.cpp" ) == 0 ) return "LogTest";
 	if( strcmp( x, "EmpireExceptions.cpp" ) == 0 ) return "EmpireExceptions";
 	if( strcmp( x, "Singleton.cpp" ) == 0 ) return "Singleton";
+	if( strcmp( x, "Core.cpp" ) == 0 ) return "Core";
 
 	return "Unregistered";
 }

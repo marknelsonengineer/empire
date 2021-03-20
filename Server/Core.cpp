@@ -16,7 +16,7 @@
 #include <iostream>  // REMOVE
 
 #include "Core.hpp"
-#include "Log.hpp"
+#include "../lib/Log.hpp"
 
 
 using namespace std;
@@ -29,6 +29,7 @@ namespace empire {
 Core::Core(token) {
 	// This has the benefit of initializing the logger
 	LOG_INFO << "Empire core services starting";
+	LOG_INFO << "***[" << __FILE__ << "]";
 
 }
 
