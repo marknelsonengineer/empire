@@ -73,15 +73,28 @@ BOOST_LOG_ATTRIBUTE_KEYWORD(line_id  ,"LineID", unsigned int)
 BOOST_LOG_ATTRIBUTE_KEYWORD(severity ,"Severity", severity_level)
 BOOST_LOG_ATTRIBUTE_KEYWORD(channel  ,"Channel", std::string)
 
-
+/// Initialize the global logger.
+///
+///   - Adds a file logger
+///   - Adds a console logger
+///   - Initialize the default logging level
+///
+/// @todo I'd like to add channels, but I think a better way is to just add the
+///       filename of the source of the log, which is a good proxy for channel.
+/// @todo Miminize the number of includes, namespaces
+/// @todo Find a way to configure the initial log level
+/// @todo Create a LogTest unit test and exercise every one of these...
+/// @todo Create a custom log sink for testing log messages
+///
 BOOST_LOG_GLOBAL_LOGGER_INIT(empireLogger, logger_t) {
 	logger_t lg;
 
 	logging::add_file_log
     (
         keywords::file_name = LOGFILE,
-        keywords::rotation_size = 10 * 1024 * 1024,
-        keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0),
+        keywords::rotation_size = 2 * 1024 * 1024,  // Rotate every 2MB or...
+        keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 5, 0),  // at 12:05am 
+    	keywords::enable_final_rotation = true,
         keywords::filter = severity >= default_log_severity_level,
         keywords::format =
         (

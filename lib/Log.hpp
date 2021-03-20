@@ -25,7 +25,16 @@
 namespace empire {
 
 /// Define the name of the logfile
-constinit const char LOGFILE[] = "./empire_%N.log";
+///
+/// Allowed date and time placeholders conform to the ones specified by 
+/// Boost.DateTime library.
+/// @see https://www.boost.org/doc/libs/1_75_0/doc/html/date_time/date_time_io.html#date_time.format_flags
+/// ...and...
+/// File counter (%N) with an optional width specification (%3N) in a 
+/// printf-like format. The file counter will always be decimal, zero filled 
+/// to the specified width.
+/// ...or a percent sign (%%).
+constinit const char LOGFILE[] = "./empire_%Y%m%d_%H%M.log";
 
 
 /// Empire-specific severity levels.  

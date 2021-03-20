@@ -68,7 +68,7 @@ test: $(TARGETS) $(TARGET) $(TESTS)
 	done
 
 clean:
-	rm -fr *.o $(TARGETS) $(TARGET) $(TESTS) empire.log
+	rm -fr *.o $(TARGETS) $(TARGET) $(TESTS) *.log
 
 .PHONY: all
 .PHONY: test
