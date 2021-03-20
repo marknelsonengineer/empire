@@ -21,11 +21,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-//#include <iostream>
-//#include <boost/log/sources/severity_channel_logger.hpp>
-//#include <boost/log/sources/record_ostream.hpp>
-//#include <boost/log/sinks.hpp>
-
 #include "Log.hpp"
 
 // Additional Boost Log #includes
@@ -33,13 +28,12 @@
 #include <boost/log/utility/setup/file.hpp>               // For add_file_log
 #include <boost/log/utility/setup/console.hpp>            // For add_console_log
 #include <boost/log/utility/setup/common_attributes.hpp>  // For add_common_attributes
+#include <boost/log/support/date_time.hpp>                // For timestamp in logs
 
-namespace logging = boost::log;
-//namespace src = boost::log::sources;
-namespace expr = boost::log::expressions;
+namespace logging  = boost::log;
+namespace expr     = boost::log::expressions;
 namespace keywords = boost::log::keywords;
-namespace sinks = boost::log::sinks;
-
+namespace sinks    = boost::log::sinks;
 
 
 namespace empire {
@@ -71,9 +65,9 @@ std::ostream& operator<< (std::ostream& strm, severity_level level) {
 
 
 // Define the attribute keywords
-BOOST_LOG_ATTRIBUTE_KEYWORD(line_id  ,"LineID", unsigned int)
 BOOST_LOG_ATTRIBUTE_KEYWORD(severity ,"Severity", severity_level)
 BOOST_LOG_ATTRIBUTE_KEYWORD(channel  ,"Channel", std::string)
+
 
 /// Initialize the global logger.
 ///
@@ -83,48 +77,39 @@ BOOST_LOG_ATTRIBUTE_KEYWORD(channel  ,"Channel", std::string)
 ///
 /// @todo I'd like to add channels, but I think a better way is to just add the
 ///       filename of the source of the log, which is a good proxy for channel.
-/// @todo Miminize the number of includes, namespaces
-/// @todo Find a way to configure the initial log level
-/// @todo Create a LogTest unit test and exercise every one of these...
-/// @todo Create a custom log sink for testing log messages
+/// @todo Create a custom log sink for testing log messages (consider unbounded_fifo_queue)
+/// @todo Implement a log-level API to change the log level in realtime
 ///
 BOOST_LOG_GLOBAL_LOGGER_INIT(empireLogger, logger_t) {
 	logger_t lg;
 
-	logging::add_file_log
-    (
-        keywords::file_name = LOGFILE,
-        keywords::rotation_size = 2 * 1024 * 1024,  // Rotate every 2MB or...
-        keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 5, 0),  // at 12:05am 
-    	keywords::enable_final_rotation = true,
-        keywords::filter = severity >= default_log_severity_level,
-        keywords::format =
-        (
-            expr::stream
-                << line_id
-                << ": <" << severity
-                << "> [" << channel << "] "
-                << expr::smessage
-        )
-    );
-
-
-    logging::add_console_log
-    (
-        std::clog,
-        keywords::filter = severity >= default_log_severity_level,
-        keywords::format =
-        (
-            expr::stream
-                << line_id
-                << ": <" << severity
-                << "> [" << channel << "] "
-                << expr::smessage
-        )
-    );
-    
 	boost::log::add_common_attributes();
-		
+
+	logging::add_file_log (
+		keywords::file_name = LOGFILE,
+		keywords::rotation_size = 2 * 1024 * 1024,  // Rotate every 2MB or...
+		keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 5, 0),  // at 12:05am
+		keywords::enable_final_rotation = true,
+		keywords::filter = severity >= default_log_severity_level,
+		keywords::format = ( expr::stream
+			<< expr::format_date_time< boost::posix_time::ptime >("TimeStamp", "%Y-%m-%d %H:%M:%S")
+			<< ": <" << severity
+			<< "> [" << channel << "] "
+			<< expr::smessage
+		)
+	);
+
+	logging::add_console_log (
+		std::clog,
+		keywords::filter = severity >= default_log_severity_level,
+		keywords::format = ( expr::stream
+			<< expr::format_date_time< boost::posix_time::ptime >("TimeStamp", "%Y-%m-%d %H:%M:%S")
+			<< ": <" << severity
+			<< "> [" << channel << "] "
+			<< expr::smessage
+		)
+	);
+
 	return lg;
 }
 

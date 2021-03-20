@@ -26,19 +26,18 @@ AR       = ar
 
 BOOST_FLAGS          = -DBOOST_ENABLE_ASSERT_HANDLER  \
                        -DBOOST_ALL_DYN_LINK           \
-                       -DBOOST_LOG_WITHOUT_WCHAR_T                   
-# Want to get to BOOST_LOG_NO_SHORTHAND_NAMES 
-                       
+                       -DBOOST_LOG_WITHOUT_WCHAR_T    \
+                       -DBOOST_LOG_NO_SHORTHAND_NAMES
+
 BOOST_TEST_CXX_FLAGS = -DBOOST_TEST_MAIN
+
 BOOST_TEST_LD_FLAGS  = -lboost_unit_test_framework    \
                        -DBOOST_TEST_DYN_LINK          \
                        -DBOOST_ENABLE_ASSERT_HANDLER  \
                        -lboost_log                    \
                        -lboost_thread                 \
                        -lpthread                      \
-                       -lboost_system                 
-# Recently Removed
-#                       -lboost_log_setup              \
+                       -lboost_system
 
 CXX_TEST_FLAGS       = $(CXXFLAGS) $(BOOST_FLAGS) $(BOOST_TEST_CXX_FLAGS)
 

@@ -21,6 +21,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <boost/log/common.hpp>
+#include <string_view>
 
 namespace empire {
 
@@ -77,20 +78,21 @@ typedef boost::log::sources::severity_channel_logger_mt<
 /// generated.
 BOOST_LOG_GLOBAL_LOGGER(empireLogger, logger_t)
 
-	// BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, trace) << "A trace severity level message";
+
+consteval const std::string_view fixup( const std::string_view x );
 
 /// Define the Log sinks...
 ///
 /// @usage
 ///     LOG_INFO << "Empire core services starting";
 ///
-#define LOG_TRACE    BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, trace)
-#define LOG_DEBUG    BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, debug)
-#define LOG_INFO     BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, info)
-#define LOG_WARN     BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, warning)
-#define LOG_ERROR    BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, error)
-#define LOG_CRITICAL BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, critical)
-#define LOG_FATAL    BOOST_LOG_CHANNEL_SEV(empireLogger::get(), __FILE__, fatal)
+#define LOG_TRACE    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, trace)
+#define LOG_DEBUG    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, debug)
+#define LOG_INFO     BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, info)
+#define LOG_WARN     BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, warning)
+#define LOG_ERROR    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, error)
+#define LOG_CRITICAL BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, critical)
+#define LOG_FATAL    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, fatal)
 
 
 } // namespace empire
