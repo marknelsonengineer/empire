@@ -21,19 +21,21 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-#include <iostream>
-#include <boost/log/expressions.hpp>
-#include <boost/log/sources/severity_channel_logger.hpp>
-#include <boost/log/sources/record_ostream.hpp>
-#include <boost/log/utility/setup/console.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
-#include <boost/log/utility/setup/file.hpp>
-#include <boost/log/sinks.hpp>
+//#include <iostream>
+//#include <boost/log/sources/severity_channel_logger.hpp>
+//#include <boost/log/sources/record_ostream.hpp>
+//#include <boost/log/sinks.hpp>
 
 #include "Log.hpp"
 
+// Additional Boost Log #includes
+#include <boost/log/expressions.hpp>                      // For BOOST_LOG_ATTRIBUTE_KEYWORD
+#include <boost/log/utility/setup/file.hpp>               // For add_file_log
+#include <boost/log/utility/setup/console.hpp>            // For add_console_log
+#include <boost/log/utility/setup/common_attributes.hpp>  // For add_common_attributes
+
 namespace logging = boost::log;
-namespace src = boost::log::sources;
+//namespace src = boost::log::sources;
 namespace expr = boost::log::expressions;
 namespace keywords = boost::log::keywords;
 namespace sinks = boost::log::sinks;
