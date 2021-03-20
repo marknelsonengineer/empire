@@ -20,7 +20,7 @@ empire
 doxygen/generated_docs/*
 
 # Logfiles
-empire.log
+*.log
 
 # Apple Filesystem files
 .DS_Store

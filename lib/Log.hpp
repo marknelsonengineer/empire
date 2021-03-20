@@ -22,6 +22,11 @@
 
 #include <boost/log/common.hpp>
 
+namespace empire {
+
+/// Define the name of the logfile
+constinit const char LOGFILE[] = "./empire_%N.log";
+
 
 /// Empire-specific severity levels.  
 ///
@@ -37,6 +42,13 @@ enum severity_level {
 };
 
 
+/// Define a default log severity level.  Logs at or above
+/// this level will be printed.  Logs below this level
+/// will be suppressed.
+constinit const severity_level default_log_severity_level = debug;
+
+
+
 /// Narrow-char, thread-safe logger w/ severity and channel
 typedef boost::log::sources::severity_channel_logger_mt< severity_level, std::string > logger_t;
 
@@ -44,11 +56,5 @@ typedef boost::log::sources::severity_channel_logger_mt< severity_level, std::st
 /// A Boost global logger
 BOOST_LOG_GLOBAL_LOGGER(empireLogger, logger_t)
 
-
-
-
-namespace empire {
-
-extern void init();
 
 } // namespace empire

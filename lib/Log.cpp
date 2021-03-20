@@ -40,6 +40,7 @@ namespace sinks = boost::log::sinks;
 
 
 
+namespace empire {
 
 
 /// Define an override for the << operator that will map
@@ -66,7 +67,6 @@ std::ostream& operator<< (std::ostream& strm, severity_level level) {
     return strm;
 }
 
-namespace empire {
 
 // Define the attribute keywords
 BOOST_LOG_ATTRIBUTE_KEYWORD(line_id  ,"LineID", unsigned int)
@@ -74,16 +74,15 @@ BOOST_LOG_ATTRIBUTE_KEYWORD(severity ,"Severity", severity_level)
 BOOST_LOG_ATTRIBUTE_KEYWORD(channel  ,"Channel", std::string)
 
 
-void init()
-{
-	severity_level default_severity_level = trace;
-	
-    logging::add_file_log
+BOOST_LOG_GLOBAL_LOGGER_INIT(empireLogger, logger_t) {
+	logger_t lg;
+
+	logging::add_file_log
     (
-        keywords::file_name = "sample_%N.log",
+        keywords::file_name = LOGFILE,
         keywords::rotation_size = 10 * 1024 * 1024,
         keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0),
-        keywords::filter = severity >= default_severity_level,
+        keywords::filter = severity >= default_log_severity_level,
         keywords::format =
         (
             expr::stream
@@ -98,7 +97,7 @@ void init()
     logging::add_console_log
     (
         std::clog,
-        keywords::filter = severity >= default_severity_level,
+        keywords::filter = severity >= default_log_severity_level,
         keywords::format =
         (
             expr::stream
@@ -110,7 +109,8 @@ void init()
     );
     
 	boost::log::add_common_attributes();
-
+		
+	return lg;
 }
 
 } // namespace empire
