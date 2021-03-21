@@ -79,27 +79,23 @@ typedef boost::log::sources::severity_channel_logger_mt<
 BOOST_LOG_GLOBAL_LOGGER(empireLogger, logger_t)
 
 
-consteval const char* fixup( const char* x ) {
-	if( strcmp( x, "LogTest.cpp" ) == 0 ) return "LogTest";
-	if( strcmp( x, "EmpireExceptions.cpp" ) == 0 ) return "EmpireExceptions";
-	if( strcmp( x, "Singleton.cpp" ) == 0 ) return "Singleton";
-	if( strcmp( x, "Core.cpp" ) == 0 ) return "Core";
-
-	return "Unregistered";
-}
+#ifndef LOG_CHANNEL
+/// LOG_CHANNEL should be set by -DLOG_CHANNEL=\"$*\" in the Makefile
+#define LOG_CHANNEL "Unknown"
+#endif
 
 /// Define the Log sinks...
 ///
 /// @usage
 ///     LOG_INFO << "Empire core services starting";
 ///
-#define LOG_TRACE    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), fixup(__FILE__), trace)
-#define LOG_DEBUG    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, debug)
-#define LOG_INFO     BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, info)
-#define LOG_WARN     BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, warning)
-#define LOG_ERROR    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, error)
-#define LOG_CRITICAL BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, critical)
-#define LOG_FATAL    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), __FILE__, fatal)
+#define LOG_TRACE    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), LOG_CHANNEL, trace)
+#define LOG_DEBUG    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), LOG_CHANNEL, debug)
+#define LOG_INFO     BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), LOG_CHANNEL, info)
+#define LOG_WARN     BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), LOG_CHANNEL, warning)
+#define LOG_ERROR    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), LOG_CHANNEL, error)
+#define LOG_CRITICAL BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), LOG_CHANNEL, critical)
+#define LOG_FATAL    BOOST_LOG_STREAM_CHANNEL_SEV(empireLogger::get(), LOG_CHANNEL, fatal)
 
 
 } // namespace empire

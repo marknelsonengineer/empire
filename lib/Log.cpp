@@ -75,11 +75,13 @@ BOOST_LOG_ATTRIBUTE_KEYWORD(channel  ,"Channel", std::string)
 ///   - Adds a console logger
 ///   - Initialize the default logging level
 ///
-/// @todo I'd like to add channels, but I think a better way is to just add the
-///       filename of the source of the log, which is a good proxy for channel.
+/// The Channel is the filename of the source of the log, which is a good proxy
+/// for a channel.
+///
+/// LOG_CHANNEL should be set by -DLOG_CHANNEL=\"$*\" in the Makefile
+///
 /// @todo Create a custom log sink for testing log messages (consider unbounded_fifo_queue)
 /// @todo Implement a log-level API to change the log level in realtime
-/// @todo Implement a log_channel name through a Makefile
 ///
 BOOST_LOG_GLOBAL_LOGGER_INIT(empireLogger, logger_t) {
 	logger_t lg;

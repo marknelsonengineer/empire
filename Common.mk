@@ -42,20 +42,21 @@ BOOST_TEST_LD_FLAGS  = -lboost_unit_test_framework    \
 CXX_TEST_FLAGS       = $(CXXFLAGS) $(BOOST_FLAGS) $(BOOST_TEST_CXX_FLAGS)
 
 
-# The following compiler templates assume that...
+# The following compiler templates assume that these two environment
+# variables have been set in the file that's including this file:
 #   $(TARGETS) = A list of .o targets for empire
 #   $(TESTS)   = A list of .o targets for unit tests
 
 $(TARGETS): %.o: %.cpp
-	$(CXX) -c $(CXXFLAGS) $(BOOST_FLAGS) -o $@ $<
+	$(CXX) -c $(CXXFLAGS) $(BOOST_FLAGS) -DLOG_CHANNEL=\"$*\" -o $@ $<
 
 # For each Boost Test target, there is one .cpp.  Create one .o and one executable.
 # If we ever build a combined test, we can incorporate all of the .o files
 # into one combined test.
 $(TESTS): %: %.cpp $(TARGETS)
 	@ for t in $(TESTS);  do                                                                          \
-		echo $(CXX) -c -o $$t.o $(CXX_TEST_FLAGS) $$t.cpp ;                                            \
-		     $(CXX) -c -o $$t.o $(CXX_TEST_FLAGS) $$t.cpp ;                                            \
+		echo $(CXX) -c -o $$t.o $(CXX_TEST_FLAGS) -DLOG_CHANNEL=\"$$t\" $$t.cpp ;                                            \
+		     $(CXX) -c -o $$t.o $(CXX_TEST_FLAGS) -DLOG_CHANNEL=\"$$t\" $$t.cpp ;                                            \
 		echo $(CXX)    -o $$t   $(CXX_TEST_FLAGS) $$t.o $(TARGETS) $(LDFLAGS) $(BOOST_TEST_LD_FLAGS) ; \
 		     $(CXX)    -o $$t   $(CXX_TEST_FLAGS) $$t.o $(TARGETS) $(LDFLAGS) $(BOOST_TEST_LD_FLAGS) ; \
 	done

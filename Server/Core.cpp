@@ -13,8 +13,6 @@
 /// @copyright (c) 2021 Mark Nelson
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <iostream>  // REMOVE
-
 #include "Core.hpp"
 #include "../lib/Log.hpp"
 
@@ -28,19 +26,17 @@ namespace empire {
 
 Core::Core(token) {
 	// This has the benefit of initializing the logger
-	LOG_INFO << "Empire core services starting";
-	LOG_INFO << "***[" << __FILE__ << "]";
-
+	LOG_INFO << "Empire core services starting" ;
 }
 
 
 Core::~Core() {
-	LOG_INFO << "Empire core services shutting down";
+	LOG_INFO << "Empire core services shutting down" ;
 }
 
 
 void Core::use() const {
-	cout << "Core in use" << endl;
+	LOG_TRACE << "Core in use" ;
 }
 
 
