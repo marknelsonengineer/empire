@@ -18,32 +18,35 @@
 
 #pragma once
 
-#include <memory>
-
 
 namespace empire {
 
 /// Create a template of a Singleton class
+///
+/// @pattern Singleton:  This is a base class for Singletons
+///
 /// @todo Need to improve this documentation
 template<typename T>
 class Singleton {
 public:
-	static T& instance();
-	
 	Singleton( const Singleton&) = delete;
 	Singleton& operator= (const Singleton) = delete;
+
+	static T& get();	
 	
 protected:
-	struct token {};
-	Singleton() {}
+	struct token {};  // Inherited, concrete singleton classes will use this 
+	                  // to call the base class without having to be a 
+	                  // friend class.
+	Singleton() {}		// The empty constructor may be overridden
 }; // template class Singleton
 
 
-/// Use the template to create an actual Singleton class
+/// Get an instance of a Singleton
+///
 /// @todo Need to improve this documentation
 template<typename T>
-T& Singleton<T>::instance() {
-	// static const std::unique_ptr<T> instance{ new T{token{}}};
+inline T& Singleton<T>::get() {
 	static T instance{ token{} };
 	return instance;
 }  // template T
