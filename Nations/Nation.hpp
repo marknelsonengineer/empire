@@ -4,7 +4,6 @@
 /// Concrete class for all nations.
 ///
 //  The documentation for classes in this file are in the .hpp file.
-/// data that varies between instances of a commodity.
 ///
 /// @file      Nation/Nation.hpp
 /// @version   1.0 - Initial version
@@ -16,10 +15,10 @@
 
 #pragma once
 
-#include <cstdint>      // For the int8_t datatypes
+#include <cstdint>      // For the int8_t Nation_ID datatype
 #include <string>       // For the nation's name
-#include <map>
-#include <string_view>  // For the map
+#include <map>          // For mapping the name to an ID number
+#include <string_view>  // For the returning name as a string_view
 
 #include "../lib/EmpireExceptions.hpp"
 
@@ -35,11 +34,7 @@ typedef uint8_t Nation_ID;
 
 
 /// Maximum number of Nations.
-///
-/// @internal This is closely tied to the `Nations::nations[MAX_NATIONS]`
-///           definition in Nation.cpp.  The number of Nations must be
-///           hand-created in there -- as they are static.
-constinit static const Nation_ID MAX_NATIONS = 25;  // @TODO Increase to 100
+constinit static const Nation_ID MAX_NATIONS = 8;  // @TODO Increase to 100
 
 
 
@@ -47,10 +42,10 @@ constinit static const Nation_ID MAX_NATIONS = 25;  // @TODO Increase to 100
 //////////////////////////////  Nation Exceptions  ////////////////////////////
 //////////////////////////////                     ////////////////////////////
 
-/// Thrown when someone tries to creat a Nation when they shouldn't have.  This
+/// Thrown when someone tries to create a Nation when they shouldn't have.  This
 /// should be fatal and the logic error resolved.
 /// When this is thown, we are telling the caller that someone tried to create
-/// a new Nation.  All nations are created at program startup and stored in the
+/// a new Nation.  All nations are created when the Core starts and stored in the
 /// Nations object/array.  Any other Nations should not be permitted.
 struct nationLimitExceededException: virtual empireException { };
 
@@ -79,13 +74,9 @@ typedef boost::error_info<struct tag_requestedId, std::string_view> errinfo_Nati
 //////////////////////////                            /////////////////////////
 
 
-/// Concrete class for Nations.
+/// Concrete class for a Nation.
 ///
-///
-/// Nation's constructor is a consteval.  This means it is created at compile
-/// time and there is no other way to instantiate a nation.
-///
-/// By convention, in Empire, we will call Countries, Territories, Soverign
+/// By convention, in Empire, we call Countries, Territories, Soverign
 /// States... collectively "Nation".
 ///
 class Nation final {
@@ -125,11 +116,13 @@ private:  //////////////////////////  Static Members  /////////////////////////
 private:  /////////////////////////////  Members  /////////////////////////////
 
 	/// The Nation ID, Nation UID and/or Nation Number...  all the same.
-	/// This *should* be const, but I'm setting it with some logic that doesn't
-	/// lend itself to an initializer list.
-	Nation_ID id;
+	const Nation_ID id;
 
-	/// The name of our nation, up to Nation::MAX_NAME
+	/// The name of our nation, up to Nation::MAX_NAME.  It should be unique 
+	/// within empire.  Spaces are allowed, but not at the beginning or end.
+	/// Any non-alphanumeric characters are mapped to a space (sorry non-english
+	/// users, we will sort out Unicode support in the future).  Collapse 
+	/// repeating interior whitespace into one ' '.
 	std::string name;
 
 	/// The status of the nation
@@ -144,10 +137,17 @@ public:  /////////////////////////// Getters //////////////////////////////////
 
 
 public:  //////////////////////////// Methods /////////////////////////////////
-	/// Rename a Nation.  The name must be unique.
+	/// Rename a Nation.
+	///
+	/// The maximum size of the name is Nation::MAX_NAME.  It should be unique 
+	/// within empire.  Spaces are allowed, but not at the beginning or end.
+	/// Any non-alphanumeric characters are mapped to a space (sorry non-english
+	/// users, we will sort out Unicode support in the future).  Collapse 
+	/// repeating interior whitespace into one ' '.
 	///
 	/// @throws std::invalid_argument if newName is 0 length
 	/// @throws std::length_error if newName exceeds Nation::MAX_NAME
+	/// @throws nationNameTakenException if the name is already in use
 	void rename( const std::string_view newName );
 
 
@@ -158,6 +158,8 @@ public:  //////////////////////////// Methods /////////////////////////////////
 
 
 
+/// @TODO Need to figure out if we want to allow Nation 0 or start with Nation 1
+
 //////////////////////////                             ////////////////////////
 //////////////////////////  Nations Class Declaration  ////////////////////////
 //////////////////////////                             ////////////////////////
@@ -165,7 +167,7 @@ public:  //////////////////////////// Methods /////////////////////////////////
 /// Container holding all of the Nation objects.
 class Nations final {
 private:  /////////////////////////////  Members  /////////////////////////////
-	static constinit Nation nations[MAX_NATIONS];
+	static Nation nations[MAX_NATIONS];
 	
 	/// Map of Nation names to Index.
 	static std::map<std::string_view, Nation_ID> nameMap;

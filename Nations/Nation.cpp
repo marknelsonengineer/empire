@@ -32,15 +32,16 @@ namespace empire {
 Nation_ID Nation::nationCounter = 0;
 
 
-Nation::Nation() {
+Nation::Nation() : id(nationCounter) {
 	if( nationCounter < MAX_NATIONS ) {
-		id = nationCounter++;
-	} else { // ...then we have too many Nations
+		//id = nationCounter++;
+		nationCounter++;
+	} else { // ...we have too many Nations
 		throw nationLimitExceededException() << errinfo_currentNationCounter( nationCounter )
 		                                     << errinfo_maxNations( MAX_NATIONS ) ;
 	}
 
-	cout << to_string(id) << endl;
+	cout << to_string(id) << endl;  // REMOVE
 	rename( to_string( id ));  // Set the name
 
 	status = NEW;
@@ -115,6 +116,7 @@ const bool Nation::validate() const {
 	BOOST_ASSERT( nationCounter >= 0 );
 	BOOST_ASSERT( nationCounter <= MAX_NATIONS );
 
+	BOOST_ASSERT( name.size() > 0 );
 	BOOST_ASSERT( name.size() <= MAX_NAME );
 
 	/// @todo Build validation for all members
@@ -130,12 +132,11 @@ const bool Nation::validate() const {
 /// Static array of Nations -- we will never have more or less Nation objects.
 ///
 /// Because it's a static array, it needs to be set here.
+///
+/// @TODO Make this a for loop and make things easy for myself... maybe
 Nation Nations::nations[MAX_NATIONS] = {
 	Nation(), Nation(), Nation(), Nation(), Nation()
-  ,Nation(), Nation(), Nation(), Nation(), Nation()
-  ,Nation(), Nation(), Nation(), Nation(), Nation()
-  ,Nation(), Nation(), Nation(), Nation(), Nation()
-  ,Nation(), Nation(), Nation(), Nation(), Nation()
+  ,Nation(), Nation(), Nation()
 };
 
 
