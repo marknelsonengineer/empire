@@ -30,15 +30,34 @@ using namespace empire;
 /// the name should not conflict with other objects in the test suite.
 BOOST_AUTO_TEST_SUITE( Nations_test_suite )
 
-/// Basic test of Nations static
-BOOST_AUTO_TEST_CASE( Nations_getter ) {
-	Nations::validate();
-		
-	Nation nation = Nations::get(0);
-	nation.validate();
+
+/// Test the Nation::fixupName() function
+BOOST_AUTO_TEST_CASE( Nation_fixupName ) {
+	BOOST_CHECK( Nation::fixupName( "   Sam" ) == "Sam" );
+	BOOST_CHECK( Nation::fixupName( "Sam   " ) == "Sam" );
+	BOOST_CHECK( Nation::fixupName( "  Sam  " ) == "Sam" );
+	BOOST_CHECK( Nation::fixupName( "Sam  I  am" ) == "Sam I am" );
+	BOOST_CHECK( Nation::fixupName( "Sam\t\tI\t\tam" ) == "Sam I am" );
+	BOOST_CHECK( Nation::fixupName( "  1  2  3  4  " ) == "1 2 3 4" );
 }
 
 
+
+/// Basic test of Nations static
+BOOST_AUTO_TEST_CASE( Nations_getter ) {
+	Nations& nations = Nations::get();
+	nations.validate();
+	
+	Nation nation = nations.get1(0);
+	nation.validate();
+	BOOST_CHECK( nation.getID() == 0 );
+	BOOST_CHECK( nation.getName() == "Pogo" );
+	BOOST_CHECK( nation.getStatus() == Nation::Status::DEITY );
+	
+}
+
+
+/*
 /// Test that an attempt to create another Nation (beyond MAX_NATIONS) will
 /// throw an exception
 BOOST_AUTO_TEST_CASE( Nations_exceeded ) {
@@ -121,6 +140,6 @@ BOOST_AUTO_TEST_CASE( Nation_rename ) {
 
 }
 
-
+*/
 
 BOOST_AUTO_TEST_SUITE_END()

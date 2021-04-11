@@ -33,6 +33,7 @@ public:
 
 }; // class TestSingleton1
 
+
 TestSingleton1::TestSingleton1(token) {
 	// cout << "TestSingleton1 constructed" << endl;
 }

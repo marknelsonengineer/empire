@@ -47,7 +47,7 @@ CXX_TEST_FLAGS       = $(CXXFLAGS) $(BOOST_FLAGS) $(BOOST_TEST_CXX_FLAGS)
 #   $(TARGETS) = A list of .o targets for empire
 #   $(TESTS)   = A list of .o targets for unit tests
 
-$(TARGETS): %.o: %.cpp
+$(TARGETS): %.o: %.cpp %.hpp
 	$(CXX) -c $(CXXFLAGS) $(BOOST_FLAGS) -DLOG_CHANNEL=\"$*\" -o $@ $<
 
 # For each Boost Test target, there is one .cpp.  Create one .o and one executable.

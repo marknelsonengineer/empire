@@ -33,45 +33,44 @@ Nation_ID Nation::nationCounter = 0;
 
 
 Nation::Nation() : id(nationCounter) {
-	if( nationCounter < MAX_NATIONS ) {
-		//id = nationCounter++;
-		nationCounter++;
-	} else { // ...we have too many Nations
+	if( nationCounter >= MAX_NATIONS ) {  // ...we have too many Nations
 		throw nationLimitExceededException() << errinfo_currentNationCounter( nationCounter )
 		                                     << errinfo_maxNations( MAX_NATIONS ) ;
 	}
 
-	cout << to_string(id) << endl;  // REMOVE
-	rename( to_string( id ));  // Set the name
+	cout << "Created nation ID [" << to_string(id) << "]" << endl;  // REMOVE
+	name = to_string( id );         // REMOVE
+	// rename( to_string( id ));  // Set the name
 
 	status = NEW;
+
+	nationCounter++;
 
 	validate();
 }
 
 
-constexpr const Nation_ID Nation::getID() const {
-	return id;
-}
-
-
-const string_view Nation::getName() const {
-	return string_view( name );
+string Nation::fixupName( const string_view newName ) {
+	string name = string( newName );
+	
+	// Map any non-alphanumeric characters to a space
+	for( auto &c : name ) {
+		if( !isalnum( c ) ) {
+			c = ' ';
+		}
+	}
+	
+	// Trim whitespace before & after the string and
+	// collapse repeating interior whitespace into one ' '
+	boost::trim_all( name );
+		
+	return name;
 }
 
 
 void Nation::rename( const std::string_view newName ) {
 	
-	string trimmedNewName = string( newName );
-	// Map any non-alphanumeric characters to a space
-	for( auto &c : trimmedNewName) {
-		if( !isalnum( c ) ) {
-			c = ' ';
-		}
-	}
-	// Trim whitespace before & after the string
-	// Collapse repeating interior whitespace into one ' '
-	boost::trim_all( trimmedNewName );
+	string trimmedNewName = fixupName( newName );
 	
 	if( trimmedNewName.length() <= 0 ) {
 		throw invalid_argument( "A nation must have a name" );
@@ -82,7 +81,7 @@ void Nation::rename( const std::string_view newName ) {
 	}
 	
 	// At this point, trimmedNewName is the new, candidate name
-	
+/*	
 	// Iterate over nameMap and see if there are any duplicates (other than our own)
 	for( auto &nation : Nations::nameMap ) {
 		if( nation.first == trimmedNewName ) {
@@ -98,20 +97,26 @@ void Nation::rename( const std::string_view newName ) {
 	// Nations::nameMap.empty();
 	Nations::nameMap.erase( trimmedNewName );
 	Nations::nameMap.emplace( trimmedNewName, id );
+*/
 	name = trimmedNewName;
 	
 	/// @todo Implement logging
 	/// @todo Implement nameMap validation
 	
+	/// @todo News:  Country [ID] changed their name from oldName to newName
 	// BOOST_LOG_TRIVIAL(info) << "Nation [" << id << "] renamed from [" << "XXX" << "] to [" << trimmedNewName << "]" ;
 }
 
 
-///@todo:  Make a decision:  Do validate() fail a BOOST_ASSERT or do they
-///        return false?
+/// Validate the health of the Nation object.  
+/// @throws BOOST_ASSERT if the validation fails.  A server-level wrapper can
+///         catch the exception -- so we can get a stack trace to the root
+///         cause.  
+/// @returns true if the object is valid -- so we can easily test for 
+///          validity in BOOST_ASSERT().
 const bool Nation::validate() const {
 	BOOST_ASSERT( id >= 0 );
-	BOOST_ASSERT( id <= MAX_NATIONS );
+	BOOST_ASSERT( id < MAX_NATIONS );
 
 	BOOST_ASSERT( nationCounter >= 0 );
 	BOOST_ASSERT( nationCounter <= MAX_NATIONS );
@@ -128,24 +133,18 @@ const bool Nation::validate() const {
 ////////////////////////////  Nations Definitions  ////////////////////////////
 ////////////////////////////                       ////////////////////////////
 
-
-/// Static array of Nations -- we will never have more or less Nation objects.
-///
-/// Because it's a static array, it needs to be set here.
-///
-/// @TODO Make this a for loop and make things easy for myself... maybe
-Nation Nations::nations[MAX_NATIONS] = {
-	Nation(), Nation(), Nation(), Nation(), Nation()
-  ,Nation(), Nation(), Nation()
-};
+Nations::Nations(token) {
+	
+	nations[0].rename( "Pogo" );
+	nations[0].setStatus( Nation::Status::DEITY );
+	
+	/// @todo Convert to a log
+	cout << "Nations constructed" << endl;
+}
 
 
-// Allocate nameMap
-map<std::string_view, Nation_ID> Nations::nameMap = map<std::string_view, Nation_ID>();
-
-
-Nation& Nations::get ( const Nation_ID index ) {
-	if( index >= MAX_NATIONS ) {
+Nation& Nations::get1 ( const Nation_ID index ) {
+	if( index < 1 || index > MAX_NATIONS ) {
 		throw out_of_range( "index" );
 	}
 
@@ -153,13 +152,33 @@ Nation& Nations::get ( const Nation_ID index ) {
 }
 
 
+/// Static array of Nations -- we will never have more or less Nation objects.
+///
+/// Because it's a static array, it needs to be set here.
+///
+/// @TODO Make this a for loop and make things easy for myself... maybe
+//Nation Nations::nations[MAX_NATIONS] = {
+//	Nation(), Nation(), Nation(), Nation(), Nation()
+//  ,Nation(), Nation(), Nation()
+//};
+
+//Nation Nations::nations[MAX_NATIONS] = Nation[MAX_NATIONS];
+/*
+
+// Allocate nameMap
+map<std::string_view, Nation_ID> Nations::nameMap = map<std::string_view, Nation_ID>();
+
+
+*/
+
 /// @todo Create an appropriate function for Boost's "void assertion_failed"
 bool Nations::validate() {
-	///@todo Build validation
 	for( Nation_ID i = 0 ; i < MAX_NATIONS ; i++ ) {
 		BOOST_ASSERT( i == nations[i].getID() );
 		nations[i].validate();
 	}
+
+	///@todo Build more validation
 
 	return true;  // All tests pass
 }

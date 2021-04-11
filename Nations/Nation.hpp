@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Empire ][
 //
-/// Concrete class for all nations.
+/// Concrete classes for all nations.
 ///
 //  The documentation for classes in this file are in the .hpp file.
 ///
@@ -21,6 +21,8 @@
 #include <string_view>  // For the returning name as a string_view
 
 #include "../lib/EmpireExceptions.hpp"
+#include "../lib/Singleton.hpp"
+
 
 namespace empire {
 
@@ -34,6 +36,11 @@ typedef uint8_t Nation_ID;
 
 
 /// Maximum number of Nations.
+///
+/// Nation IDs will go from 0 to MAX_NATIONS -1 .  As we all know, C bases arrays
+/// with 0.  Philosophically, I'd like Empire ][ to be *simple*.  To that end, 
+/// I'm going to allow a country_name of 0... which will default to Pogo, the 
+/// Deity.
 constinit static const Nation_ID MAX_NATIONS = 8;  // @TODO Increase to 100
 
 
@@ -43,10 +50,10 @@ constinit static const Nation_ID MAX_NATIONS = 8;  // @TODO Increase to 100
 //////////////////////////////                     ////////////////////////////
 
 /// Thrown when someone tries to create a Nation when they shouldn't have.  This
-/// should be fatal and the logic error resolved.
-/// When this is thown, we are telling the caller that someone tried to create
-/// a new Nation.  All nations are created when the Core starts and stored in the
-/// Nations object/array.  Any other Nations should not be permitted.
+/// should be fatal. When this is thown, we are telling the caller that someone 
+/// tried to create a new Nation.  All nations are created when the Core starts
+/// and stored in the Nations object/array.  Any other Nations should not be 
+/// permitted.
 struct nationLimitExceededException: virtual empireException { };
 
 /// Thrown when someone tries to copy another Nation's name.
@@ -65,9 +72,6 @@ typedef boost::error_info<struct tag_requestedId, Nation_ID> errinfo_NationID;
 typedef boost::error_info<struct tag_requestedId, std::string_view> errinfo_NationName;
 
 	
-
-
-
 
 //////////////////////////                            /////////////////////////
 //////////////////////////  Nation Class Declaration  /////////////////////////
@@ -113,6 +117,15 @@ private:  //////////////////////////  Static Members  /////////////////////////
 	static Nation_ID nationCounter;
 
 
+public:  //////////////////////////  Static Methods  //////////////////////////
+	/// Fixup new country names.  Specifically:
+	///   1. Trim leading and trailing spaces
+	///   2. Replace non-alphanumeric characters with a space (sorry to non-
+	///      english users, we'll sort out Unicode support in the future).
+	///   3. Collapse repeating interior whitespace into one ' '.
+	static std::string fixupName( const std::string_view name );
+
+
 private:  /////////////////////////////  Members  /////////////////////////////
 
 	/// The Nation ID, Nation UID and/or Nation Number...  all the same.
@@ -130,10 +143,20 @@ private:  /////////////////////////////  Members  /////////////////////////////
 
 
 public:  /////////////////////////// Getters //////////////////////////////////
-	/// Get the ID of the nation.
-   constexpr const Nation_ID getID() const;
+	/// Get the ID of the nation
+	constexpr const Nation_ID getID() const { return id; }
    
-   const std::string_view getName() const;
+   /// Get the name of the nation
+   const std::string_view getName() const { return std::string_view( name ); }
+   	
+   /// Get the status of a nation
+   constexpr Status getStatus() const { return status; }
+
+	/// Set the status of a nation
+	/// @todo:  Validate and consider a state machine
+	/// @todo:  We *really* need to work out a security model for Empire ][
+   constexpr void setStatus( const Status newStatus ) { status = newStatus; }
+
 
 
 public:  //////////////////////////// Methods /////////////////////////////////
@@ -153,38 +176,58 @@ public:  //////////////////////////// Methods /////////////////////////////////
 
    /// Validate the health of the Nation
    const bool validate() const ;
+   
+   ///@TODO Implement a dump() function.  Question:  Where should the dump 
+   ///      output to?  Console or log?
 
 };  // class Nation
 
 
-
-/// @TODO Need to figure out if we want to allow Nation 0 or start with Nation 1
 
 //////////////////////////                             ////////////////////////
 //////////////////////////  Nations Class Declaration  ////////////////////////
 //////////////////////////                             ////////////////////////
 
 /// Container holding all of the Nation objects.
-class Nations final {
+///
+/// @pattern Singleton:  Nations is a singleton
+///
+class Nations final : public Singleton<Nations>{
+public:  ///////////////////////// Constructors ///////////////////////////////
+	/// Creates and initializes the Nations of Empire ][.
+	Nations(token) ;
+
 private:  /////////////////////////////  Members  /////////////////////////////
-	static Nation nations[MAX_NATIONS];
-	
+	Nation nations[MAX_NATIONS];
+
 	/// Map of Nation names to Index.
-	static std::map<std::string_view, Nation_ID> nameMap;
+	std::map<std::string_view, Nation_ID> nameMap;
 
 	/// Declare Nation::rename() to be a friend of Nations... so it can directly
 	/// access nameMap;
 	friend void Nation::rename( std::string_view newName );
 
 public:  //////////////////////////// Methods /////////////////////////////////
-	
+
 	/// Get a Nation (by Nation ID)
 	///
-	/// @throws std::out_of_range if index >= MAX_NATIONS
-	static Nation& get ( const Nation_ID index ); 
+	/// Although C will create a Nation[0], we are not going to use it.  This way
+	/// Nation IDs, which start with 1, will match up with their array index.
+	///
+	/// @throws std::out_of_range if index < 1 or > MAX_NATIONS
+	Nation& get1 ( const Nation_ID index );
 	
+	/// Get a Nation (by name)
+	///
+	/// @throes std::out_of_range if name is not found
+	Nation& get1 ( const std::string_view name );
+		
+	/// Return true if name is a Nation
+	bool isNation( const std::string_view name ) const;
+
    /// Validate the health of the Nations container
-   static bool validate() ;
+   bool validate() ;
+   ///@TODO Implement a dump() function
 
 };  // class Nations
 
