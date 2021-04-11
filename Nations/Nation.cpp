@@ -18,6 +18,8 @@
 #include <iostream> //REMOVE
 
 #include "Nation.hpp"
+#include "../lib/Log.hpp"
+
 
 using namespace std;
 
@@ -38,9 +40,7 @@ Nation::Nation() : id(nationCounter) {
 		                                     << errinfo_maxNations( MAX_NATIONS ) ;
 	}
 
-	cout << "Created nation ID [" << to_string(id) << "]" << endl;  // REMOVE
-	name = to_string( id );         // REMOVE
-	// rename( to_string( id ));  // Set the name
+	rename( to_string( id ));  // Set the name
 
 	status = NEW;
 
@@ -81,7 +81,12 @@ void Nation::rename( const std::string_view newName ) {
 	}
 	
 	// At this point, trimmedNewName is the new, candidate name
-/*	
+
+//	Nations& nations = Nations::get();
+
+//	Nation_ID mapped_ID = nations.nameMap["Boo"];
+
+/*
 	// Iterate over nameMap and see if there are any duplicates (other than our own)
 	for( auto &nation : Nations::nameMap ) {
 		if( nation.first == trimmedNewName ) {
@@ -138,38 +143,19 @@ Nations::Nations(token) {
 	nations[0].rename( "Pogo" );
 	nations[0].setStatus( Nation::Status::DEITY );
 	
-	/// @todo Convert to a log
-	cout << "Nations constructed" << endl;
+	/// @todo BUG:  MAX_NATIONS is not printing out	
+	LOG_DEBUG << MAX_NATIONS << " nations constructed.";
 }
 
 
-Nation& Nations::get1 ( const Nation_ID index ) {
-	if( index < 1 || index > MAX_NATIONS ) {
+Nation& Nations::operator[](const Nation_ID index ) {
+	if( index < 0 || index >= MAX_NATIONS ) {
 		throw out_of_range( "index" );
 	}
 
 	return nations[index];
 }
 
-
-/// Static array of Nations -- we will never have more or less Nation objects.
-///
-/// Because it's a static array, it needs to be set here.
-///
-/// @TODO Make this a for loop and make things easy for myself... maybe
-//Nation Nations::nations[MAX_NATIONS] = {
-//	Nation(), Nation(), Nation(), Nation(), Nation()
-//  ,Nation(), Nation(), Nation()
-//};
-
-//Nation Nations::nations[MAX_NATIONS] = Nation[MAX_NATIONS];
-/*
-
-// Allocate nameMap
-map<std::string_view, Nation_ID> Nations::nameMap = map<std::string_view, Nation_ID>();
-
-
-*/
 
 /// @todo Create an appropriate function for Boost's "void assertion_failed"
 bool Nations::validate() {

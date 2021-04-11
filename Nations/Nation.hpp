@@ -90,7 +90,7 @@ public:  ////////////////  Constructor and Operator Overrides  ////////////////
 	///
 	/// The default name is the nation id number (which comes from nationCounter)
 	/// The default status is NEW
-	Nation();
+	Nation() ;
 
 
 public:  ///////////////////////////  Enumerations  ///////////////////////////
@@ -102,19 +102,19 @@ public:  ///////////////////////////  Enumerations  ///////////////////////////
    				 ,SANCTUARY  ///< Still in sanctuary
    				 ,ACTIVE     ///< Active (sanctuary broken)
    				 ,DEITY      ///< Deity powers
-   				};
+   				} ;
 
    /// Identifies the Nation's Status by type.
-   typedef enum Status Status;
+   typedef enum Status Status ;
 
    /// Maximum length of a nation's name
-   constinit static const uint8_t MAX_NAME = 20;
+   constinit static const uint8_t MAX_NAME = 20 ;
 
 
 private:  //////////////////////////  Static Members  /////////////////////////
 	/// An internal counter... used to assign unique ID numbers to nations and
 	/// to ensure that no more than MAX_NATIONS get created.
-	static Nation_ID nationCounter;
+	static Nation_ID nationCounter ;
 
 
 public:  //////////////////////////  Static Methods  //////////////////////////
@@ -123,23 +123,23 @@ public:  //////////////////////////  Static Methods  //////////////////////////
 	///   2. Replace non-alphanumeric characters with a space (sorry to non-
 	///      english users, we'll sort out Unicode support in the future).
 	///   3. Collapse repeating interior whitespace into one ' '.
-	static std::string fixupName( const std::string_view name );
+	static std::string fixupName( const std::string_view name ) ;
 
 
 private:  /////////////////////////////  Members  /////////////////////////////
 
 	/// The Nation ID, Nation UID and/or Nation Number...  all the same.
-	const Nation_ID id;
+	const Nation_ID id ;
 
 	/// The name of our nation, up to Nation::MAX_NAME.  It should be unique 
 	/// within empire.  Spaces are allowed, but not at the beginning or end.
 	/// Any non-alphanumeric characters are mapped to a space (sorry non-english
 	/// users, we will sort out Unicode support in the future).  Collapse 
 	/// repeating interior whitespace into one ' '.
-	std::string name;
+	std::string name ;
 
 	/// The status of the nation
-	Status status;
+	Status status ;
 
 
 public:  /////////////////////////// Getters //////////////////////////////////
@@ -171,14 +171,14 @@ public:  //////////////////////////// Methods /////////////////////////////////
 	/// @throws std::invalid_argument if newName is 0 length
 	/// @throws std::length_error if newName exceeds Nation::MAX_NAME
 	/// @throws nationNameTakenException if the name is already in use
-	void rename( const std::string_view newName );
+	void rename( const std::string_view newName ) ;
 
 
    /// Validate the health of the Nation
    const bool validate() const ;
    
    ///@TODO Implement a dump() function.  Question:  Where should the dump 
-   ///      output to?  Console or log?
+   ///      output to?  Console or log?  I'm thinking the TRACE_LOG
 
 };  // class Nation
 
@@ -195,35 +195,33 @@ public:  //////////////////////////// Methods /////////////////////////////////
 class Nations final : public Singleton<Nations>{
 public:  ///////////////////////// Constructors ///////////////////////////////
 	/// Creates and initializes the Nations of Empire ][.
-	Nations(token) ;
+	Nations( token ) ;
+		
 
 private:  /////////////////////////////  Members  /////////////////////////////
-	Nation nations[MAX_NATIONS];
+	Nation nations[MAX_NATIONS] ;
 
 	/// Map of Nation names to Index.
-	std::map<std::string_view, Nation_ID> nameMap;
+	std::map<std::string_view, Nation_ID> nameMap ;
 
 	/// Declare Nation::rename() to be a friend of Nations... so it can directly
 	/// access nameMap;
-	friend void Nation::rename( std::string_view newName );
+	friend void Nation::rename( std::string_view newName ) ;
 
 public:  //////////////////////////// Methods /////////////////////////////////
 
 	/// Get a Nation (by Nation ID)
 	///
-	/// Although C will create a Nation[0], we are not going to use it.  This way
-	/// Nation IDs, which start with 1, will match up with their array index.
-	///
-	/// @throws std::out_of_range if index < 1 or > MAX_NATIONS
-	Nation& get1 ( const Nation_ID index );
-	
+	/// @throws std::out_of_range if index < 0 or >= MAX_NATIONS
+	Nation& operator[]( const Nation_ID index ) ;
+
 	/// Get a Nation (by name)
 	///
 	/// @throes std::out_of_range if name is not found
-	Nation& get1 ( const std::string_view name );
-		
+	// Nation& get1 ( const std::string_view name );
+
 	/// Return true if name is a Nation
-	bool isNation( const std::string_view name ) const;
+	bool isNation( const std::string_view name ) const ;
 
    /// Validate the health of the Nations container
    bool validate() ;

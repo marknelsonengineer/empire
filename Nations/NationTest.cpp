@@ -48,16 +48,16 @@ BOOST_AUTO_TEST_CASE( Nations_getter ) {
 	Nations& nations = Nations::get();
 	nations.validate();
 	
-	Nation nation = nations.get1(0);
+	Nation& nation = nations[0];
+	
 	nation.validate();
 	BOOST_CHECK( nation.getID() == 0 );
 	BOOST_CHECK( nation.getName() == "Pogo" );
 	BOOST_CHECK( nation.getStatus() == Nation::Status::DEITY );
-	
 }
 
 
-/*
+
 /// Test that an attempt to create another Nation (beyond MAX_NATIONS) will
 /// throw an exception
 BOOST_AUTO_TEST_CASE( Nations_exceeded ) {
@@ -73,21 +73,25 @@ BOOST_AUTO_TEST_CASE( Nations_exceeded ) {
       BOOST_CHECK( *maxValue == MAX_NATIONS );
 
       const Nation_ID* currentValue = boost::get_error_info<errinfo_currentNationCounter>( e );
-      BOOST_CHECK( *currentValue == 25 );
+      BOOST_CHECK( *currentValue == MAX_NATIONS );
    }
 }
 
 
+
 /// Test Nations.get( id ) bounds
 BOOST_AUTO_TEST_CASE( Nations_get_bounds_on_index ) {
-	BOOST_CHECK_THROW( Nations::get( -1 ), std::out_of_range );
-	BOOST_CHECK_NO_THROW( Nations::get( 0 ));
-	BOOST_CHECK_NO_THROW( Nations::get( MAX_NATIONS - 1 ) );
-	BOOST_CHECK_THROW( Nations::get( MAX_NATIONS ), std::out_of_range );
+	Nations& nations = Nations::get();
+
+	BOOST_CHECK_THROW( nations[-1], std::out_of_range );
+	BOOST_CHECK_NO_THROW( nations[0] );
+	BOOST_CHECK_NO_THROW( nations[MAX_NATIONS - 1] );
+	BOOST_CHECK_THROW( nations[MAX_NATIONS], std::out_of_range );
 }
 
 
 
+/*
 BOOST_AUTO_TEST_CASE( Nation_rename ) {
 	Nation nation = Nations::get(0);
 	
