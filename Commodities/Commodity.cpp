@@ -6,7 +6,7 @@
 ///
 //  The documentation for classes in this file are in the .hpp file.
 ///
-/// @file      Commodity.cpp
+/// @file      Commodities/Commodity.cpp
 /// @version   1.0 - Initial version
 /// @version   1.1 - Combined with CommodityTest to support inlining,
 ///                  constinit and constexpr

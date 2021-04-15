@@ -1,7 +1,7 @@
 ###############################################################################
 # Empire ][
 #
-# @file    Commodities/Makefile
+# @file    ../Commodities/Makefile
 # @version 1.0 - Initial implementation
 #
 # @author Mark Nelson <marknels@hawaii.edu>

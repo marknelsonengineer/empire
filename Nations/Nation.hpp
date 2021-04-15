@@ -3,9 +3,7 @@
 //
 /// Concrete classes for all nations.
 ///
-//  The documentation for classes in this file are in the .hpp file.
-///
-/// @file      Nation/Nation.hpp
+/// @file      Nations/Nation.hpp
 /// @version   1.0 - Initial version
 ///
 /// @author    Mark Nelson <mr_nelson@icloud.com>
@@ -37,10 +35,10 @@ typedef uint8_t Nation_ID;
 
 /// Maximum number of Nations.
 ///
-/// Nation IDs will go from 0 to MAX_NATIONS -1 .  As we all know, C bases arrays
-/// with 0.  Philosophically, I'd like Empire ][ to be *simple*.  To that end, 
-/// I'm going to allow a country_name of 0... which will default to Pogo, the 
-/// Deity.
+/// Nation IDs will go from 0 to MAX_NATIONS-1 .  As we all know, C bases arrays
+/// with 0.  Philosophically, I'd like to simplify the Empire ][ codebase.  To
+/// that end, I'm going to allow a country_name of 0... which will default to
+/// Pogo, the Deity.
 constinit static const Nation_ID MAX_NATIONS = 8;  // @TODO Increase to 100
 
 
@@ -50,9 +48,9 @@ constinit static const Nation_ID MAX_NATIONS = 8;  // @TODO Increase to 100
 //////////////////////////////                     ////////////////////////////
 
 /// Thrown when someone tries to create a Nation when they shouldn't have.  This
-/// should be fatal. When this is thown, we are telling the caller that someone 
+/// should be fatal. When this is thown, we are telling the caller that someone
 /// tried to create a new Nation.  All nations are created when the Core starts
-/// and stored in the Nations object/array.  Any other Nations should not be 
+/// and stored in the Nations object/array.  Any other Nations should not be
 /// permitted.
 struct nationLimitExceededException: virtual empireException { };
 
@@ -64,14 +62,14 @@ typedef boost::error_info<struct tag_maxNations, Nation_ID> errinfo_maxNations;
 
 /// On a NationLimitExceededException, this holds the current nationCounter.
 typedef boost::error_info<struct tag_requestedId, Nation_ID> errinfo_currentNationCounter;
-	
+
 /// On a nationNameTakenException, this holds the ID of a duplicate nation
 typedef boost::error_info<struct tag_requestedId, Nation_ID> errinfo_NationID;
 
 /// On a nationNameTakenException, this holds the name of the nation
 typedef boost::error_info<struct tag_requestedId, std::string_view> errinfo_NationName;
 
-	
+
 
 //////////////////////////                            /////////////////////////
 //////////////////////////  Nation Class Declaration  /////////////////////////
@@ -80,7 +78,7 @@ typedef boost::error_info<struct tag_requestedId, std::string_view> errinfo_Nati
 
 /// Concrete class for a Nation.
 ///
-/// By convention, in Empire, we call Countries, Territories, Soverign
+/// By convention, in Empire, we call Countries, Territories, and/or Soverign
 /// States... collectively "Nation".
 ///
 class Nation final {
@@ -120,8 +118,9 @@ private:  //////////////////////////  Static Members  /////////////////////////
 public:  //////////////////////////  Static Methods  //////////////////////////
 	/// Fixup new country names.  Specifically:
 	///   1. Trim leading and trailing spaces
-	///   2. Replace non-alphanumeric characters with a space (sorry to non-
-	///      english users, we'll sort out Unicode support in the future).
+	///   2. Replace non-alphanumeric characters with a space (apoligies to non-
+	///      english users, we'll sort out [Unicode](https://unicode.org)
+	///      support in the future).
 	///   3. Collapse repeating interior whitespace into one ' '.
 	static std::string fixupName( const std::string_view name ) ;
 
@@ -131,11 +130,11 @@ private:  /////////////////////////////  Members  /////////////////////////////
 	/// The Nation ID, Nation UID and/or Nation Number...  all the same.
 	const Nation_ID id ;
 
-	/// The name of our nation, up to Nation::MAX_NAME.  It should be unique 
+	/// The name of our nation, up to Nation::MAX_NAME.  It should be unique
 	/// within empire.  Spaces are allowed, but not at the beginning or end.
 	/// Any non-alphanumeric characters are mapped to a space (sorry non-english
-	/// users, we will sort out Unicode support in the future).  Collapse 
-	/// repeating interior whitespace into one ' '.
+	/// users, we will sort out [Unicode](https://unicode.org) support in the
+	/// future).  Collapse repeating interior whitespace into one ' '.
 	std::string name ;
 
 	/// The status of the nation
@@ -145,14 +144,15 @@ private:  /////////////////////////////  Members  /////////////////////////////
 public:  /////////////////////////// Getters //////////////////////////////////
 	/// Get the ID of the nation
 	constexpr const Nation_ID getID() const { return id; }
-   
+
    /// Get the name of the nation
    const std::string_view getName() const { return std::string_view( name ); }
-   	
+
    /// Get the status of a nation
    constexpr Status getStatus() const { return status; }
 
 	/// Set the status of a nation
+	///
 	/// @todo:  Validate and consider a state machine
 	/// @todo:  We *really* need to work out a security model for Empire ][
    constexpr void setStatus( const Status newStatus ) { status = newStatus; }
@@ -162,11 +162,11 @@ public:  /////////////////////////// Getters //////////////////////////////////
 public:  //////////////////////////// Methods /////////////////////////////////
 	/// Rename a Nation.
 	///
-	/// The maximum size of the name is Nation::MAX_NAME.  It should be unique 
+	/// The maximum size of the name is Nation::MAX_NAME.  It should be unique
 	/// within empire.  Spaces are allowed, but not at the beginning or end.
 	/// Any non-alphanumeric characters are mapped to a space (sorry non-english
-	/// users, we will sort out Unicode support in the future).  Collapse 
-	/// repeating interior whitespace into one ' '.
+	/// users, we will sort out [Unicode](https://unicode.org) support in the
+	/// future).  Collapse repeating interior whitespace into one ' '.
 	///
 	/// @throws std::invalid_argument if newName is 0 length
 	/// @throws std::length_error if newName exceeds Nation::MAX_NAME
@@ -174,10 +174,18 @@ public:  //////////////////////////// Methods /////////////////////////////////
 	void rename( const std::string_view newName ) ;
 
 
-   /// Validate the health of the Nation
+	/// Validate the health of a Nation object (from the code's perspective...
+	/// from the game's perspective, you're on your own).
+	///
+	/// @throws BOOST_ASSERT if the validation fails.  A server-level wrapper can
+	///         catch the exception -- so we can get a stack trace to the root
+	///         cause.
+	///
+	/// @returns true if the object is valid -- so we can easily test for
+	///          validity in BOOST_ASSERT().
    const bool validate() const ;
-   
-   ///@TODO Implement a dump() function.  Question:  Where should the dump 
+
+   ///@todo Implement a dump() function.  Question:  Where should the dump
    ///      output to?  Console or log?  I'm thinking the TRACE_LOG
 
 };  // class Nation
@@ -195,10 +203,21 @@ public:  //////////////////////////// Methods /////////////////////////////////
 class Nations final : public Singleton<Nations>{
 public:  ///////////////////////// Constructors ///////////////////////////////
 	/// Creates and initializes the Nations of Empire ][.
+	///
+	/// token Is a protected Singleton struct... thereby preventing
+	/// non-inherited classes from invoking this constructor.
 	Nations( token ) ;
-		
+
 
 private:  /////////////////////////////  Members  /////////////////////////////
+	/// Array holding all of the Nations.  This will likely be a hotspot for
+	/// Empire ][.
+	///
+	/// @internal
+	/// I've tried making this compiletime static and runtime static, but
+	/// becuase Nation needs complex initialization logic, we need a full-up
+	/// initializer.  So, I've decided to make Nations a singleton and hold
+	/// nations as an array.
 	Nation nations[MAX_NATIONS] ;
 
 	/// Map of Nation names to Index.
@@ -208,17 +227,105 @@ private:  /////////////////////////////  Members  /////////////////////////////
 	/// access nameMap;
 	friend void Nation::rename( std::string_view newName ) ;
 
+
 public:  //////////////////////////// Methods /////////////////////////////////
 
-	/// Get a Nation (by Nation ID)
+	/// Get a Nation (by Nation_ID)
+	///
+	/// @param[in] index Must be between 0 and MAX_NATIONS-1
 	///
 	/// @throws std::out_of_range if index < 0 or >= MAX_NATIONS
 	Nation& operator[]( const Nation_ID index ) ;
 
 	/// Get a Nation (by name)
 	///
-	/// @throes std::out_of_range if name is not found
-	// Nation& get1 ( const std::string_view name );
+	/// @param[in] name The Nation's name.  It must be well formatted (run it
+	///                 through Nation::fixupName first) and have a length between
+	///                 1 and Nation::MAX_NAME.
+	///
+	/// @throws std::out_of_range if name is not found
+	/// @throws std::invalid_argument if `name != fixupName( name )`
+	Nation& operator[]( const std::string_view name ) ;
+
+	/// Checks if name is in Nations
+	///
+	/// This functions does *not* do Nation::fixupName first... so you should
+	/// fixup the name before calling this.
+	///
+	/// Use this to see if Nations has name... if it does, then it's safe to
+	/// call `Nations::get()["your name here"]`.
+	///
+	/// @param[in] name The Nation's name.  If must have a length between 1 and
+	///                 Nation::MAX_NAME.
+	///
+	/// @return true if name is in Nations.
+	bool contains( const std::string_view name ) const ;
+
+	/// Refresh nameMap
+	///
+	/// @throws boost_assert If there's a duplicate name.
+	void refreshNameMap() ;
+
+
+	// /////////////////////////  Nations Iterator  ////////////////////////////
+	/// Iterator of Nations
+	///
+	/// @see https://internalpointers.com/post/writing-custom-iterators-modern-cpp
+
+	struct Iterator {
+	public:
+		/// Determines the capabilities of this iterator.  Used by std::Algorithms
+		/// to pick appropriate optimizations when using the Iterator.
+		///
+		/// @todo Figure out if input_iterator_tag is the kind of iterator we want
+		using iterator_category = std::input_iterator_tag;
+
+		/// Determines how the Iterator can compute the difference between two
+		/// iterators.  We are holding Nation in an array, so this will use
+		/// array-index-pointer arithmetic to comptue the difference.
+		using difference_type = std::ptrdiff_t;
+
+		using value_type = Nation;   ///< Datatype the Iterator is iterating over
+		using pointer    = Nation*;  ///< Pointer type of the Iterator
+		using reference  = Nation&;  ///< Reference type of the Iterator
+
+		/// Constructor for the iterator.  It takes a pointer to the Nations class
+		Iterator(pointer ptr) : m_ptr(ptr) {}
+
+		/// Returns the Nation that the Iterator is currently at
+		reference operator*() const { return *m_ptr; }
+
+		/// Returns a pointer to the Nation the Iterator is currently at
+		pointer operator->() { return m_ptr; }
+
+		/// Increments the loop count of this Iterator and then return the Iterator.
+		Iterator& operator++() { m_ptr++; return *this; }
+
+		/// Increments the loop count of this iterator, returning a copy with
+		/// the value *before* the increment.
+		Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
+
+		/// Iterators are equal if they both point to the same Nation.
+		friend bool operator== (const Iterator& a, const Iterator& b) { return a.m_ptr == b.m_ptr; };
+
+		/// Iteratrors are not equal if they don't point to the same Nation.
+		friend bool operator!= (const Iterator& a, const Iterator& b) { return a.m_ptr != b.m_ptr; };
+
+	private:
+		/// Pointer to a Nation in the nations array.
+		pointer m_ptr;
+	};
+
+
+public:  //////////////////////////// Methods /////////////////////////////////
+
+	/// Returns iterator to first Nation
+	Iterator begin() { return Iterator(&nations[0]); }
+
+	/// Returns Iterator to a sentinal representing the last Nation (one past
+	/// the actual last nation).
+	Iterator end()   { return Iterator(&nations[MAX_NATIONS]); }
+
 
 	/// Return true if name is a Nation
 	bool isNation( const std::string_view name ) const ;

@@ -3,7 +3,7 @@
 //
 /// Test class for Commodity.cpp
 ///
-/// @file      CommodityTest.cpp
+/// @file      Commodities/CommodityTest.cpp
 /// @version   1.0
 ///
 /// @author    Mark Nelson <mr_nelson@icloud.com>

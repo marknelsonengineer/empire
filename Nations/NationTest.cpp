@@ -3,7 +3,7 @@
 //
 /// Test class for Nation.cpp
 ///
-/// @file      NationTest.cpp
+/// @file      Nations/NationTest.cpp
 /// @version   1.0
 ///
 /// @author    Mark Nelson <mr_nelson@icloud.com>
@@ -18,6 +18,7 @@
 #include <boost/test/execution_monitor.hpp>
 #include <string>
 #include <string_view>
+#include <iostream>  /// @TODO REMOVE
 
 //#include "EmpireExceptions.hpp"
 #include "Nation.hpp"
@@ -47,9 +48,9 @@ BOOST_AUTO_TEST_CASE( Nation_fixupName ) {
 BOOST_AUTO_TEST_CASE( Nations_getter ) {
 	Nations& nations = Nations::get();
 	nations.validate();
-	
+
 	Nation& nation = nations[0];
-	
+
 	nation.validate();
 	BOOST_CHECK( nation.getID() == 0 );
 	BOOST_CHECK( nation.getName() == "Pogo" );
@@ -91,14 +92,52 @@ BOOST_AUTO_TEST_CASE( Nations_get_bounds_on_index ) {
 
 
 
+/// Test Nations.get( name )
+BOOST_AUTO_TEST_CASE( Nations_get_name ) {
+	Nations& nations = Nations::get();
+
+	Nation& nation0 = nations["Pogo"];
+	BOOST_CHECK( nation0.getID() == 0 );
+
+	Nation& nation1 = nations["1"];
+	BOOST_CHECK( nation1.getID() == 1 );
+
+	// This demonstrates another way to get a Nation by name
+	BOOST_CHECK( Nations::get()["2"].getID() == 2 );
+
+	BOOST_CHECK_THROW( nations["Not a nation"], std::out_of_range );
+
+	BOOST_CHECK_THROW( nations[" Pogo "], std::invalid_argument );
+
+	BOOST_CHECK( nations.contains(  "Pogo" ) );
+	BOOST_CHECK( !nations.contains( " Pogo") );
+	BOOST_CHECK( !nations.contains( "Pogo ") );
+
+	BOOST_CHECK( !nations.contains( "Not a nation") );
+}
+
+
+
+/// Test basic Nations range iterator
+BOOST_AUTO_TEST_CASE( Nations_basic_range_iterator ) {
+	Nations& nations = Nations::get();
+
+	int i = 0;
+	for( auto nation : nations ) {
+		nation.validate();
+		i++;
+	}
+	BOOST_CHECK( i == MAX_NATIONS );
+}
+
 /*
 BOOST_AUTO_TEST_CASE( Nation_rename ) {
 	Nation nation = Nations::get(0);
-	
+
 	// Basic rename
 	nation.rename( "Sam" );
 	BOOST_CHECK( nation.getName() == "Sam" );
-	
+
 	// Rename to ""
 	BOOST_CHECK_THROW( nation.rename(""), std::invalid_argument );
 
@@ -123,10 +162,10 @@ BOOST_AUTO_TEST_CASE( Nation_rename ) {
 	BOOST_CHECK( nation.getName() == "Sam" );
 
 	// Test duplicate naming
-	
+
 	Nation nation5 = Nations::get(5);
 	Nation nation7 = Nations::get(7);
-		
+
 	nation7.rename( "Popular" );
    // Test renaming a "later" Nation
    try {

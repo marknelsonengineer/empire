@@ -12,7 +12,7 @@
 /// @internal  Compile with
 ///            g++ -std=c++11 test_log_default.cpp -DBOOST_LOG_DYN_LINK -lboost_log -lboost_thread -lpthread -lboost_system
 ///
-/// @file      Server/Log.hpp
+/// @file      lib/Log.hpp
 /// @version   1.0 - Initial version
 ///
 /// @author    Mark Nelson <mr_nelson@icloud.com>
