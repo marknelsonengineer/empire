@@ -185,4 +185,13 @@ BOOST_AUTO_TEST_CASE( Nation_rename ) {
 
 */
 
+
+/// Test basic Nations dump()
+BOOST_AUTO_TEST_CASE( Nations_dump ) {
+	Nations& nations = Nations::get();
+	nations.dump();
+}
+
+
+
 BOOST_AUTO_TEST_SUITE_END()

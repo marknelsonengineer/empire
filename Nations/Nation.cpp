@@ -127,6 +127,11 @@ const bool Nation::validate() const {
 }
 
 
+void Nation::dump() const {
+	LOG_TRACE << to_string( id ) << " of " << to_string( nationCounter ) << ": \"" << name << "\"";
+}
+
+
 ////////////////////////////                       ////////////////////////////
 ////////////////////////////  Nations Definitions  ////////////////////////////
 ////////////////////////////                       ////////////////////////////
@@ -195,7 +200,7 @@ void Nations::refreshNameMap() {
 
 
 /// @todo Create an appropriate function for Boost's "void assertion_failed"
-bool Nations::validate() {
+bool Nations::validate() const {
 	for( Nation_ID i = 0 ; i < MAX_NATIONS ; i++ ) {
 		BOOST_ASSERT( i == nations[i].getID() );
 		nations[i].validate();
@@ -205,5 +210,16 @@ bool Nations::validate() {
 
 	return true;  // All tests pass
 }
+
+
+void Nations::dump() const {
+	LOG_TRACE << "Nations =====================";
+	LOG_TRACE << "MAX_NATIONS = [" << to_string( MAX_NATIONS ) << "]";
+	LOG_TRACE << "Nation::MAX_NAME = [" << to_string( Nation::MAX_NAME ) << "]";
+
+	for( auto nation : nations ) {
+		nation.dump();
+	}
+} 
 
 }  // namespace empire
