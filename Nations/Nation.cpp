@@ -220,6 +220,6 @@ void Nations::dump() const {
 	for( auto nation : nations ) {
 		nation.dump();
 	}
-} 
+}
 
 }  // namespace empire
