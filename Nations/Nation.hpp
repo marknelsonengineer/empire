@@ -17,6 +17,7 @@
 #include <string>       // For the nation's name
 #include <map>          // For mapping the name to an ID number
 #include <string_view>  // For the returning name as a string_view
+//#include <boost/bimap>
 
 #include "../lib/EmpireExceptions.hpp"
 #include "../lib/Singleton.hpp"
@@ -47,8 +48,8 @@ constinit static const Nation_ID MAX_NATIONS = 8;  // @TODO Increase to 100
 //////////////////////////////  Nation Exceptions  ////////////////////////////
 //////////////////////////////                     ////////////////////////////
 
-/// Thrown when someone tries to create a Nation when they shouldn't have.  This
-/// should be fatal. When this is thown, we are telling the caller that someone
+/// Thrown when someone tries to create a Nation when they shouldn't.  This
+/// should be fatal.  When thown, we are telling the caller that someone
 /// tried to create a new Nation.  All nations are created when the Core starts
 /// and stored in the Nations object/array.  Any other Nations should not be
 /// permitted.
@@ -57,10 +58,10 @@ struct nationLimitExceededException: virtual empireException { };
 /// Thrown when someone tries to copy another Nation's name.
 struct nationNameTakenException: virtual empireException { };
 
-/// On a NationLimitExceededException, this holds the MAX_NATIONS limit.
+/// On a nationLimitExceededException, this holds the MAX_NATIONS limit.
 typedef boost::error_info<struct tag_maxNations, Nation_ID> errinfo_maxNations;
 
-/// On a NationLimitExceededException, this holds the current nationCounter.
+/// On a nationLimitExceededException, this holds the current nationCounter.
 typedef boost::error_info<struct tag_requestedId, Nation_ID> errinfo_currentNationCounter;
 
 /// On a nationNameTakenException, this holds the ID of a duplicate nation
@@ -93,7 +94,7 @@ public:  ////////////////  Constructor and Operator Overrides  ////////////////
 
 public:  ///////////////////////////  Enumerations  ///////////////////////////
 
-	/// Nation status.
+	/// Nation status
    enum Status { UNUSED     ///< Not in use
    				 ,NEW        ///< Just initialized
    				 ,VISITOR    ///< Visitor
@@ -111,7 +112,7 @@ public:  ///////////////////////////  Enumerations  ///////////////////////////
 
 private:  //////////////////////////  Static Members  /////////////////////////
 	/// An internal counter... used to assign unique ID numbers to nations and
-	/// to ensure that no more than MAX_NATIONS get created.
+	/// to ensure that no more than MAX_NATIONS are created.
 	static Nation_ID nationCounter ;
 
 
@@ -146,6 +147,8 @@ public:  /////////////////////////// Getters //////////////////////////////////
 	constexpr const Nation_ID getID() const { return id; }
 
    /// Get the name of the nation
+   ///
+   /// There's no setter.  Istead, use rename().
    const std::string_view getName() const { return std::string_view( name ); }
 
    /// Get the status of a nation
@@ -205,13 +208,13 @@ class Nations final : public Singleton<Nations>{
 public:  ///////////////////////// Constructors ///////////////////////////////
 	/// Creates and initializes the Nations of Empire ][.
 	///
-	/// token Is a protected Singleton struct... thereby preventing
+	/// `token` is a protected Singleton struct... thereby preventing
 	/// non-inherited classes from invoking this constructor.
 	Nations( token ) ;
 
 
 private:  /////////////////////////////  Members  /////////////////////////////
-	/// Array holding all of the Nations.  This will likely be a hotspot for
+	/// Array holding all of the `Nation`s.  This will likely be a hotspot for
 	/// Empire ][.
 	///
 	/// @internal
@@ -219,11 +222,11 @@ private:  /////////////////////////////  Members  /////////////////////////////
 	/// becuase Nation needs complex initialization logic, we need a full-up
 	/// initializer.  So, I've decided to make Nations a singleton and hold
 	/// nations as an array.
-	Nation nations[MAX_NATIONS] ;
-//	blArray<Nation, MAX_NATIONS> nations;
+	Nation nations[MAX_NATIONS] ;  /// @todo: Use blArray
+//	blArray<Nation, MAX_NATIONS> nations ;
 
 	/// Map of Nation names to Index.
-	std::map<std::string_view, Nation_ID> nameMap ;
+	std::map<std::string_view, Nation_ID> nameMap ;  /// @todo: Use bimap
 
 	/// Declare Nation::rename() to be a friend of Nations... so it can directly
 	/// access nameMap;
@@ -251,7 +254,7 @@ public:  //////////////////////////// Methods /////////////////////////////////
 
 	/// Checks if name is in Nations
 	///
-	/// This functions does *not* do Nation::fixupName first... so you should
+	/// This method does *not* do Nation::fixupName first... so you should
 	/// fixup the name before calling this.
 	///
 	/// Use this to see if Nations has name... if it does, then it's safe to
@@ -269,6 +272,11 @@ public:  //////////////////////////// Methods /////////////////////////////////
 	void refreshNameMap() ;
 
 
+	// /////////////////////////  Nations Iterator  ////////////////////////////
+	/// Iterator of Nations
+	///
+	/// @see https://github.com/navyenzo/blIteratorAPI
+	/// @see https://internalpointers.com/post/writing-custom-iterators-modern-cpp
 
 	typedef blRawIterator<Nation>              iterator;
 	typedef blRawIterator<const Nation>        const_iterator;
@@ -277,63 +285,13 @@ public:  //////////////////////////// Methods /////////////////////////////////
 	typedef blRawReverseIterator<const Nation> const_reverse_iterator;
 
 
-	// /////////////////////////  Nations Iterator  ////////////////////////////
-	/// Iterator of Nations
-	///
-	/// @see https://internalpointers.com/post/writing-custom-iterators-modern-cpp
-/*
-	struct Iterator {
-	public:
-		/// Determines the capabilities of this iterator.  Used by std::Algorithms
-		/// to pick appropriate optimizations when using the Iterator.
-		///
-		/// @todo Figure out if input_iterator_tag is the kind of iterator we want
-		using iterator_category = std::input_iterator_tag;
-
-		/// Determines how the Iterator can compute the difference between two
-		/// iterators.  We are holding Nation in an array, so this will use
-		/// array-index-pointer arithmetic to comptue the difference.
-		using difference_type = std::ptrdiff_t;
-
-		using value_type = Nation;   ///< Datatype the Iterator is iterating over
-		using pointer    = Nation*;  ///< Pointer type of the Iterator
-		using reference  = Nation&;  ///< Reference type of the Iterator
-
-		/// Constructor for the iterator.  It takes a pointer to the Nations class
-		Iterator(pointer ptr) : m_ptr(ptr) {}
-
-		/// Returns the Nation that the Iterator is currently at
-		reference operator*() const { return *m_ptr; }
-
-		/// Returns the const Nation that the Iterator is currently at
-		//const reference operator*() const { return *m_ptr; }
-
-		/// Returns a pointer to the Nation the Iterator is currently at
-		pointer operator->() { return m_ptr; }
-
-		/// Increments the loop count of this Iterator and then return the Iterator.
-		Iterator& operator++() { m_ptr++; return *this; }
-
-		/// Increments the loop count of this iterator, returning a copy with
-		/// the value *before* the increment.
-		Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
-
-		/// Iterators are equal if they both point to the same Nation.
-		friend bool operator== (const Iterator& a, const Iterator& b) { return a.m_ptr == b.m_ptr; };
-
-		/// Iteratrors are not equal if they don't point to the same Nation.
-		friend bool operator!= (const Iterator& a, const Iterator& b) { return a.m_ptr != b.m_ptr; };
-
-	private:
-		/// Pointer to a Nation in the nations array.
-		pointer m_ptr;
-	};
-*/
-
 public:  //////////////////////////// Methods /////////////////////////////////
 
-
+	/// Returns iterator to first Nation
 	iterator begin(){ return iterator( &nations[0] ); }
+
+	/// Returns Iterator to a sentinal representing the last Nation (one past
+	/// the actual last nation).
 	iterator end(){ return iterator( &nations[MAX_NATIONS] ); }
 
 	const_iterator cbegin(){ return const_iterator( &nations[0] ); }
@@ -345,13 +303,6 @@ public:  //////////////////////////// Methods /////////////////////////////////
 	const_reverse_iterator crbegin(){ return const_reverse_iterator( &nations[MAX_NATIONS - 1] ); }
 	const_reverse_iterator crend(){ return const_reverse_iterator( &nations[-1] ); }
 
-
-	/// Returns iterator to first Nation
-	//Iterator begin() { return Iterator(&nations[0]); }
-
-	/// Returns Iterator to a sentinal representing the last Nation (one past
-	/// the actual last nation).
-	//Iterator end()   { return Iterator(&nations[MAX_NATIONS]); }
 
 	/// Return true if name is a Nation
 	bool isNation( const std::string_view name ) const ;
