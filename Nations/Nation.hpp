@@ -279,28 +279,45 @@ public:  //////////////////////////// Methods /////////////////////////////////
 	/// @see https://internalpointers.com/post/writing-custom-iterators-modern-cpp
 
 	typedef blRawIterator<Nation>              iterator;
+
+	/// Const Nations iterator
 	typedef blRawIterator<const Nation>        const_iterator;
 
+	/// Reverse Nations iterator
 	typedef blRawReverseIterator<Nation>       reverse_iterator;
+
+	/// Const Reverse Nations iterator
 	typedef blRawReverseIterator<const Nation> const_reverse_iterator;
 
 
 public:  //////////////////////////// Methods /////////////////////////////////
 
-	/// Returns iterator to first Nation
+	/// Returns an iterator to the first Nation
 	iterator begin(){ return iterator( &nations[0] ); }
 
-	/// Returns Iterator to a sentinal representing the last Nation (one past
+	/// Returns an iterator to a sentinal representing the last Nation (one past
 	/// the actual last nation).
 	iterator end(){ return iterator( &nations[MAX_NATIONS] ); }
 
+	/// Returns the constant iterator to the first Nation
 	const_iterator cbegin(){ return const_iterator( &nations[0] ); }
+
+	/// Returns a constant iterator to a sentinal representing the last Nation
+	/// (one past the actual last nation).
 	const_iterator cend(){ return const_iterator( &nations[MAX_NATIONS] ); }
 
+	/// Returns a reverse iterator to the last Nation
 	reverse_iterator rbegin(){ return reverse_iterator( &nations[MAX_NATIONS - 1] ); }
+
+	/// Returns a reverse iterator to a sentinal representing the first Nation
+	/// (one past the actual first nation).
 	reverse_iterator rend(){ return reverse_iterator( &nations[-1] ); }
 
+	/// Returns a constant reverse iterator to the last Nation
 	const_reverse_iterator crbegin(){ return const_reverse_iterator( &nations[MAX_NATIONS - 1] ); }
+
+	/// Returns a constant reverse iterator to a sentinal representing the
+	/// first Nation (one past the actual first nation).
 	const_reverse_iterator crend(){ return const_reverse_iterator( &nations[-1] ); }
 
 
