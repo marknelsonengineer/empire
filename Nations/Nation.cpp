@@ -122,6 +122,8 @@ const bool Nation::validate() const {
 	BOOST_ASSERT( name.size() > 0 );
 	BOOST_ASSERT( name.size() <= MAX_NAME );
 
+	BOOST_ASSERT( fixupName( name ) == name );
+
 	/// @todo Build validation for all members
 	return true;  // All tests pass
 }
@@ -212,14 +214,42 @@ bool Nations::validate() const {
 }
 
 
+#define const_range_for_loop( item, container ) {  \
+	auto && __range = container ;                   \
+	auto __begin = __range.cbegin() ;               \
+	auto __end = __range.cend() ;                   \
+	for ( ; __begin != __end; ++__begin) {          \
+		const auto& item = *__begin;                 \
+	                                                \
+
+
 void Nations::dump() const {
 	LOG_TRACE << "Nations =====================";
 	LOG_TRACE << "MAX_NATIONS = [" << to_string( MAX_NATIONS ) << "]";
 	LOG_TRACE << "Nation::MAX_NAME = [" << to_string( Nation::MAX_NAME ) << "]";
 
-	for( auto nation : nations ) {
+//	const auto& const_container = nations;
+//
+//	for( const auto& nation : const_container ) {
+//		nation.dump();
+//	}
+
+	const_range_for_loop( nation, nations )
 		nation.dump();
-	}
+	}}
+
+
+auto && __range = nations ;
+auto __begin = __range.cbegin() ;
+auto __end = __range.cend() ;
+for ( ; __begin != __end; ++__begin) {
+	const auto& nation = *__begin;
+	//loop-statement
+	nation.dump();
+}
+
+
+
 }
 
 }  // namespace empire

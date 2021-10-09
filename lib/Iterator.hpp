@@ -1,7 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Empire ][
 //
-/// Templates used to create array-based iterators.  This is a header-file only
+/// Templates used to create array-based iterators.
+/// This is a header-file only.
 ///
 /// @todo      Cleanup the documentation
 ///
@@ -17,14 +18,17 @@
 
 #pragma once
 
+#include <iterator>
 
+
+/// Define a Raw Iterator class based on the datatype in `blDataType`
+///
 template<typename blDataType>
-class blRawIterator : public std::iterator<std::random_access_iterator_tag,
-                                           blDataType,
-                                           ptrdiff_t,
-                                           blDataType*,
-                                           blDataType&>
-{
+class blRawIterator : public std::iterator<std::contiguous_iterator_tag
+                                          ,blDataType
+                                          ,ptrdiff_t
+                                          ,blDataType*
+                                          ,blDataType& > {
 public:
 
     blRawIterator(blDataType* ptr = nullptr){m_ptr = ptr;}
@@ -34,8 +38,7 @@ public:
     blRawIterator<blDataType>&                  operator=(const blRawIterator<blDataType>& rawIterator) = default;
     blRawIterator<blDataType>&                  operator=(blDataType* ptr){m_ptr = ptr;return (*this);}
 
-    operator                                    bool()const
-    {
+    operator                                    bool()const {
         if(m_ptr)
             return true;
         else
@@ -56,9 +59,9 @@ public:
 
     ptrdiff_t                                   operator-(const blRawIterator<blDataType>& rawIterator){return std::distance(rawIterator.getPtr(),this->getPtr());}
 
-    blDataType&                                 operator*(){return *m_ptr;}
-    const blDataType&                           operator*()const{return *m_ptr;}
-    blDataType*                                 operator->(){return m_ptr;}
+    blDataType&                                 operator*()       { return *m_ptr; }
+    const blDataType&                           operator*() const { return *m_ptr; }
+    blDataType*                                 operator->()      { return  m_ptr; }
 
     blDataType*                                 getPtr()const{return m_ptr;}
     const blDataType*                           getConstPtr()const{return m_ptr;}
@@ -66,13 +69,12 @@ public:
 protected:
 
     blDataType*                                 m_ptr;
-};
+} ;  // blRawIterator
 
 
 
 template<typename blDataType>
-class blRawReverseIterator : public blRawIterator<blDataType>
-{
+class blRawReverseIterator : public blRawIterator<blDataType> {
 public:
 
     blRawReverseIterator(blDataType* ptr = nullptr):blRawIterator<blDataType>(ptr){}
@@ -96,7 +98,7 @@ public:
     ptrdiff_t                                   operator-(const blRawReverseIterator<blDataType>& rawReverseIterator){return std::distance(this->getPtr(),rawReverseIterator.getPtr());}
 
     blRawIterator<blDataType>                   base(){blRawIterator<blDataType> forwardIterator(this->m_ptr); ++forwardIterator; return forwardIterator;}
-};
+} ;  // blRawReverseIterator
 
 
 
@@ -104,10 +106,9 @@ public:
 
 
 
-template<std::contiguous_iterator blDataType, size_t blArraySize>
-
-class blArray
-{
+//template<std::contiguous_iterator blDataType, size_t blArraySize>
+template<typename blDataType, size_t blArraySize>
+class blArray {
 public: // Public typedefs
 
     typedef blRawIterator<blDataType>                       iterator;
@@ -119,41 +120,31 @@ public: // Public typedefs
 public: // Constructors and destructors
 
     // Default constructor
-
     blArray();
 
     // Copy constructor
-
-    blArray(const blArray<blDataType,blArraySize>& array) = default;
+    blArray( const blArray<blDataType, blArraySize>& array ) = default;
 
     // Move constructor
-
-    blArray(blArray<blDataType,blArraySize>&& array) = default;
+    blArray( blArray<blDataType, blArraySize>&& array ) = default;
 
     // Initializer-list constructor
-
-    blArray(std::initializer_list<blDataType> theList);
+    blArray( std::initializer_list<blDataType> theList );
 
     // Copy constructor from a different size and/or different data type array
-
     template<typename blDataType2,size_t blArraySize2>
-    blArray(const blArray<blDataType2,blArraySize2>& array);
+    blArray( const blArray<blDataType2, blArraySize2>& array );
 
     // Constructor using a raw array
-
     template<typename blDataType2,size_t blArraySize2>
-    blArray(const blDataType2 (&staticArray)[blArraySize2]);
+    blArray( const blDataType2 (&staticArray)[blArraySize2] );
 
     // Constructor using iterators
-
     template<typename blIteratorType>
-    blArray(blIteratorType sourceBegin,
-            blIteratorType sourceEnd);
+    blArray( blIteratorType sourceBegin, blIteratorType sourceEnd );
 
     // Destructor
-
-    ~blArray()
-    {
+    ~blArray() {
     }
 
 public: // Assignment operators
@@ -171,17 +162,17 @@ public: // Assignment operators
 public: // Public functions
 
     // Additional operator overloads
-
-    bool                                                    operator==(const blArray<blDataType,blArraySize>& array)const;
-    bool                                                    operator!=(const blArray<blDataType,blArraySize>& array)const;
+    bool                                                    operator==(const blArray<blDataType, blArraySize>& array)const;
+    bool                                                    operator!=(const blArray<blDataType, blArraySize>& array)const;
 
     // Element access functions
-
     blDataType&                                             operator[](const size_t elementIndex);
     const blDataType&                                       operator[](const size_t elementIndex)const;
 
-    // Functions used to return the array size
+/// MARK:  I added this code here... but I'm not sure it's right
+//	blDataType& operator*() const { return *m_ptr; }
 
+    // Functions used to return the array size
     size_t                                                  length()const;
     size_t                                                  size()const;
     size_t                                                  max_size()const;
@@ -189,14 +180,13 @@ public: // Public functions
 
     // Function used to swap values between two arrays of equal length
 
-    void                                                    swap(const blArray<blDataType,blArraySize>& Array);
+    void                                                    swap(const blArray<blDataType, blArraySize>& Array);
 
     // Function used to fill the array with a specified value
 
     void                                                    fill(const blDataType& value);
 
     // Function used to return a reference to the front and back elements
-
     blDataType&                                             front();
     const blDataType&                                       front()const;
 
@@ -204,13 +194,11 @@ public: // Public functions
     const blDataType&                                       back()const;
 
     // Functions used to get a raw pointer to the first element
-
     blDataType*                                             data();
     const blDataType*                                       data()const;
     const blDataType*                                       c_str()const;
 
     // Functions used to get iterators to this container
-
     iterator                                                begin();
     iterator                                                end();
     const_iterator                                          cbegin()const;
@@ -223,76 +211,60 @@ public: // Public functions
 
 private: // Private data
 
-    // The raw array
-
+    /// The raw array
     blDataType                                              m_container[blArraySize];
 
-    // The null end element useful when using this array as a constant
-    // character string
-
+    /// The null end element is useful when using this array as a constant
+    /// character string
     blDataType                                              m_nullChar;
-};
-//-------------------------------------------------------------------
+
+};  // blArray
 
 
-//-------------------------------------------------------------------
-template<typename blDataType,size_t blArraySize>
-inline blArray<blDataType,blArraySize>::blArray() : m_nullChar(0)
-{
+// Default constructor
+template<typename blDataType, size_t blArraySize>
+//inline blArray<blDataType, blArraySize>::blArray() : m_nullChar(0) {
+inline blArray<blDataType, blArraySize>::blArray() {
 }
-//-------------------------------------------------------------------
 
 
-//-------------------------------------------------------------------
-template<typename blDataType,size_t blArraySize>
-inline blArray<blDataType,blArraySize>::blArray(std::initializer_list<blDataType> theList) : m_nullChar(0)
-{
+// Initializer-list constructor
+template<typename blDataType, size_t blArraySize>
+inline blArray<blDataType, blArraySize>::blArray(std::initializer_list<blDataType> theList) : m_nullChar(0) {
     auto Iter1 = this->begin();
     auto Iter2 = theList.begin();
 
     for(;
         Iter1 != this->end(),Iter2 != theList.end();
-        ++Iter1,++Iter2)
-    {
+        ++Iter1,++Iter2) {
         (*Iter1) = (*Iter2);
     }
 }
-//-------------------------------------------------------------------
 
 
-//-------------------------------------------------------------------
-template<typename blDataType,size_t blArraySize>
-template<typename blDataType2,size_t blArraySize2>
-inline blArray<blDataType,blArraySize>::blArray(const blArray<blDataType2,blArraySize2>& array) : m_nullChar(0)
-{
-    auto Iter1 = this->begin();
-    auto Iter2 = array.begin();
+/// Copy constructor
+template<typename blDataType, size_t blArraySize>
+template<typename blDataType2, size_t blArraySize2>
+inline blArray<blDataType, blArraySize>::blArray(const blArray<blDataType2, blArraySize2>& array) : m_nullChar(0) {
+	auto Iter1 = this->begin();
+	auto Iter2 = array.begin();
 
-    for(;
-        Iter1 != this->end(),Iter2 != array.end();
-        ++Iter1,++Iter2)
-    {
-        (*Iter1) = (*Iter2);
-    }
+	for( ; Iter1 != this->end(),Iter2 != array.end() ; ++Iter1,++Iter2) {
+		(*Iter1) = (*Iter2);
+	}
 }
-//-------------------------------------------------------------------
 
 
-//-------------------------------------------------------------------
-template<typename blDataType,size_t blArraySize>
-template<typename blDataType2,size_t blArraySize2>
-inline blArray<blDataType,blArraySize>::blArray(const blDataType2 (&staticArray)[blArraySize2]) : m_nullChar(0)
-{
-    auto Iter1 = this->begin();
+// Move constructor
+template<typename blDataType, size_t blArraySize>
+template<typename blDataType2, size_t blArraySize2>
+inline blArray<blDataType, blArraySize>::blArray(const blDataType2 (&staticArray)[blArraySize2]) : m_nullChar(0) {
+	auto Iter1 = this->begin();
 
-    for(size_t i = 0;
-        Iter1 != this->end(), i < blArraySize2;
-        ++Iter1,++i)
-    {
-        (*Iter1) = staticArray[i];
-    }
+	for( size_t i = 0 ; Iter1 != this->end(), i < blArraySize2 ; ++Iter1,++i) {
+		(*Iter1) = staticArray[i];
+	}
 }
-//-------------------------------------------------------------------
 
 
 //-------------------------------------------------------------------
@@ -523,67 +495,59 @@ inline const blDataType* blArray<blDataType,blArraySize>::data()const
 
 //-------------------------------------------------------------------
 template<typename blDataType,size_t blArraySize>
-inline const blDataType* blArray<blDataType,blArraySize>::c_str()const
-{
+inline const blDataType* blArray<blDataType,blArraySize>::c_str()const {
     return &m_container[0];
 }
 //-------------------------------------------------------------------
 
 
-//-------------------------------------------------------------------
-// The iterators
-//-------------------------------------------------------------------
-template<typename blDataType,size_t blArraySize>
-inline typename blArray<blDataType,blArraySize>::iterator blArray<blDataType,blArraySize>::begin()
-{
+//////////////////////////   The Iterators   ////////////////////////
+
+template<typename blDataType, size_t blArraySize>
+inline typename blArray<blDataType, blArraySize>::iterator blArray<blDataType, blArraySize>::begin() {
     return &(m_container[0]);
 }
 
-template<typename blDataType,size_t blArraySize>
-inline typename blArray<blDataType,blArraySize>::iterator blArray<blDataType,blArraySize>::end()
-{
+template<typename blDataType, size_t blArraySize>
+inline typename blArray<blDataType, blArraySize>::iterator blArray<blDataType, blArraySize>::end() {
     return &(m_container[blArraySize]);
 }
-template<typename blDataType,size_t blArraySize>
-inline typename blArray<blDataType,blArraySize>::const_iterator blArray<blDataType,blArraySize>::cbegin()const
-{
+
+template<typename blDataType, size_t blArraySize>
+inline typename blArray<blDataType, blArraySize>::const_iterator blArray<blDataType, blArraySize>::cbegin() const {
     return &(m_container[0]);
 }
 
-template<typename blDataType,size_t blArraySize>
-inline typename blArray<blDataType,blArraySize>::const_iterator blArray<blDataType,blArraySize>::cend()const
-{
+template<typename blDataType, size_t blArraySize>
+inline typename blArray<blDataType, blArraySize>::const_iterator blArray<blDataType, blArraySize>::cend() const {
     return &(m_container[blArraySize]);
 }
-template<typename blDataType,size_t blArraySize>
-inline typename blArray<blDataType,blArraySize>::reverse_iterator blArray<blDataType,blArraySize>::rbegin()
-{
+
+template<typename blDataType, size_t blArraySize>
+inline typename blArray<blDataType,blArraySize>::reverse_iterator blArray<blDataType,blArraySize>::rbegin() {
     return &(m_container[blArraySize - 1]);
 }
 
-template<typename blDataType,size_t blArraySize>
-inline typename blArray<blDataType,blArraySize>::reverse_iterator blArray<blDataType,blArraySize>::rend()
-{
+template<typename blDataType, size_t blArraySize>
+inline typename blArray<blDataType, blArraySize>::reverse_iterator blArray<blDataType, blArraySize>::rend() {
     return &(m_container[-1]);
 }
-template<typename blDataType,size_t blArraySize>
-inline typename blArray<blDataType,blArraySize>::const_reverse_iterator blArray<blDataType,blArraySize>::crbegin()const
-{
+
+template<typename blDataType, size_t blArraySize>
+inline typename blArray<blDataType, blArraySize>::const_reverse_iterator blArray<blDataType, blArraySize>::crbegin()const {
     return &(m_container[blArraySize - 1]);
 }
 
-template<typename blDataType,size_t blArraySize>
-inline typename blArray<blDataType,blArraySize>::const_reverse_iterator blArray<blDataType,blArraySize>::crend()const
-{
+template<typename blDataType, size_t blArraySize>
+inline typename blArray<blDataType, blArraySize>::const_reverse_iterator blArray<blDataType, blArraySize>::crend()const {
     return &(m_container[-1]);
 }
-//-------------------------------------------------------------------
 
 
-//-------------------------------------------------------------------
-// Function used to automatically deduct
-// the type and size of array from a raw
-// array
+
+/// Function used to automatically deduct
+/// the type and size of array from a raw
+/// array
 //-------------------------------------------------------------------
 template<typename blDataType,size_t blArraySize>
 blArray<blDataType,blArraySize> getArray(const blDataType (&staticArray)[blArraySize])
@@ -593,14 +557,11 @@ blArray<blDataType,blArraySize> getArray(const blDataType (&staticArray)[blArray
 //-------------------------------------------------------------------
 
 
-//-------------------------------------------------------------------
-// Function used to automatically deduct
-// the type and size of array from a NULL
-// terminated array
-//-------------------------------------------------------------------
+/// Automatically deduct the type and size of array from a NULL
+/// terminated array
+///
 template<typename blDataType,size_t blArraySize>
 blArray<blDataType,blArraySize - 1> getArrayFromNullTerminated(const blDataType (&staticArray)[blArraySize])
 {
     return blArray<blDataType,blArraySize - 1>(staticArray);
 }
-//-------------------------------------------------------------------

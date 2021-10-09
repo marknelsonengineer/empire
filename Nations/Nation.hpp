@@ -17,7 +17,8 @@
 #include <string>       // For the nation's name
 #include <map>          // For mapping the name to an ID number
 #include <string_view>  // For the returning name as a string_view
-//#include <boost/bimap>
+// #include <boost/bimap>
+#include <array>        // For the array
 
 #include "../lib/EmpireExceptions.hpp"
 #include "../lib/Singleton.hpp"
@@ -81,6 +82,8 @@ typedef boost::error_info<struct tag_requestedId, std::string_view> errinfo_Nati
 ///
 /// By convention, in Empire, we call Countries, Territories, and/or Soverign
 /// States... collectively "Nation".
+///
+/// @internal This class is `final` so it can't be subclassed.
 ///
 class Nation final {
 public:  ////////////////  Constructor and Operator Overrides  ////////////////
@@ -148,7 +151,7 @@ public:  /////////////////////////// Getters //////////////////////////////////
 
    /// Get the name of the nation
    ///
-   /// There's no setter.  Istead, use rename().
+   /// There's no setter.  Instead, use rename().
    const std::string_view getName() const { return std::string_view( name ); }
 
    /// Get the status of a nation
@@ -204,7 +207,9 @@ public:  //////////////////////////// Methods /////////////////////////////////
 ///
 /// @pattern Singleton:  Nations is a singleton
 ///
-class Nations final : public Singleton<Nations>{
+/// @internal This class is `final` so it can't be subclassed.
+///
+class Nations final : public Singleton<Nations> {
 public:  ///////////////////////// Constructors ///////////////////////////////
 	/// Creates and initializes the Nations of Empire ][.
 	///
@@ -222,8 +227,9 @@ private:  /////////////////////////////  Members  /////////////////////////////
 	/// becuase Nation needs complex initialization logic, we need a full-up
 	/// initializer.  So, I've decided to make Nations a singleton and hold
 	/// nations as an array.
-	Nation nations[MAX_NATIONS] ;  /// @todo: Use blArray
+//	Nation nations[MAX_NATIONS] ;  /// @todo: Use blArray
 //	blArray<Nation, MAX_NATIONS> nations ;
+	std::array<Nation, MAX_NATIONS> nations;
 
 	/// Map of Nation names to Index.
 	std::map<std::string_view, Nation_ID> nameMap ;  /// @todo: Use bimap
@@ -330,6 +336,11 @@ public:  //////////////////////////// Methods /////////////////////////////////
    /// Dump information about Nations to the TRACE_LOG
    void dump() const ;
 
-};  // class Nations
+/*
+/// Experimental . discard if I can get this working
+private:  //////////////////////////// Methods /////////////////////////////////
+	const inline blArray<Nation, MAX_NATIONS> get_nations_as_const() const { return nations; }
+*/
 
+};  // class Nations
 }  // namespace empire
