@@ -105,9 +105,9 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 
 
-
-//template<std::contiguous_iterator blDataType, size_t blArraySize>
-template<typename blDataType, size_t blArraySize>
+/*
+template<std::contiguous_iterator blDataType, size_t blArraySize>
+//template<typename blDataType, size_t blArraySize>
 class blArray {
 public: // Public typedefs
 
@@ -565,3 +565,5 @@ blArray<blDataType,blArraySize - 1> getArrayFromNullTerminated(const blDataType 
 {
     return blArray<blDataType,blArraySize - 1>(staticArray);
 }
+
+*/

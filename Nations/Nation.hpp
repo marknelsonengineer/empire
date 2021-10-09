@@ -17,12 +17,10 @@
 #include <string>       // For the nation's name
 #include <map>          // For mapping the name to an ID number
 #include <string_view>  // For the returning name as a string_view
-// #include <boost/bimap>
-#include <array>        // For the array
+#include <array>        // For array<Nation, MAX_NATIONS> nations
 
 #include "../lib/EmpireExceptions.hpp"
 #include "../lib/Singleton.hpp"
-#include "../lib/Iterator.hpp"
 
 namespace empire {
 
@@ -208,6 +206,11 @@ public:  //////////////////////////// Methods /////////////////////////////////
 /// @pattern Singleton:  Nations is a singleton
 ///
 /// @internal This class is `final` so it can't be subclassed.
+/// @internal `nations` is held as a `std::array<Nation, MAX_NATIONS>` array.
+///           I worked on this for a long time, trying custom iterators, 
+///           arrays, templates w/ concepts.  In the end, I decided to use the
+///           `std::array implementation`, hope that it's fast enough and optimize
+///           later if it's not.
 ///
 class Nations final : public Singleton<Nations> {
 public:  ///////////////////////// Constructors ///////////////////////////////
@@ -226,9 +229,7 @@ private:  /////////////////////////////  Members  /////////////////////////////
 	/// I've tried making this compiletime static and runtime static, but
 	/// becuase Nation needs complex initialization logic, we need a full-up
 	/// initializer.  So, I've decided to make Nations a singleton and hold
-	/// nations as an array.
-//	Nation nations[MAX_NATIONS] ;  /// @todo: Use blArray
-//	blArray<Nation, MAX_NATIONS> nations ;
+	/// nations as a `std::array<Nation, MAX_NATIONS>`.
 	std::array<Nation, MAX_NATIONS> nations;
 
 	/// Map of Nation names to Index.
@@ -283,48 +284,48 @@ public:  //////////////////////////// Methods /////////////////////////////////
 	///
 	/// @see https://github.com/navyenzo/blIteratorAPI
 	/// @see https://internalpointers.com/post/writing-custom-iterators-modern-cpp
-
-	typedef blRawIterator<Nation>              iterator;
+	/// @see https://stackoverflow.com/questions/3582608/how-to-correctly-implement-custom-iterators-and-const-iterators
+	typedef std::array<Nation, MAX_NATIONS>::iterator               iterator;
 
 	/// Const Nations iterator
-	typedef blRawIterator<const Nation>        const_iterator;
+	typedef std::array<Nation, MAX_NATIONS>::const_iterator         const_iterator;
 
 	/// Reverse Nations iterator
-	typedef blRawReverseIterator<Nation>       reverse_iterator;
+	typedef std::array<Nation, MAX_NATIONS>::reverse_iterator       reverse_iterator;
 
 	/// Const Reverse Nations iterator
-	typedef blRawReverseIterator<const Nation> const_reverse_iterator;
+	typedef std::array<Nation, MAX_NATIONS>::const_reverse_iterator const_reverse_iterator;
 
 
 public:  //////////////////////////// Methods /////////////////////////////////
 
 	/// Returns an iterator to the first Nation
-	iterator begin(){ return iterator( &nations[0] ); }
+	iterator begin() { return nations.begin(); }
 
 	/// Returns an iterator to a sentinal representing the last Nation (one past
 	/// the actual last nation).
-	iterator end(){ return iterator( &nations[MAX_NATIONS] ); }
+	iterator end() { return nations.end(); }
 
 	/// Returns the constant iterator to the first Nation
-	const_iterator cbegin(){ return const_iterator( &nations[0] ); }
+	const_iterator cbegin() { return nations.cbegin(); }
 
 	/// Returns a constant iterator to a sentinal representing the last Nation
 	/// (one past the actual last nation).
-	const_iterator cend(){ return const_iterator( &nations[MAX_NATIONS] ); }
+	const_iterator cend() { return nations.cend(); }
 
 	/// Returns a reverse iterator to the last Nation
-	reverse_iterator rbegin(){ return reverse_iterator( &nations[MAX_NATIONS - 1] ); }
+	reverse_iterator rbegin() { return nations.rbegin(); }
 
 	/// Returns a reverse iterator to a sentinal representing the first Nation
 	/// (one past the actual first nation).
-	reverse_iterator rend(){ return reverse_iterator( &nations[-1] ); }
+	reverse_iterator rend() { return nations.rend(); }
 
 	/// Returns a constant reverse iterator to the last Nation
-	const_reverse_iterator crbegin(){ return const_reverse_iterator( &nations[MAX_NATIONS - 1] ); }
+	const_reverse_iterator crbegin() { return nations.crbegin(); }
 
 	/// Returns a constant reverse iterator to a sentinal representing the
 	/// first Nation (one past the actual first nation).
-	const_reverse_iterator crend(){ return const_reverse_iterator( &nations[-1] ); }
+	const_reverse_iterator crend() { return nations.crend(); }
 
 
 	/// Return true if name is a Nation
@@ -335,12 +336,6 @@ public:  //////////////////////////// Methods /////////////////////////////////
 
    /// Dump information about Nations to the TRACE_LOG
    void dump() const ;
-
-/*
-/// Experimental . discard if I can get this working
-private:  //////////////////////////// Methods /////////////////////////////////
-	const inline blArray<Nation, MAX_NATIONS> get_nations_as_const() const { return nations; }
-*/
 
 };  // class Nations
 }  // namespace empire

@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE( Nation_fixupName ) {
 
 
 
-/// Basic test of Nations static
+/// Basic test of a simple Nations getter
 BOOST_AUTO_TEST_CASE( Nations_getter ) {
 	Nations& nations = Nations::get();
 	nations.validate();
@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE( Nations_get_bounds_on_index ) {
 
 
 
-/// Test Nations.get( name )
+/// Test Nations.get( name ) and Nations.contains( name )
 BOOST_AUTO_TEST_CASE( Nations_get_name ) {
 	Nations& nations = Nations::get();
 
@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE( Nations_basic_range_iterator ) {
 	Nations& nations = Nations::get();
 
 	int i = 0;
-	for( auto nation : nations ) {
+	for( const auto& nation : nations ) {
 		nation.validate();
 		i++;
 	}

@@ -39,7 +39,7 @@ Nation::Nation() : id(nationCounter) {
 		                                     << errinfo_maxNations( MAX_NATIONS ) ;
 	}
 
-	rename( to_string( id ));  // Set the name
+	rename( fixupName( to_string( id )));  // Set the name
 
 	status = NEW;
 
@@ -203,6 +203,7 @@ void Nations::refreshNameMap() {
 
 /// @todo Create an appropriate function for Boost's "void assertion_failed"
 bool Nations::validate() const {
+	// Use a tradational for loop so we can compare getID and i
 	for( Nation_ID i = 0 ; i < MAX_NATIONS ; i++ ) {
 		BOOST_ASSERT( i == nations[i].getID() );
 		nations[i].validate();
@@ -214,42 +215,15 @@ bool Nations::validate() const {
 }
 
 
-#define const_range_for_loop( item, container ) {  \
-	auto && __range = container ;                   \
-	auto __begin = __range.cbegin() ;               \
-	auto __end = __range.cend() ;                   \
-	for ( ; __begin != __end; ++__begin) {          \
-		const auto& item = *__begin;                 \
-	                                                \
-
-
+/// Dump the current state of all of the Nations to the console/log.
 void Nations::dump() const {
 	LOG_TRACE << "Nations =====================";
 	LOG_TRACE << "MAX_NATIONS = [" << to_string( MAX_NATIONS ) << "]";
 	LOG_TRACE << "Nation::MAX_NAME = [" << to_string( Nation::MAX_NAME ) << "]";
 
-//	const auto& const_container = nations;
-//
-//	for( const auto& nation : const_container ) {
-//		nation.dump();
-//	}
-
-	const_range_for_loop( nation, nations )
+	for( const auto& nation : nations ) {
 		nation.dump();
-	}}
-
-
-auto && __range = nations ;
-auto __begin = __range.cbegin() ;
-auto __end = __range.cend() ;
-for ( ; __begin != __end; ++__begin) {
-	const auto& nation = *__begin;
-	//loop-statement
-	nation.dump();
-}
-
-
-
+	}
 }
 
 }  // namespace empire
