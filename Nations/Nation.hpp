@@ -142,6 +142,10 @@ private:  /////////////////////////////  Members  /////////////////////////////
 	/// The status of the nation
 	Status status ;
 
+	/// Declare Nations to be a friend class, so it can set the name during
+	/// Nations+Nation constructors.
+	friend class Nations ;
+
 
 public:  /////////////////////////// Getters //////////////////////////////////
 	/// Get the ID of the nation
@@ -207,7 +211,7 @@ public:  //////////////////////////// Methods /////////////////////////////////
 ///
 /// @internal This class is `final` so it can't be subclassed.
 /// @internal `nations` is held as a `std::array<Nation, MAX_NATIONS>` array.
-///           I worked on this for a long time, trying custom iterators, 
+///           I worked on this for a long time, trying custom iterators,
 ///           arrays, templates w/ concepts.  In the end, I decided to use the
 ///           `std::array implementation`, hope that it's fast enough and optimize
 ///           later if it's not.
@@ -230,10 +234,14 @@ private:  /////////////////////////////  Members  /////////////////////////////
 	/// becuase Nation needs complex initialization logic, we need a full-up
 	/// initializer.  So, I've decided to make Nations a singleton and hold
 	/// nations as a `std::array<Nation, MAX_NATIONS>`.
-	std::array<Nation, MAX_NATIONS> nations;
+	std::array<Nation, MAX_NATIONS> nations ;
 
 	/// Map of Nation names to Index.
-	std::map<std::string_view, Nation_ID> nameMap ;  /// @todo: Use bimap
+	///
+	/// @internal
+	/// Don't martial this to a file... this is a temporal data structure.
+	/// Use `rebuildNameMap()` to populate it.
+	std::map<std::string_view, Nation_ID> nameMap ;
 
 	/// Declare Nation::rename() to be a friend of Nations... so it can directly
 	/// access nameMap;

@@ -34,12 +34,19 @@ Nation_ID Nation::nationCounter = 0;
 
 
 Nation::Nation() : id(nationCounter) {
+
 	if( nationCounter >= MAX_NATIONS ) {  // ...we have too many Nations
 		throw nationLimitExceededException() << errinfo_currentNationCounter( nationCounter )
 		                                     << errinfo_maxNations( MAX_NATIONS ) ;
 	}
 
-	rename( fixupName( to_string( id )));  // Set the name
+	name = to_string( id );
+	// rename( fixupName( to_string( id )));  // DO NOT USE THIS
+	/// Here's the lifecycle for nation.name:
+	///   1. All of the `Nation` objects are created in the constructor of `Nations`
+	///      but `Nations` is not fully built yet, hence `nameMap` isn't there.
+	///   2. Just set Name in the constructor for Nation
+	///   3. In `Nations` constructor, call `refreshNameMap()`
 
 	status = NEW;
 
@@ -68,6 +75,7 @@ string Nation::fixupName( const string_view newName ) {
 
 
 void Nation::rename( const std::string_view newName ) {
+	Nations& nations = Nations::get();
 
 	string trimmedNewName = fixupName( newName );
 
@@ -81,28 +89,22 @@ void Nation::rename( const std::string_view newName ) {
 
 	// At this point, trimmedNewName is the new, candidate name
 
-//	Nations& nations = Nations::get();
-
-//	Nation_ID mapped_ID = nations.nameMap["Boo"];
-
-/*
 	// Iterate over nameMap and see if there are any duplicates (other than our own)
-	for( auto &nation : Nations::nameMap ) {
-		if( nation.first == trimmedNewName ) {
-			if( nation.second == id ) { // We are about to rename a nation to the same name... whatever
+	for( const auto &mapEntry : nations.nameMap ) {
+		if( mapEntry.first == trimmedNewName ) {
+			if( mapEntry.second == id ) { // We are about to rename a nation to the same name... whatever
 				continue;
 			} else {
-				throw nationNameTakenException() << errinfo_NationID( nation.second )
-				                                 << errinfo_NationName( nation.first );
+				throw nationNameTakenException() << errinfo_NationID( mapEntry.second )
+				                                 << errinfo_NationName( mapEntry.first );
 			}
 		}
 	}
 
-	// Nations::nameMap.empty();
-	Nations::nameMap.erase( trimmedNewName );
-	Nations::nameMap.emplace( trimmedNewName, id );
-*/
+	// Ideally, these three operations would be done as an atomic operation
+	nations.nameMap.erase( name );
 	name = trimmedNewName;
+	nations.nameMap.emplace( name, id );
 
 	/// @todo Implement logging
 	/// @todo Implement nameMap validation
@@ -124,6 +126,8 @@ const bool Nation::validate() const {
 
 	BOOST_ASSERT( fixupName( name ) == name );
 
+	// No duplicate names (put in Nations)
+
 	/// @todo Build validation for all members
 	return true;  // All tests pass
 }
@@ -139,8 +143,8 @@ void Nation::dump() const {
 ////////////////////////////                       ////////////////////////////
 
 Nations::Nations(token) {
+	nations[0].name = "Pogo" ;
 
-	nations[0].rename( "Pogo" );
 	nations[0].setStatus( Nation::Status::DEITY );
 	/// @todo When the time comes, we need to find a way to set Pogo's credentials
 	///       uniquely for each instance of the game.  No default creds.
@@ -198,6 +202,8 @@ void Nations::refreshNameMap() {
 	}
 
 	validate();
+
+	LOG_TRACE << __PRETTY_FUNCTION__ << " completed successfully";
 }
 
 

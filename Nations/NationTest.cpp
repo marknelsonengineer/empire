@@ -129,60 +129,63 @@ BOOST_AUTO_TEST_CASE( Nations_basic_range_iterator ) {
 }
 
 
-/*
+
 BOOST_AUTO_TEST_CASE( Nation_rename ) {
-	Nation nation = Nations::get(0);
+	Nations& nations = Nations::get();
+	Nation& nation1 = nations[1];
 
 	// Basic rename
-	nation.rename( "Sam" );
-	BOOST_CHECK( nation.getName() == "Sam" );
+	nation1.rename( "Sam" );
+	BOOST_CHECK( nation1.getName() == "Sam" );
 
 	// Rename to ""
-	BOOST_CHECK_THROW( nation.rename(""), std::invalid_argument );
+	BOOST_CHECK_THROW( nation1.rename(""), std::invalid_argument );
 
 	// Rename to largest possible name
 	std::string newName = std::string( Nation::MAX_NAME, 'x' );
-	nation.rename( newName );
-	BOOST_CHECK( nation.getName() == newName );
+	nation1.rename( newName );
+	BOOST_CHECK( nation1.getName() == newName );
 
 	newName += "X";  // Add one more characrter...
-	BOOST_CHECK_THROW( nation.rename(newName), std::length_error );
-	// std::cout << newName;
+	BOOST_CHECK_THROW( nation1.rename(newName), std::length_error );
 
 	// Test the trim_all functionality
-	nation.rename( "  Sam   I\t\t am  " );
-	BOOST_CHECK( nation.getName() == "Sam I am" );
-	std::cout << "The new name is [" << nation.getName() << "]";
+	nation1.rename( "  Sam   I\t\t am  " );
+	BOOST_CHECK( nation1.getName() == "Sam I am" );
+}
+
+
+
+BOOST_AUTO_TEST_CASE( Nation_rename_duplicate ) {
+	Nations& nations = Nations::get();
+	Nation& nation1 = nations[1];
 
 	// Test renaming a nation to itself
-	nation.rename( "Sam" );
-	BOOST_CHECK( nation.getName() == "Sam" );
-	nation.rename( "Sam" );
-	BOOST_CHECK( nation.getName() == "Sam" );
+	nation1.rename( "Sam" );
+	BOOST_CHECK( nation1.getName() == "Sam" );
+	nation1.rename( "Sam" );
+	BOOST_CHECK( nation1.getName() == "Sam" );
 
 	// Test duplicate naming
 
-	Nation nation5 = Nations::get(5);
-	Nation nation7 = Nations::get(7);
+	Nation& nation5 = nations[5];
+	Nation& nation7 = nations[7];
 
-	nation7.rename( "Popular" );
-   // Test renaming a "later" Nation
+	nation5.rename( "Popular" );
+   // Test renaming a Nation to an existing Nation
    try {
-		Nation nation9 = Nations::get(9);
-		nation9.rename( "Popular" );
+		nation7.rename( "Popular" );
       BOOST_CHECK_MESSAGE( false, "The line above should have thrown an exception" );
    }
    catch( boost::exception & e ) {
       const Nation_ID* nationID = boost::get_error_info<errinfo_NationID>( e );
-      BOOST_CHECK( *nationID == 7 );
+      BOOST_CHECK( *nationID == 5 );
 
       const std::string_view* nationName = boost::get_error_info<errinfo_NationName>( e );
-      BOOST_CHECK( *nationName == "Popular" );
+      BOOST_CHECK_EQUAL( *nationName, "Popular" );
    }
-
 }
 
-*/
 
 
 /// Test basic Nations dump()
@@ -190,7 +193,6 @@ BOOST_AUTO_TEST_CASE( Nations_dump ) {
 	Nations& nations = Nations::get();
 	nations.dump();
 }
-
 
 
 BOOST_AUTO_TEST_SUITE_END()
