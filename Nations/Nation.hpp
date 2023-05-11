@@ -336,9 +336,6 @@ public:  //////////////////////////// Methods /////////////////////////////////
 	const_reverse_iterator crend() { return nations.crend(); }
 
 
-	/// Return true if name is a Nation
-	bool isNation( const std::string_view name ) const ;
-
    /// Validate the health of the Nations container
    bool validate() const ;
 
