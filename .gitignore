@@ -1,0 +1,151 @@
+###############################################################################
+### Empire ][
+###
+### Tells Git which files to ignore
+###
+### @see https://git-scm.com/docs/gitignore
+###
+### Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm,
+### CLion, Android Studio, WebStorm and Rider
+### @see https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+###
+### @file    .gitignore
+### @author  Mark Nelson <marknels@hawaii.edu>
+###############################################################################
+
+# Ignore user-specific JetBrains content
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# Ignore AWS user-specific content
+.idea/**/aws.xml
+
+# Ignore JetBrains generated content
+.idea/**/contentModel.xml
+
+# Ignore sensitive or high-churn content
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dbnavigator.xml
+
+# Ignore Gradle content
+.idea/**/gradle.xml
+.idea/**/libraries
+
+# Ignore CMake content
+cmake-build-*/
+
+# Ignore Mongo Explorer plugin
+.idea/**/mongoSettings.xml
+
+# Ignore file-based project content
+*.iws
+
+# Ingore IntelliJ content
+out/
+
+# Ignore mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# Ignore JIRA plugin
+atlassian-ide-plugin.xml
+
+# Ignore Cursive Clojure plugin
+.idea/replstate.xml
+
+# Ignore SonarLint plugin
+.idea/sonarlint/
+
+# Ignore Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Ignore editor-based Rest Client
+.idea/httpRequests
+
+# Ignore Android studio 3.1+ serialized cache file
+.idea/caches/build_file_checksums.ser
+
+
+# Additional exclusions ######################################################
+##############################################################################
+
+# Ignore Doxygen generated content
+.doxygen/docs
+generated_docs/
+doxygen/generated_docs/*
+
+# Ignore compiled files & libraries
+*.o
+*.ko
+*.so
+*.a
+*.lib
+*.dll
+*.slo
+*.lo
+*.obj
+*.lai
+*.la
+*.dylib
+
+# Ignore crecompiled Headers
+*.gch
+*.pch
+
+# Ignore generic cxecutables
+*Test
+*.exe
+*.out
+*.app
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Ignore logfiles
+*.log
+*.binlog
+
+# Ignore hidden filesystem files
+.DS_Store
+Thumbs.db
+[Dd]esktop.ini
+
+# Windows shortcuts
+*.lnk
+
+# Ignore vi/vim swap files
+.*.swp
+
+# Ignore gdb files
+.gdb_history
+
+# Ignore core dumps
+core
+
+# Ignore Visual Studio content
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.vshistory/
+
+# Ignore backup files
+bak/
+
+# Ignore project executables
+boost_tests
+empire
