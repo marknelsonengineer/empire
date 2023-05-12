@@ -1,10 +1,10 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-project(empire
-      VERSION 1.0
-      DESCRIPTION "Lorem ipsum"
-      LANGUAGES CXX)
+project(Empire
+      VERSION     2.0
+      DESCRIPTION "More is better"
+      LANGUAGES   CXX)
 
 message(STATUS "CMAKE_SOURCE_DIR = [${CMAKE_SOURCE_DIR}]")
 
