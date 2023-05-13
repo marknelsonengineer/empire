@@ -1252,9 +1252,9 @@ CLANG_ADD_INC_PATHS    = YES
 # specified with INPUT and INCLUDE_PATH.
 # This tag requires that the tag CLANG_ASSISTED_PARSING is set to YES.
 
-CLANG_OPTIONS          = "-I /usr/lib/clang/15.0.7/include"
-CLANG_OPTIONS         += "-I /usr/include/linux"
-CLANG_OPTIONS         += "-std=c++23"
+# CLANG_OPTIONS          = "-I /usr/lib/clang/15.0.7/include"
+# CLANG_OPTIONS         += "-I /usr/include/linux"
+CLANG_OPTIONS         += "-std=c++20"
 
 # If clang assisted parsing is enabled you can provide the clang parser with the
 # path to the directory containing a file called compile_commands.json. This
@@ -2355,7 +2355,7 @@ SEARCH_INCLUDES        = YES
 # RECURSIVE has no effect here.
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
-INCLUDE_PATH           =
+INCLUDE_PATH           =  /usr/lib/clang/15.0.7/include
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the
