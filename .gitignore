@@ -1,5 +1,5 @@
 ###############################################################################
-### Empire ][
+### Empire ][ - What you do is what you do
 ###
 ### Tells Git which files to ignore
 ###
@@ -79,9 +79,7 @@ fabric.properties
 ##############################################################################
 
 # Ignore Doxygen generated content
-.doxygen/docs
 generated_docs/
-doxygen/generated_docs/*
 
 # Ignore compiled files & libraries
 *.o
