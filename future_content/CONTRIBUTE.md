@@ -7,6 +7,13 @@ Contribute to Empire ][
 Empire ][ is a CMake-based C Linux usermode console program
 
 
+For enums, the last element is called COUNT and has the number of elements in the enum.
+
+I intend to let CLion reflow the source code
+
+
+
+
 
 
 ## Setup the development environment
