@@ -5,9 +5,9 @@ The Design of Empire ][
 
 ## Design Philosophy
 
-  1) Embrace modern Software Engineering design practices
-  2) Is correct & efficient
-  3) Is fun
+1. Embrace modern Software Engineering design practices
+2. Is correct & efficient
+3. Is fun
 
 To a large degree, I'm writing Empire because I want to learn more about
 Object-Oriented Programming.  Specifically, I want to become a practitioner of
@@ -19,8 +19,8 @@ application.
 ## High Level Design
 
 Options come in 2 flavors:
-  1) Compiled into the code (most of them - for efficiency)
-  2) Runtime options
+1. Compiled into the code (most of them - for efficiency)
+2. Runtime options
 
 
 ## High Level Design Requirements
@@ -136,6 +136,23 @@ for a session.  For example:
 [ ] We need to think about how we push new information about the real model to the users' model.
 
 
+## Configuration
+
+Classic Empire had a number of text-based configuration files that were pretty
+easy to override and configure.  For the sake of efficiency and because I think
+we can structure our source code to be pretty user-friendly, I'm going to make
+all of those configurable elements part of the C++ source.  Specifically, they
+will be built in as `inline constexpr`.
+
+For review:
+`const var` Means the variable won't change after it's initialized. Variables may be initialized at runtime, though.
+`method() const` Means the method won't change the state of the object
+`constexpr` Means "to be evaluated at compile time".  Applies to variables.
+`consteval` Declares a function or template to produce a compile time constant expression.  It forces calles to happen at compile-time.
+`constinit` Initializes a static variable at compile time.  It does not imply `const` nor `constexpr`.
+
+
+
 ## Other Notes (for now)
 
 We are going to work very hard to keep the object model separate from the 
@@ -158,13 +175,12 @@ I need to get smarter on delegates and composites
 [ ] Do a UMLet drawing of the current Empire codebase
 [ ] Expand on the UMLet drawing to include the design of the Business Domain / 
     data model.
+[ ] Set the project icon in CLion
 
 
-Empire:  http://www.wolfpackempire.com
-3-tiered application:  https://en.wikipedia.org/wiki/Multitier_architecture
-ACID: https://en.wikipedia.org/wiki/ACID
-WinACE: https://sourceforge.net/projects/winace/files/
-PTkII2:  https://sourceforge.net/projects/ptkei2/
-gPRC:  https://grpc.io
-
-
+[Empire]:  http://www.wolfpackempire.com
+[3-tiered application]:  https://en.wikipedia.org/wiki/Multitier_architecture
+[ACID]: https://en.wikipedia.org/wiki/ACID
+[WinACE]: https://sourceforge.net/projects/winace/files/
+[PTkII2]:  https://sourceforge.net/projects/ptkei2/
+[gPRC]:  https://grpc.io
