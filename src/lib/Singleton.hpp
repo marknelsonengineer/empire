@@ -1,3 +1,6 @@
+#ifndef HOME_MARKNELS_SRC_EMPIRE_SRC_LIB_SINGLETON_HPP
+#define HOME_MARKNELS_SRC_EMPIRE_SRC_LIB_SINGLETON_HPP
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Empire ][
 //
@@ -38,7 +41,7 @@ protected:
 	struct token {};  // Inherited, concrete singleton classes will use this 
 	                  // to call the base class without having to be a 
 	                  // friend class.
-	Singleton() {}		// The empty constructor may be overridden
+	Singleton() = default;		// The empty constructor may be overridden
 }; // template class Singleton
 
 
@@ -53,3 +56,5 @@ inline T& Singleton<T>::get() {
 
 
 }  // namespace empire
+
+#endif

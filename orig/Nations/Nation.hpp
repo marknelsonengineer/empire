@@ -20,7 +20,7 @@
 #include <array>        // For array<Nation, MAX_NATIONS> nations
 
 #include "../lib/EmpireExceptions.hpp"
-#include "../lib/Singleton.hpp"
+#include "../../src/lib/Singleton.hpp"
 
 namespace empire {
 

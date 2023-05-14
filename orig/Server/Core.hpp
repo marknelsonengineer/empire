@@ -16,7 +16,7 @@
 #pragma once
 
 #include "../lib/EmpireExceptions.hpp"
-#include "../lib/Singleton.hpp"
+#include "../../src/lib/Singleton.hpp"
 
 
 namespace empire {
