@@ -9,8 +9,9 @@
 ### CLion, Android Studio, WebStorm and Rider
 ### @see https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 ###
-### @file    .gitignore
-### @author  Mark Nelson <marknels@hawaii.edu>
+### @file      .gitignore
+### @author    Mark Nelson <marknels@hawaii.edu>
+### @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ###############################################################################
 
 # Ignore user-specific JetBrains content

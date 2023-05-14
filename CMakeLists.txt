@@ -7,7 +7,7 @@
 ###
 ### @file      CMakeLists.txt
 ### @author    Mark Nelson <marknels@hawaii.edu>
-### @copyright All rights reserved
+### @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ###############################################################################
 
 cmake_minimum_required(VERSION 3.26)
