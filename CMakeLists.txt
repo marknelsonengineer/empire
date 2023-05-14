@@ -35,4 +35,12 @@ add_custom_target(Publish
         COMMAND rsync --recursive --checksum --delete --compress --stats --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/ marknels@uhunix.hawaii.edu:~/public_html/${CMAKE_PROJECT_NAME}
         )
 
-add_executable(empire main.cpp)
+file( GLOB_RECURSE ALL_SOURCES ./src/*.cpp ./tests/*.cpp )
+message(STATUS "Sources to lint ${ALL_SOURCES}")
+
+add_custom_target( Lint
+        COMMENT "Linting source"
+        COMMAND clang-tidy ${ALL_SOURCES} --quiet --extra-arg-before=-std=c++20 --
+        )
+
+add_executable(empire src/main.cpp)

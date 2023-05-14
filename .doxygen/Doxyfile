@@ -916,6 +916,7 @@ INPUT                  = .
 INPUT                 += .doxygen/stats.py
 INPUT                 += .doxygen/update_usage.py
 INPUT                 += .doxygen/update_version.py
+INPUT                 += src
 INPUT                 += tests
 
 # This tag can be used to specify the character encoding of the source files

@@ -1,0 +1,34 @@
+###############################################################################
+### Empire ][ - What you do is what you do
+###
+### Configuration for clang-tidy
+###
+### @see https://clang.llvm.org/extra/clang-tidy/
+###
+### @file      .clang-tidy
+### @author    Mark Nelson <mr_nelson@icloud.com>
+### @copyright (c) 2021 Mark Nelson.  All rights reserved.
+###############################################################################
+
+# -cert-msc30-c,       # We can use the rand() function in C
+# -cert-msc50-cpp,     # We can use the rand() function in C++
+# -llvmlibc-*,         # We aren't writing LLVM-libc code
+# -modernize-use-trailing-return-type,       # We won't be using the newfangled return types
+# -readability-redundant-access-specifiers,  # Redundant access specifiers works for my documentation style
+---
+Checks: >
+  *,
+  -cert-msc30-c,
+  -cert-msc50-cpp,
+  -llvmlibc-*,
+  -modernize-use-trailing-return-type,
+  -readability-redundant-access-specifiers
+HeaderFilterRegex: '.*'
+AnalyzeTemporaryDtors: false
+FormatStyle:     none
+User:            marknels
+CheckOptions:
+  llvm-else-after-return.WarnOnUnfixable: 'false'
+  cert-msc32-c.DisallowedSeedTypes: 'time_t,std::time_t'
+UseColor:        true
+...
