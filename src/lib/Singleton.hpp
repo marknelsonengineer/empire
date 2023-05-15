@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Empire ][ - What you do is what you do
 //
-/// A generic Singleton template & class
+/// A generic Singleton template
 ///
 /// @see https://codereview.stackexchange.com/questions/173929/modern-c-singleton-template
 ///

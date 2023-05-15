@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Empire ][ - What you do is what you do
 //
-/// Test class for Singleton.cpp
+/// Comprehensive tests for Singleton
 ///
 /// @file      tests/test_Singleton.cpp
 /// @author    Mark Nelson <mr_nelson@icloud.com>
@@ -9,23 +9,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// @cond Suppress Doxygen warnings
 
-/// The name of this test module is Empire_Server
 #define BOOST_TEST_MODULE Empire_Server
 #define BOOST_TEST_MAIN  // Include this to get Boost Test's main()
 
-#include <boost/assert.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/test/execution_monitor.hpp>
 
 #include "../src/lib/Singleton.hpp"
 
-
 using namespace empire;
-
 
 class TestSingleton1 final : public Singleton<TestSingleton1> {
 public:
-	TestSingleton1(token) ;
+	TestSingleton1( token ) ;
 	~TestSingleton1();
 
 	void use() const;

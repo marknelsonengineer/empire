@@ -1,22 +1,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Empire ][
+//  Empire ][ - What you do is what you do
 //
-/// A generic Singleton template & class.
+/// A generic Singleton template
 ///
-//  The documentation for classes in this file are in the .hpp file.
+/// @see https://codereview.stackexchange.com/questions/173929/modern-c-singleton-template
 ///
 /// @file      lib/Singleton.cpp
-/// @version   1.0 - Initial version
-///
 /// @author    Mark Nelson <mr_nelson@icloud.com>
-/// @date      16 Mar 2021
-/// @copyright (c) 2021 Mark Nelson
+/// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
 
-
 #include "Singleton.hpp"
-
-using namespace std;
 
 namespace empire {
 
