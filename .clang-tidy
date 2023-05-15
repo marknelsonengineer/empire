@@ -12,6 +12,7 @@
 
 # -cert-msc30-c,       # We can use the rand() function in C
 # -cert-msc50-cpp,     # We can use the rand() function in C++
+# -llvm-header-guard   # We use #pragma once, not a traditional header guard
 # -llvmlibc-*,         # We aren't writing LLVM-libc code
 # -modernize-use-trailing-return-type,       # We won't be using the newfangled return types
 # -readability-redundant-access-specifiers,  # Redundant access specifiers works for my documentation style
@@ -20,6 +21,7 @@ Checks: >
   *,
   -cert-msc30-c,
   -cert-msc50-cpp,
+  -llvm-header-guard,
   -llvmlibc-*,
   -modernize-use-trailing-return-type,
   -readability-redundant-access-specifiers

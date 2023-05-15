@@ -1,60 +1,49 @@
-#ifndef HOME_MARKNELS_SRC_EMPIRE_SRC_LIB_SINGLETON_HPP
-#define HOME_MARKNELS_SRC_EMPIRE_SRC_LIB_SINGLETON_HPP
-
 ///////////////////////////////////////////////////////////////////////////////
-//  Empire ][
+//  Empire ][ - What you do is what you do
 //
-/// A generic Singleton template & class.
-///
-//  The documentation for classes in this file are in the .hpp file.
-/// data that varies between instances of a commodity.
-///
-/// @file      lib/Singleton.hpp
-/// @version   1.0 - Initial version
+/// A generic Singleton template & class
 ///
 /// @see https://codereview.stackexchange.com/questions/173929/modern-c-singleton-template
 ///
+/// @file      lib/Singleton.hpp
 /// @author    Mark Nelson <mr_nelson@icloud.com>
-/// @date      16 Mar 2021
-/// @copyright (c) 2021 Mark Nelson
+/// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 
 namespace empire {
 
-/// Create a template of a Singleton class
+/// Template for a Singleton class
 ///
-/// @pattern Singleton:  This is a base class for Singletons
+/// @pattern Singleton:  This is a base class for Singleton
 ///
 /// @todo Need to improve this documentation
-template<typename T>
+template< typename T >
 class Singleton {
 public:
-	Singleton( const Singleton&) = delete;
-	Singleton& operator= (const Singleton) = delete;
+   Singleton( const Singleton& ) = delete;
 
-	static T& get();	
-	
+   Singleton& operator=( const Singleton ) = delete;
+
+   static T& get();
+
 protected:
-	struct token {};  // Inherited, concrete singleton classes will use this 
-	                  // to call the base class without having to be a 
-	                  // friend class.
-	Singleton() = default;		// The empty constructor may be overridden
-}; // template class Singleton
+   struct token {};  ///< Inherited, concrete singleton classes will use this
+                     ///< to call the base class without having to be a
+                     ///< friend class.
+
+   Singleton() = default;  ///< The empty constructor may be overridden
+}; // Singleton
 
 
 /// Get an instance of a Singleton
 ///
-/// @todo Need to improve this documentation
-template<typename T>
-inline T& Singleton<T>::get() {
-	static T instance{ token{} };
-	return instance;
-}  // template T
-
+/// @tparam T The Singleton class
+/// @return The one and only instance of `T`
+template< typename T >
+inline T& Singleton< T >::get() {
+   static T instance { token {} };
+   return instance;
+}
 
 }  // namespace empire
-
-#endif
