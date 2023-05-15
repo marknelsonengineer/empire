@@ -18,28 +18,29 @@
 
 using namespace empire;
 
-class TestSingleton1 final : public Singleton<TestSingleton1> {
+class TestSingleton1 final : public Singleton< TestSingleton1 > {
 public:
-	TestSingleton1( token ) ;
-	~TestSingleton1();
+   TestSingleton1( token );
 
-	void use() const;
+   ~TestSingleton1();
+
+   void use() const;
 
 }; // class TestSingleton1
 
 
-TestSingleton1::TestSingleton1(token) {
-	// cout << "TestSingleton1 constructed" << endl;
+TestSingleton1::TestSingleton1( token ) {
+   // cout << "TestSingleton1 constructed" << endl;
 }
 
 
 TestSingleton1::~TestSingleton1() {
-	// cout << "TestSingleton1 destroyed" << endl;
+   // cout << "TestSingleton1 destroyed" << endl;
 }
 
 
 void TestSingleton1::use() const {
-	// cout << "TestSingleton1 in use" << endl;
+   // cout << "TestSingleton1 in use" << endl;
 }
 
 
@@ -47,20 +48,21 @@ void TestSingleton1::use() const {
 /// multiple dervied classes of Singleton
 ///
 /// Note:  This Singleton does not have a destructor
-class TestSingleton2 final : public Singleton<TestSingleton2> {
+class TestSingleton2 final : public Singleton< TestSingleton2 > {
 public:
-	TestSingleton2(token) ;
+   TestSingleton2(token);
 
-	void use() const;
+   void use() const;
 
 }; // class TestSingleton2
 
-TestSingleton2::TestSingleton2(token) {
-	// cout << "TestSingleton1 constructed" << endl;
+TestSingleton2::TestSingleton2( token ) {
+   // cout << "TestSingleton1 constructed" << endl;
 }
 
+
 void TestSingleton2::use() const {
-	// cout << "TestSingleton2 in use" << endl;
+   // cout << "TestSingleton2 in use" << endl;
 }
 
 
@@ -72,24 +74,25 @@ BOOST_AUTO_TEST_SUITE( Singleton_test_suite )
 /// Test an enabled Commodity constructor
 BOOST_AUTO_TEST_CASE( Singleton_general ) {
 
-	// Populate t11 w/ TestSingleton1
-	const TestSingleton1& t11 = TestSingleton1::get();
+   // Populate t11 w/ TestSingleton1
+   const TestSingleton1& t11 = TestSingleton1::get();
    BOOST_CHECK_NO_THROW( t11.use() );
 
-	// Populate t12 with the same singleton
+   // Populate t12 with the same singleton
    const TestSingleton1& t12 = TestSingleton1::get();
    BOOST_CHECK_NO_THROW( t12.use() );
 
-	// Ensure they are the same object
+   // Ensure they are the same object
    BOOST_CHECK( &t11 == &t12 );
 
-	// Test our second Singleton
-	const TestSingleton2& t2 = TestSingleton2::get();
-	BOOST_CHECK_NO_THROW( t2.use() );
+   // Test our second Singleton
+   const TestSingleton2& t2 = TestSingleton2::get();
+   BOOST_CHECK_NO_THROW( t2.use() );
 
-	// Ensure they are different objecgts
-   BOOST_CHECK( (void*)&t11 != (void*)&t2 );
+   // Ensure they are different objecgts
+   BOOST_CHECK( (void*) &t11 != (void*) &t2 );
 }
+
 
 BOOST_AUTO_TEST_SUITE_END()
 /// @endcond
