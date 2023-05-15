@@ -1,18 +1,16 @@
 Boost Test
 ==========
-<img src="images/logo_boost_full_259x86.png" style="float: right; margin: 50px 50px 50px 50px;" alt="Boost"/>
+<img src="images/logo_boost_full_259x86.png" style="float: right; margin: 10px 50px 50px 50px;" alt="Boost Logo"/>
 
 _Test everything that could possibly break_
-
---[XP] maxim
 
 _The acceptance test makes the customer satisfied that the software provides the
 business value that makes them willing to pay for it. The unit test makes the 
 programmer satisfied that the software does what the programmer thinks it does._
 
---[XP] maxim
+--[XP] maxims
 
-## Boost Test
+## The Boost Test Library
 
 The [Boost Test] library provides an easy-to-use and flexible set of interfaces 
 for writing tests, organizing them into test cases, and controlling their 
@@ -20,7 +18,6 @@ runtime execution.
 
 A typical [Boost Test] looks like this:
 
-````
     BOOST_AUTO_TEST_SUITE( test_conversions )
        BOOST_AUTO_TEST_CASE( test_Kilo_conversions ) {
           BOOST_CHECK_FAIL( stringToUnsignedLongLongWithScale( NULL ) ) ;
@@ -34,15 +31,14 @@ A typical [Boost Test] looks like this:
        }
     
     BOOST_AUTO_TEST_SUITE_END()
+
+Running [Boost Test] from this command line:
 ````
+    ./boost_tests --build_info --color_output --show_progress --report_format=HRF --report_level=short
+````
+...generates the following results:
 
-blob
-
-    The quick
-    brown fox
-    jumps over
-    the lazy
-    dog
+<img src="images/boost_test_results.png" style="width:40%; margin: 10px 10px 10px 10px;" alt="Boost Results"/>
 
 [Boost Test]s are relatively easy to configure and run.  They are incredibly 
 powerful when you combine them with an IDE like [Eclipse] or [CLion].

@@ -1,25 +1,29 @@
-/* ////////////////////////////////////////////////////////////////////////////
-//          University of Hawaii, College of Engineering
-//          DTMF_Decoder - EE 469 - Fall 2022
-//
-//  A Windows Desktop C program that decodes DTMF tones
+/* ///////////////////////////////////////////////////////////////////////////
+//  Empire ][ - What you do is what you do
 //
 /// Custom style sheet for Doxygen documentation
 ///
-/// @file    extraStyleSheet.css
-/// @version 1.0
-///
-/// @author  Mark Nelson <marknels@hawaii.edu>
-/// @date    2_Nov_2022
-//////////////////////////////////////////////////////////////////////////// */
+/// @file      extraStyleSheet.css
+/// @author    Mark Nelson <marknels@hawaii.edu>
+/// @copyright (c) 2021 Mark Nelson.  All rights reserved.
+/////////////////////////////////////////////////////////////////////////// */
 
 code {
     color: green;
 }
 
+/* A gold on dark color scheme reminiscent of old terminals    */
+/* This is used by indenting 4 spaces                          */
 pre.fragment {
-    color: green;
-    background-color: #e8e8e8
+    color:            #FFD00D;  /* Gold                        */
+    background-color: #24160A   /* Black with a gold glow      */
+}
+
+/* A green on white color scheme, more like a printed document */
+/* This is used with the ```` tag                              */
+div.fragment {
+    color:            #00FD00;  /* Green                       */
+    background-color: #0D1912   /* Black with a green glow     */
 }
 
 span.comment {
