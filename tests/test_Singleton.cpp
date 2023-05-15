@@ -1,24 +1,23 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Empire ][
+//  Empire ][ - What you do is what you do
 //
 /// Test class for Singleton.cpp
 ///
-/// @file      lib/SingletonTest.cpp
-/// @version   1.0
-///
+/// @file      tests/test_Singleton.cpp
 /// @author    Mark Nelson <mr_nelson@icloud.com>
-/// @date      16 Mar 2021
-/// @copyright (c) 2021 Mark Nelson
+/// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
+/// @cond Suppress Doxygen warnings
 
 /// The name of this test module is Empire_Server
 #define BOOST_TEST_MODULE Empire_Server
+#define BOOST_TEST_MAIN  // Include this to get Boost Test's main()
 
 #include <boost/assert.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/execution_monitor.hpp>
 
-#include "../../src/lib/Singleton.hpp"
+#include "../src/lib/Singleton.hpp"
 
 
 using namespace empire;
@@ -98,3 +97,4 @@ BOOST_AUTO_TEST_CASE( Singleton_general ) {
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+/// @endcond

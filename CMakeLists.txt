@@ -45,3 +45,5 @@ add_custom_target( Lint
         )
 
 add_executable( empire src/main.cpp)
+
+add_subdirectory( tests )
