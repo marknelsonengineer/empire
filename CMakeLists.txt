@@ -27,6 +27,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 add_custom_target(Document
         COMMENT           "Generating documentation"
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        COMMAND           rsync --recursive --checksum --delete --mkpath --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/images ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/
         COMMAND           doxygen .doxygen/Doxyfile
         )
 
