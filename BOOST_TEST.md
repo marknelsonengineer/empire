@@ -1,6 +1,9 @@
 Boost Test
 ==========
-<img src="images/logo_boost_full_259x86.png" style="float: right; margin: 10px 50px 50px 50px;" alt="Boost Logo"/>
+<img src="images/logo_boost_full_259x86.png" 
+     style="float: right; margin: 10px 50px 50px 50px;" 
+     alt="Boost Logo"
+/>
 
 _Test everything that could possibly break_
 
