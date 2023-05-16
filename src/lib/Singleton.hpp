@@ -16,17 +16,15 @@ namespace empire {
 /// Template for a Singleton class
 ///
 /// @pattern Singleton:  This is a base class for Singleton
-///
-/// @todo Need to improve this documentation
 template< typename T >
 class Singleton {
 public:
-   Singleton( const Singleton& )  = delete;  // Copy constructor
+   Singleton( const Singleton& ) = delete;  // Copy constructor
    Singleton( const Singleton&& ) = delete;  // Move constructor
 
-   Singleton& operator=( const Singleton )    = delete;  // Copy assignment (One of these is wrong)
-   Singleton& operator=( const Singleton& )   = delete;  // Copy assignment (One of these is wrong)
-   Singleton& operator=( const Singleton&& )  = delete;  // Move assignment
+   Singleton& operator=( const Singleton ) = delete;  // Copy assignment (One of these is wrong)
+   Singleton& operator=( const Singleton& ) = delete;  // Copy assignment (One of these is wrong)
+   Singleton& operator=( const Singleton&& ) = delete;  // Move assignment
 
    static T& get();
 
@@ -35,9 +33,10 @@ public:
 protected:
    Singleton() = default;  ///< The empty constructor may be overridden
 
-   struct token {};  ///< Inherited, concrete singleton classes will use `token`
-                     ///< to call the base class without having to be a
-                     ///< friend class.
+   /// Inherited, concrete singleton classes will use `token` to call the base
+   /// class without having to be a friend class.
+   struct token {
+   };
 
 }; // Singleton
 
@@ -48,7 +47,7 @@ protected:
 /// @return The one and only instance of `T`
 template< typename T >
 inline T& Singleton< T >::get() {
-   static T instance { token {} };
+   static T instance { token { } };
    return instance;
 }
 

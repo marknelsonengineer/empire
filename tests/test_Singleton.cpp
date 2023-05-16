@@ -24,6 +24,7 @@ public:
       // cout << "TestSingleton1 constructed" << endl;
    }
 
+
    void use() const {
       // cout << "TestSingleton1 in use" << endl;
    }
@@ -37,6 +38,7 @@ public:
    explicit TestSingleton2( [[maybe_unused]] token singletonToken ) {
       // cout << "TestSingleton1 constructed" << endl;
    }
+
 
    void use() const {
       // cout << "TestSingleton2 in use" << endl;
