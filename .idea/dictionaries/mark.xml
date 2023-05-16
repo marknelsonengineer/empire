@@ -2,17 +2,23 @@
   <dictionary name="mark">
     <words>
       <w>blockfree</w>
+      <w>calles</w>
       <w>cout</w>
       <w>doxyfile</w>
+      <w>dtors</w>
       <w>enddd</w>
       <w>endl</w>
       <w>infod</w>
       <w>interdd</w>
       <w>keywordflow</w>
+      <w>llvmlibc</w>
       <w>lockfree</w>
+      <w>marknels</w>
+      <w>mkpath</w>
       <w>startdd</w>
       <w>telent</w>
       <w>tful</w>
+      <w>uhunix</w>
       <w>xrefitem</w>
     </words>
   </dictionary>
