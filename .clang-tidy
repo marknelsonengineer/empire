@@ -29,10 +29,11 @@ Checks: >
   -readability-redundant-access-specifiers
 HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
-FormatStyle:     none
-User:            marknels
+FormatStyle: none
+User: marknels
 CheckOptions:
+  readability-identifier-length.IgnoredVariableNames: '[ijk]'
   llvm-else-after-return.WarnOnUnfixable: 'false'
   cert-msc32-c.DisallowedSeedTypes: 'time_t,std::time_t'
-UseColor:        true
+UseColor: true
 ...
