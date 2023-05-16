@@ -116,9 +116,9 @@ terminal interface that accepts text input and converts it to the API.
 
 Empire ][ will have the following layers:
   - Core:  A multi-threaded C++ program that maintains the state of the application and processes transactions.
-  - Rep:  The Representative.  This layer runs on the same server as the core, but in a different process space (Probably).  It's purpose is to mediate requests between the Client API.
+  - Rep:  The Representative.  This layer runs on the same server as the core, but in a different process space (Probably).  Its purpose is to mediate requests between the Client API.
   - Client API:  [gRPC] over SSH using XXX for authentication.
-  - Default Client:  A multi-platform shell-like program that can login to XXX.  The Client is considered untrusted code.
+  - Default Client:  A multi-platform shell-like program that is the default Empire client.  The Client is considered untrusted code.
 
 I'm thinking of using [gRPC] for the client-layer API.
 
@@ -148,7 +148,7 @@ For review:
 `const var` Means the variable won't change after it's initialized. Variables may be initialized at runtime, though.
 `method() const` Means the method won't change the state of the object
 `constexpr` Means "to be evaluated at compile time".  Applies to variables.
-`consteval` Declares a function or template to produce a compile time constant expression.  It forces calles to happen at compile-time.
+`consteval` Declares a function or template to produce a compile time constant expression.  It forces calls to happen at compile-time.
 `constinit` Initializes a static variable at compile time.  It does not imply `const` nor `constexpr`.
 
 
