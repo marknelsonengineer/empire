@@ -21,18 +21,24 @@ namespace empire {
 template< typename T >
 class Singleton {
 public:
-   Singleton( const Singleton& ) = delete;
+   Singleton( const Singleton& )  = delete;  // Copy constructor
+   Singleton( const Singleton&& ) = delete;  // Move constructor
 
-   Singleton& operator=( const Singleton ) = delete;
+   Singleton& operator=( const Singleton )    = delete;  // Copy assignment (One of these is wrong)
+   Singleton& operator=( const Singleton& )   = delete;  // Copy assignment (One of these is wrong)
+   Singleton& operator=( const Singleton&& )  = delete;  // Move assignment
 
    static T& get();
 
+   virtual ~Singleton() = default;
+
 protected:
-   struct token {};  ///< Inherited, concrete singleton classes will use this
+   Singleton() = default;  ///< The empty constructor may be overridden
+
+   struct token {};  ///< Inherited, concrete singleton classes will use `token`
                      ///< to call the base class without having to be a
                      ///< friend class.
 
-   Singleton() = default;  ///< The empty constructor may be overridden
 }; // Singleton
 
 
