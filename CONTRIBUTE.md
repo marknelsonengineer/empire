@@ -56,7 +56,7 @@ need to manually install `libcap`.
 
 ## Handling errors & warnings in a testing framework
 - Memscan does not have a dedicated logger.
-- Messages and exceptions should be pre-pended with #getProgramName and sent 
+- Messages and exceptions should be pre-pended with getProgramName and sent 
   to `stderr`.
 - Instrument programs to make them easily to test.  This is easier with C++ 
   programs that have `try`/`catch` blocks and exceptions.  As a C program, 
