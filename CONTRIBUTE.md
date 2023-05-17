@@ -20,17 +20,14 @@ I intend to let CLion reflow the source code
 To setup your development environment on a fresh system, you'll likely need 
 the following:
 - This section is incomplete, but...
-  - ...but it worked on Rasberian!
-  - ...and it worked on Debian under WSL2
-  - ...and it worked on a Fedora-based Amazon Linux 2023 ARM-64
-- After [Git] is installed, you can use `git clone https://github.com/marknelsonengineer-sp23/sre_lab4_memscan.git` 
+  - ...but it worked on my ArchLinux rig!
+- After [Git] is installed, you can use `git clone https://github.com/marknelsonengineer/empire` 
   to download memscan
 
 | Package            | Debian / apt-get                     | ArchLinux / pacman       | AWS ARM-64                        | RedHat / rpm |
 |--------------------|--------------------------------------|--------------------------|-----------------------------------|--------------|
 | [Git]              |                                      |                          | `# dnf install git`               |              |
 | [C++]              |                                      |                          | `# dnf install g++`               |              |
-| [Capabilities]     | `# apt-get install libcap-dev`       |                          | `# dnf install libcap-devel`      |              |
 | [Boost]            | `# apt-get install libboost-all-dev` |                          | `# dnf install boost-devel`       |              |
 | [clang-tidy]       | `# apt-get install clang-tidy`       |                          | `# dnf install clang-tools-extra` |              |
 | [Graphviz] for DOT | `# apt-get install graphviz`         |                          | `# dnf install graphviz`          |              |
@@ -95,63 +92,6 @@ program in C.  Bare-bones tests will tell us if something works or doesn't
 but not _why_.
 
 
-## Local variables
-There are many ways to do local variables.  Local variables are fundamentally 
-different from `malloc` and `mmap`.  When the thread of execution exits
-the scope,  the local data evaporates.  The other challenge with local
-variables is how to dynamically size them.  Locals, like globals, are fixed
-at compile-time.  So how do we allocate `--local` bytes of local data when 
-`--local` is only known at run time?
-
-Consider the [stack] and how most programs find their parameters and local
-variables relative to the base of their [stack frames], and it becomes clear 
-that programs cannot allocate a block of local memory whose size is only 
-known at runtime.
-
-There are a number of ways we could solve these problems: 
-  - Create some local variables on the `main()` thread and immediately 
-    release them to continue the program.
-  - Create some local variables on the `main()` thread and then complete
-    the rest of the program from that local function, thereby keeping the 
-    local variables in scope.
-  - Spin up a new [thread], with a new [stack] and then create some local 
-    variables on that new stack.
-
-Memscan creates a new [thread] on a new stack.
-
-The next problem is how to allocate an arbitrary amount of local memory.  The
-only way to do this in C is using [recursion].  Having a subroutine allocate
-local memory repeatedly.  We do use [recursion] in memscan, but we've found a 
-novel way to allocate an arbitrary amount of local memory with [Inline Assembly].
-
-It ends up that with two relatively simple [Inline Assembly] functions, we can
-create arbitrarily sized local variables using `--local`.  The functions are:  
-  - getBaseOfStack() `GET_BASE_OF_STACK` is used to create a pointer to 
-    the start of a local memory region.  This is kept in an array of pointers
-    #localAllocations which is #numLocals long.
-  - allocateLocalStorage() `ALLOCATE_LOCAL_STORAGE` subtracts an arbitrary value
-    from the [Stack Pointer], creating the local storage.
-
-Then, we recursively call the above function `--numLocal` times.  This gives
-us the ability to create many small local allocations or a few big ones.  It 
-also allows us to explore how Linux will expand a stack should it become 
-necessary.
-
-Finally, remember that the total amount of local data will be a bit larger
-than `--local` x `--numLocal` bytes.  This is because each call to a function
-incurs some overhead on the stack frame.  Not a lot, but not 0.
-
-Have fun exploring local variables.  Use `--shannon` or `--fill` and `--scan_byte` to 
-find the new stack.
-
-[stack]:  https://en.wikipedia.org/wiki/Stack-based_memory_allocation
-[stack frames]:  https://en.wikipedia.org/wiki/Call_stack
-[thread]:  https://en.wikipedia.org/wiki/Thread_(computing)
-[recursion]:  https://en.wikipedia.org/wiki/Recursion_(computer_science)
-[Inline Assembly]:  https://en.wikipedia.org/wiki/Inline_assembler
-[Stack Pointer]: https://en.wikipedia.org/wiki/Call_stack#STACK-POINTER
-
-
 ## Toolchain
 - Memscan is written in C.
   - It's compiled with [gcc].
@@ -168,8 +108,6 @@ find the new stack.
   so always `make clean` first.
 - Memscan is a Linux-based, user-mode command-line program that needs to run
   with root-level privileges.
-  - To get the most out of Memscan, it should be run as `root` or with the 
-    `CAP_SYS_ADMIN` capability.  See https://www.kernel.org/doc/Documentation/vm/pagemap.txt
 - Memscan was written in CLion, using `Makefile` based build.  Note:  CLion 
   usually uses a CMake based build.
 
@@ -273,25 +211,8 @@ It's cool to have this working.
 
 | Module                           | const correctness | include correctness | Review Doxygen | 32-bit   | Boost tests   | API documented |
 |----------------------------------|-------------------|---------------------|----------------|----------|---------------|:---------------|
-| `allocate.h` <br> `allocate.c`   |                   |                     |                |          |               |                |
-| `assembly.h` <br> `assembly.c`   |                   |                     |                |          |               |                |
-| `colors.h`                       |                   |                     |                |          |               |                |
-| `config.h` <br> `config.c`       |                   |                     |                |          |               |                |
-| `convert.h` <br> `convert.c`     |                   |                     |                |          |               |                |
-| `files.h` <br> `files.c`         | 4 Apr 23          |                     | 4 Apr 23       | 4 Apr 23 |               | 4 Apr 23       |
-| `iomem.h` <br> `iomem.c`         | 11 Apr 23         | 17 Apr 23           | 29 Apr 23      |          | 28 Apr 23 (2) | 29 Apr 23      |
-| `maps.h` <br> `maps.c`           | 29 Apr 23         | 29 Apr 23           |                |          |               |                |
-| `memscan.h` <br> `memscan.c`     |                   |                     |                |          |               |                |
-| `pagecount.h` <br> `pagecount.c` | 6 Apr 23          | 6 Apr 23            | 6 Apr 23       |          | 16 Apr 23     | 6 Apr 23       |
-| `pageflags.h` <br> `pageflags.c` | 7 Apr 23          | 7 Apr 23            | 7 Apr 23       |          | 16 Apr 23     | 7 Apr 23       |
-| `pagemap.h` <br> `pagemap.c`     | 7 Apr 23          | 7 Apr 23            | 11 Apr 23      |          | 16 Apr 23 (1) | 7 Apr 23       |
-| `shannon.h` <br> `shannon.c`     |                   |                     |                |          |               |                |
-| `threads.h` <br> `threads.c`     |                   |                     |                |          |               |                |
-| `trim.h` <br> `trim.c`           | 6 Apr 23          | 6 Apr 23            | 6 Apr 23       | N/A      | 6 Apr 23      | 6 Apr 23       |
-| `typedefs.h`                     |                   |                     |                |          |               |                |
-| `version.h`                      | 4 Apr 23          | None                | 4 Apr 23       | 4 Apr 23 |               | 4 Apr 23       |
+| `Singleton`                      |                   |                     |                |          |               |                |
 
-The `main()` for memscan is in `memscan.c`.
 
 - (1):  getPageInfo() has comprehensive unit tests.  comparePages() needs some tests, but I don't want to do them right now.  The other 
         routines print things to the screen and don't lend themselves to unit testing.  I intend to implement system tests to exercise this code.
