@@ -26,9 +26,8 @@ ELSE( Boost_UNIT_TEST_FRAMEWORK_FOUND )
    MESSAGE( "BOOST Test framework is missing" )
 ENDIF( Boost_UNIT_TEST_FRAMEWORK_FOUND )
 
-SET( ENV{DEBUGINFOD_URLS} "https://debuginfod.archlinux.org" )
-
 ADD_CUSTOM_TARGET( Valgrind
                    COMMENT "Grinding the tests"
-                   COMMAND valgrind --leak-check=full --track-origins=yes --error-exitcode=1 --quiet ./All_Boost_Tests --build_info --color_output --show_progress --report_format=HRF --report_level=short
+                   DEPENDS All_Boost_Tests
+                   COMMAND ${CMAKE_COMMAND} -E env DEBUGINFOD_URLS=https://debuginfod.archlinux.org valgrind --leak-check=full --track-origins=yes --error-exitcode=1 --quiet ./All_Boost_Tests --build_info --color_output --show_progress --report_format=HRF --report_level=short
                    )
