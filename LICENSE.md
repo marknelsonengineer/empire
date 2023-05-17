@@ -23,3 +23,14 @@ all necessary servicing, repair or correction.
 #### Limitation of Liability
 In no event will the copyright holder be liable for damages arising out of
 the use or inability to use this program.
+
+## Source Licenses
+The Wolfpack Empire website is Copyrighted, All Rights Reserved. 
+http://www.wolfpackempire.com/links.html
+
+The source code, hosted at https://sourceforge.net/projects/empserver/ uses 
+GPLv3, which is a Copyleft license.
+
+...so I guess I'm in a lot of trouble.  For what it's worth, I have no intention
+of monetizing Empire ][.  I just want to control it until I figure out what to
+do with it.
