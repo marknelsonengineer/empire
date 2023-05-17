@@ -914,7 +914,7 @@ WARN_LOGFILE           =
 
 INPUT                  = .
 INPUT                 += .doxygen/stats.py
-INPUT                 += .doxygen/update_usage.py
+# INPUT                 += .doxygen/update_usage.py
 INPUT                 += .doxygen/update_version.py
 INPUT                 += src
 INPUT                 += src/lib

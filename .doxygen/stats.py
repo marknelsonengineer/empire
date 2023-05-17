@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
 #  #############################################################################
-#  University of Hawaii, College of Engineering
-#  Lab 4 - Memory Scanner - EE 491F (Software Reverse Engineering) - Spr 2023
+#  Empire ][ - What you do is what you do
 #
 ## Generate project statistics
 ##
@@ -15,8 +14,9 @@
 ## @see https://github.com/gitpython-developers/GitPython
 ## @see https://gitpython.readthedocs.io/en/stable/
 ##
-## @file   stats.py
-## @author Mark Nelson <marknels@hawaii.edu>
+## @file      stats.py
+## @author    Mark Nelson <mr_nelson@icloud.com>
+## @copyright (c) 2021 Mark Nelson.  All rights reserved.
 #  #############################################################################
 
 import sys
@@ -32,10 +32,10 @@ import re
 OUTPUT_FILE = "STATISTICS.md"
 
 ## The GitHub username that owns this repository
-GITHUB_USERNAME = "marknelsonengineer-sp23"
+GITHUB_USERNAME = "marknelsonengineer"
 
 ## The GitHub repository name
-GITHUB_REPO = "sre_lab4_memscan"
+GITHUB_REPO = "empire"
 
 ## Use this style when printing content from shields_io
 ##
@@ -96,7 +96,7 @@ def print_title():
 	print("Project Statistics")
 	print("==================")
 	print("")
-	print("@brief Documents high-level statistics about the source code and")
+	print("@brief Document high-level statistics about the source code and")
 	print("       git repository")
 	print("")
 
@@ -328,6 +328,8 @@ def process_files_in_git():
 					number_of_test_assertions += 1
 					# print( line )
 
+		elif "fileTemplates" in _path:
+			other_files.add(_path)
 		elif file_extension == '.h':
 			h_src_files.add(_path)
 		elif file_extension == '.c':
