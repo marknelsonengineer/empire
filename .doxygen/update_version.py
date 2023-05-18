@@ -5,7 +5,7 @@
 #
 ## Increment the build number in `version.h`
 ##
-## /// Use Semantic Versioning 2.0.0:  https://semver.org/
+## Use Semantic Versioning 2.0.0:  https://semver.org/
 ##
 ## Usage:  Update the `version.h` file
 ##
