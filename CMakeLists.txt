@@ -47,6 +47,6 @@ ADD_CUSTOM_TARGET( Lint
                    COMMAND clang-tidy ${ALL_SOURCES} --quiet --extra-arg-before=-std=c++20 --
                    )
 
-ADD_EXECUTABLE( empire src/main.cpp )
+ADD_EXECUTABLE( empire src/main.cpp src/version.h )
 
 ADD_SUBDIRECTORY( tests )

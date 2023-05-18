@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
 #  #############################################################################
-#  University of Hawaii, College of Engineering
-#  Lab 4 - Memory Scanner - EE 491F (Software Reverse Engineering) - Spr 2023
+#  Empire ][ - What you do is what you do
 #
 ## Increment the build number in `version.h`
 ##
@@ -12,10 +11,11 @@
 ##
 ## @file   update_version.py
 ## @author Mark Nelson <marknels@hawaii.edu>
+## @copyright (c) 2021 Mark Nelson.  All rights reserved.
 #  #############################################################################
 
 ## Path to version.h in C
-VERSION_HEADER_FILE = "./version.h"
+VERSION_HEADER_FILE = "./src/version.h"
 
 ## Increments with major functional changes
 major_version = 0

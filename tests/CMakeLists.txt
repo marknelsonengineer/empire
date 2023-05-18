@@ -19,7 +19,7 @@ INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
 IF( Boost_UNIT_TEST_FRAMEWORK_FOUND )
    MESSAGE( STATUS "Generating unit tests for BOOST Unit Test Framework" )
 
-   ADD_EXECUTABLE( All_Boost_Tests test_Singleton.cpp ../src/lib/Singleton.hpp ../src/lib/Singleton.cpp )
+   ADD_EXECUTABLE( All_Boost_Tests test_Singleton.cpp ../src/lib/Singleton.hpp ../src/lib/Singleton.cpp ../src/version.h )
    TARGET_LINK_LIBRARIES( All_Boost_Tests ${Boost_LIBRARIES} )
 
 ELSE( Boost_UNIT_TEST_FRAMEWORK_FOUND )
