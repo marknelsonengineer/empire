@@ -47,52 +47,52 @@ build_version = 0
 ## @param line The string to be searched (haystack)
 ## @return The integer that follows the keyword
 def extract_int(key: str, line: str) -> int:
-	i = line.find(key)    # Find the leading string
+    i = line.find(key)  # Find the leading string
 
-	if i == -1:        # If not found, return -1
-		return -1
+    if i == -1:  # If not found, return -1
+        return -1
 
-	i2 = i + len(key)     # Get the remaining part of the string
+    i2 = i + len(key)  # Get the remaining part of the string
 
-	i3 = int(line[i2:])   # Convert it to an int
+    i3 = int(line[i2:])  # Convert it to an int
 
-	return i3
+    return i3
 
 
 ## Get the full version number (as a string) from `version.h`
 ##
 ## @return A string like `1.4.0+2202`
 def get_full_version() -> str:
-	global major_version
-	global minor_version
-	global patch_version
-	global build_version
+    global major_version
+    global minor_version
+    global patch_version
+    global build_version
 
-	with open(VERSION_HEADER_FILE, "rt") as versionFile:  # open for reading text
-		for aLine in versionFile:              # For each line, read to a string,
-			# print(myline)                     # and print the string.
-			i = extract_int("#define VERSION_MAJOR", aLine)
-			if i != -1:
-				major_version = i
+    with open(VERSION_HEADER_FILE, "rt") as versionFile:  # open for reading text
+        for aLine in versionFile:  # For each line, read to a string,
+            # print(myline)        # and print the string.
+            i = extract_int("#define VERSION_MAJOR", aLine)
+            if i != -1:
+                major_version = i
 
-			i = extract_int("#define VERSION_MINOR", aLine)
-			if i != -1:
-				minor_version = i
+            i = extract_int("#define VERSION_MINOR", aLine)
+            if i != -1:
+                minor_version = i
 
-			i = extract_int("#define VERSION_PATCH", aLine)
-			if i != -1:
-				patch_version = i
+            i = extract_int("#define VERSION_PATCH", aLine)
+            if i != -1:
+                patch_version = i
 
-			i = extract_int("#define VERSION_BUILD", aLine)
-			if i != -1:
-				build_version = i
+            i = extract_int("#define VERSION_BUILD", aLine)
+            if i != -1:
+                build_version = i
 
-	full_version = str(major_version)
-	full_version += "." + str(minor_version)
-	full_version += "." + str(patch_version)
-	full_version += "+" + str(build_version)
+    full_version = str(major_version)
+    full_version += "." + str(minor_version)
+    full_version += "." + str(patch_version)
+    full_version += "+" + str(build_version)
 
-	return full_version
+    return full_version
 
 
 ## Update the build line in `version.h`
@@ -107,24 +107,24 @@ def get_full_version() -> str:
 ## @param filename The file to be searched (haystack)
 ## @return Nothing
 def update_version(key: str, filename: str):
-	li = []
+    li = []
 
-	with open(filename, "rt") as versionFile:
-		for line in versionFile:
-			i = line.find(key)
-			if i >= 0:
-				old_build = extract_int(key, line)
-				new_build = old_build + 1
-				new_line = line.replace(str(old_build), str(new_build))
-				li.append(new_line)
-			else:
-				li.append(line)
+    with open(filename, "rt") as versionFile:
+        for line in versionFile:
+            i = line.find(key)
+            if i >= 0:
+                old_build = extract_int(key, line)
+                new_build = old_build + 1
+                new_line = line.replace(str(old_build), str(new_build))
+                li.append(new_line)
+            else:
+                li.append(line)
 
-	j = 0
-	with open(filename, "wt") as version_file:
-		while j < len(li):
-			version_file.write(li[j])
-			j += 1
+    j = 0
+    with open(filename, "wt") as version_file:
+        while j < len(li):
+            version_file.write(li[j])
+            j += 1
 
 
 # The main body of the program
