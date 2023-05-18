@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Empire ][
+//  Empire V
 //
 /// Test class for Commodity.cpp
 ///
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE( Commodity_overflow ) {
 
       const commodityValue* maxValue = boost::get_error_info<errinfo_maxValue>( e );
       BOOST_CHECK( *maxValue == 100 );
-      
+
       char const* commodityName1 = boost::get_error_info<errinfo_commodityType>( e );
       BOOST_CHECK( *commodityName1 == 'd' );
    }
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE( Commodity_underflow ) {
 
       const commodityValue* requestedValue = boost::get_error_info<errinfo_requestedValue>( e );
       BOOST_CHECK( *requestedValue == -1 );
-      
+
 		const char* commodityName1 = boost::get_error_info<errinfo_commodityType>( e );
       BOOST_CHECK( *commodityName1 == 'o' );
    }

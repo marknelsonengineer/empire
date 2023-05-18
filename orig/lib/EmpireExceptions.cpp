@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Empire ][
+//  Empire V
 //
 /// Base class for all of Empire's exceptions.
 ///
@@ -28,7 +28,7 @@ namespace boost {
 /// Empire specific handler when we fail BOOST_ASSERT().
 ///
 /// @internal
-/// boost::assertion_failed is declared in <boost/assert.hpp> but it is never 
+/// boost::assertion_failed is declared in <boost/assert.hpp> but it is never
 /// defined.  The application is expected to supply an appropriate definition.
 ///
 /// @see https://www.boost.org/doc/libs/1_73_0/libs/assert/doc/html/assert.html

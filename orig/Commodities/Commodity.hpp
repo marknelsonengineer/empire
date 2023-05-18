@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Empire ][
+//  Empire V
 //
 /// Base class for all commodities (food, iron ore, civs, mil, etc.) that keeps
 /// data that varies between instances of a commodity.

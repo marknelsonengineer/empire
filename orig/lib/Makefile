@@ -1,5 +1,5 @@
 ###############################################################################
-# Empire ][
+# Empire V
 #
 # @file    lib/Makefile
 # @version 1.0 - Initial implementation

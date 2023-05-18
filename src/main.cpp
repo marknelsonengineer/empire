@@ -9,10 +9,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include <iostream>
 
+#include "version.h"
+
 /// A sample Hello World program
 ///
 /// @return Zero
    int main() {
-      std::cout << "Hello, World!" << std::endl;
+      std::cout << "Empire version " << FULL_VERSION << std::endl;
       return 0;
    }

@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Empire ][
+//  Empire V
 //
-/// Test Boost global logging services for Empire ][
+/// Test Boost global logging services for Empire V
 ///
 /// @see https://www.boost.org/doc/libs/1_75_0/libs/log/doc/html/index.html
 /// @see https://github.com/snikulov/boost-log-example/blob/master/src/main.cpp

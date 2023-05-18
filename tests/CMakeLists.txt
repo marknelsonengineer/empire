@@ -1,5 +1,5 @@
 ###############################################################################
-### Empire ][ - What you do is what you do
+### Empire V - What you do is what you do
 ###
 ### Tells cmake about the project's source files and targets
 ###

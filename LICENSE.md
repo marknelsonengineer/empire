@@ -1,7 +1,7 @@
 License
 =======
 
-@brief Documents the current license for Empire ][
+@brief Documents the current license for Empire V
 
 Copyright (C) 2023 Mark Nelson, All rights reserved. 
 
@@ -32,5 +32,5 @@ The source code, hosted at https://sourceforge.net/projects/empserver/ uses
 GPLv3, which is a Copyleft license.
 
 ...so I guess I'm in a lot of trouble.  For what it's worth, I have no intention
-of monetizing Empire ][.  I just want to control it until I figure out what to
+of monetizing Empire V.  I just want to control it until I figure out what to
 do with it.

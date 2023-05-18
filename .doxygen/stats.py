@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 #  #############################################################################
-#  Empire ][ - What you do is what you do
+#  Empire V - What you do is what you do
 #
 ## Generate project statistics
 ##

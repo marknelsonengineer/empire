@@ -1,5 +1,5 @@
 ###############################################################################
-# Empire ][
+# Empire V
 #
 # @file    Nations/Makefile
 # @version 1.0 - Initial implementation

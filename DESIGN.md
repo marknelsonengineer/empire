@@ -111,10 +111,10 @@ and used a username+password to login.  Sessions were not encrypted.  3rd
 party Empire Clients like [WinACE] and [PTkII2] had to use the same Telent 
 interface as a backend and then create a whole presentation layer on top of that.
 
-Empire ][ will present an API to clients.  The default client will have an SSH
+Empire V will present an API to clients.  The default client will have an SSH
 terminal interface that accepts text input and converts it to the API.
 
-Empire ][ will have the following layers:
+Empire V will have the following layers:
   - Core:  A multi-threaded C++ program that maintains the state of the application and processes transactions.
   - Rep:  The Representative.  This layer runs on the same server as the core, but in a different process space (Probably).  Its purpose is to mediate requests between the Client API.
   - Client API:  [gRPC] over SSH using XXX for authentication.

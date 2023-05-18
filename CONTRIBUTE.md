@@ -4,7 +4,7 @@ Contribute to Empire
 @brief Document the development environment, development philosophy, major
 design decisions, code conventions, et al.
 
-Empire ][ is a CMake-based C Linux usermode console program
+Empire V is a CMake-based C Linux usermode console program
 
 
 For enums, the last element is called COUNT and has the number of elements in the enum.

@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Empire ][
+//  Empire V
 //
-/// The Core services of the Empire ][ server.
+/// The Core services of the Empire V server.
 ///
 //  The documentation for classes in this file are in the .hpp file.
 ///

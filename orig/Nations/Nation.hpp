@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Empire ][
+//  Empire V
 //
 /// Concrete classes for all nations.
 ///
@@ -36,7 +36,7 @@ typedef uint8_t Nation_ID;
 /// Maximum number of Nations.
 ///
 /// Nation IDs will go from 0 to MAX_NATIONS-1 .  As we all know, C bases arrays
-/// with 0.  Philosophically, I'd like to keep the Empire ][ codebase simple.
+/// with 0.  Philosophically, I'd like to keep the Empire V codebase simple.
 /// To that end, I'm going to allow a country_name of 0... which will default to
 /// Pogo, the Deity.
 constinit static const Nation_ID MAX_NATIONS = 8;  // @TODO Increase to 100
@@ -162,7 +162,7 @@ public:  /////////////////////////// Getters //////////////////////////////////
 	/// Set the status of a nation
 	///
 	/// @todo:  Validate and consider a state machine
-	/// @todo:  We *really* need to work out a security model for Empire ][
+	/// @todo:  We *really* need to work out a security model for Empire V
    constexpr void setStatus( const Status newStatus ) { status = newStatus; }
 
 
@@ -218,7 +218,7 @@ public:  //////////////////////////// Methods /////////////////////////////////
 ///
 class Nations final : public Singleton<Nations> {
 public:  ///////////////////////// Constructors ///////////////////////////////
-	/// Creates and initializes the Nations of Empire ][.
+	/// Creates and initializes the Nations of Empire V.
 	///
 	/// `token` is a protected Singleton struct... thereby preventing
 	/// non-inherited classes from invoking this constructor.
@@ -227,7 +227,7 @@ public:  ///////////////////////// Constructors ///////////////////////////////
 
 private:  /////////////////////////////  Members  /////////////////////////////
 	/// Array holding all of the `Nation`s.  This will likely be a hotspot for
-	/// Empire ][.
+	/// Empire V.
 	///
 	/// @internal
 	/// I've tried making this compiletime static and runtime static, but
