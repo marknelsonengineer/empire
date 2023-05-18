@@ -24,7 +24,7 @@
 
 /// Monotonic counter, set by update_version.py, that tracks the number of
 /// compilations.
-#define VERSION_BUILD 4
+#define VERSION_BUILD 5
 
 #ifndef STRINGIFY_VALUE
 /// C preprocesor trick that converts values into strings at compile time

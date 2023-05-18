@@ -34,6 +34,11 @@ ADD_CUSTOM_TARGET( Document
                    COMMAND doxygen .doxygen/Doxyfile
                    )
 
+SET_TARGET_PROPERTIES( Document
+                       PROPERTIES
+                       ADDITIONAL_CLEAN_FILES "${CMAKE_SOURCE_DIR}/.doxygen/generated_docs"
+                       )
+
 ADD_CUSTOM_TARGET( Publish
                    COMMENT "Pushing files to UHUnix"
                    COMMAND rsync --recursive --checksum --delete --compress --stats --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/ marknels@uhunix.hawaii.edu:~/public_html/${CMAKE_PROJECT_NAME}
