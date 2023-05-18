@@ -5,6 +5,8 @@ Boost Test
      alt="Boost Logo"
 />
 
+@brief Document how [Boost Test] is confgured and used
+
 _Test everything that could possibly break_
 
 _The acceptance test makes the customer satisfied that the software provides the

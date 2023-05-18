@@ -1,8 +1,8 @@
-Contribute to Empire ][
-=======================
+Contribute to Empire
+====================
 
 @brief Document the development environment, development philosophy, major
-       design decisions, code conventions, et al.
+design decisions, code conventions, et al.
 
 Empire ][ is a CMake-based C Linux usermode console program
 

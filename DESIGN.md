@@ -1,5 +1,5 @@
-The Design of Empire ][
-=======================
+The Design of Empire
+====================
 
 @brief Document the development philosophy and major design decisions
 
@@ -11,10 +11,10 @@ The Design of Empire ][
 
 To a large degree, I'm writing Empire because I want to learn more about
 Object-Oriented Programming.  Specifically, I want to become a practitioner of
-design patterns.  [Empire] is well understood and documented inasmuch as it's an
-existing program that I intend to replicate.  To that end, my intent is to 
-consider as many patterns as possible and select the best fit for the 
-application.
+design patterns and modern C++.  [Empire] is well understood and documented 
+inasmuch as it's an existing program that I intend to replicate.  To that end, 
+my intent is to consider as many patterns as possible and select the best fit 
+for the application.
 
 ## High Level Design
 

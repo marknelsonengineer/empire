@@ -6,6 +6,8 @@ Doxygen
      alt="Doxygen Logo"
 />
 
+@brief Document how [Doxygen] is configured and used
+
 [Doxygen] is the de facto standard for generating documentation from annotated
 C++ sources.  Doxygen's website is:  https://www.doxygen.nl
 

@@ -1,6 +1,9 @@
 Credits
 =======
 
+@brief Empire benefits from the work of a large number of volunteers and open
+       source projects
+
 I'd like to thank Jim Garlic for allowing Empire on our AT&T 3B5 system at CSU 
 Chico in the mid-80s.  This was my introduction to the game.
 
