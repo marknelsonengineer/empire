@@ -7,24 +7,26 @@
 ///
 /// #VERSION_BUILD is modified by update_version.py
 ///
-/// @file    version.h
-/// @author  Mark Nelson <marknels@hawaii.edu>
+/// @file      version.hpp
+/// @author    Mark Nelson <marknels@hawaii.edu>
 /// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#include "typedefs.h"  // For const_version_number_t
+
 /// Increments with __major__ functional changes
-#define VERSION_MAJOR    5
+extern const_version_number_t VERSION_MAJOR;
 
 /// Increments with minor functional changes
-#define VERSION_MINOR    0
+extern const_version_number_t VERSION_MINOR;
 
 /// Increments with bugfixes
-#define VERSION_PATCH    0
+extern const_version_number_t VERSION_PATCH;
 
 /// Monotonic counter, set by update_version.py, that tracks the number of
 /// compilations.
-#define VERSION_BUILD 5
+extern const_version_number_t VERSION_BUILD;
 
 #ifndef STRINGIFY_VALUE
 /// C preprocessor trick that converts values into strings at compile time

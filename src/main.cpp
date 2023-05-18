@@ -7,9 +7,10 @@
 /// @author    Mark Nelson <mr_nelson@icloud.com>
 /// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
+
 #include <iostream>
 
-#include "version.h"
+#include "version.hpp"
 
 /// A sample Hello World program
 ///

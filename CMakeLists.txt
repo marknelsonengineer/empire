@@ -52,7 +52,7 @@ ADD_CUSTOM_TARGET( Lint
                    COMMAND clang-tidy ${ALL_SOURCES} --quiet --extra-arg-before=-std=c++20 --
                    )
 
-ADD_EXECUTABLE( empire src/main.cpp src/version.h )
+ADD_EXECUTABLE( empire src/main.cpp src/version.hpp src/typedefs.h src/version.cpp )
 
 ADD_CUSTOM_TARGET( update_version
                    COMMENT "Update version"
