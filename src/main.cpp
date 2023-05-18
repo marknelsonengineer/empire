@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Empire ][ - What you do is what you do
+//  Empire V - What you do is what you do
 //
-/// The Core services of the `Empire ][` server.
+/// The Core services of the `Empire V` server.
 ///
 /// @file      main.cpp
 /// @author    Mark Nelson <mr_nelson@icloud.com>
