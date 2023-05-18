@@ -1,6 +1,6 @@
 #if ($HEADER_COMMENTS)
 ///////////////////////////////////////////////////////////////////////////////
-//  Empire ][ - What you do is what you do
+//  Empire V - What you do is what you do
 //
 /// Lorem ipsum
 ///
