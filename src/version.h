@@ -27,7 +27,7 @@
 #define VERSION_BUILD 5
 
 #ifndef STRINGIFY_VALUE
-/// C preprocesor trick that converts values into strings at compile time
+/// C preprocessor trick that converts values into strings at compile time
 /// @see https://stackoverflow.com/questions/12844364/stringify-c-preprocess
 #define STRINGIFY_VALUE(a)  STRINGIFY_VALUE_(a)
 
