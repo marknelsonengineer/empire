@@ -49,4 +49,10 @@ ADD_CUSTOM_TARGET( Lint
 
 ADD_EXECUTABLE( empire src/main.cpp src/version.h )
 
+ADD_CUSTOM_TARGET( update_version
+                   COMMENT "Update version"
+                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                   COMMAND .doxygen/update_version.py )
+ADD_DEPENDENCIES( empire update_version )
+
 ADD_SUBDIRECTORY( tests )

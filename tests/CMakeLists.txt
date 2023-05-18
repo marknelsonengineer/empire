@@ -21,6 +21,7 @@ IF( Boost_UNIT_TEST_FRAMEWORK_FOUND )
 
    ADD_EXECUTABLE( All_Boost_Tests test_Singleton.cpp ../src/lib/Singleton.hpp ../src/lib/Singleton.cpp ../src/version.h )
    TARGET_LINK_LIBRARIES( All_Boost_Tests ${Boost_LIBRARIES} )
+   ADD_DEPENDENCIES( All_Boost_Tests update_version )
 
 ELSE( Boost_UNIT_TEST_FRAMEWORK_FOUND )
    MESSAGE( "BOOST Test framework is missing" )
