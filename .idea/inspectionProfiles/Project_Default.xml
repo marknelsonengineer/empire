@@ -7,7 +7,15 @@
       </Languages>
     </inspection_tool>
     <inspection_tool class="OCUnusedMacro" enabled="true" level="WARNING" enabled_by_default="false">
-      <scope name="Production Code" level="WARNING" enabled="true" />
+      <scope name="Production Code" level="WARNING" enabled="true" editorAttributes="NOT_USED_ELEMENT_ATTRIBUTES" />
+    </inspection_tool>
+    <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="E266" />
+          <option value="E501" />
+        </list>
+      </option>
     </inspection_tool>
   </profile>
 </component>

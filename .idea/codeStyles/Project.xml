@@ -75,6 +75,12 @@
         <rule entity="LOCAL_VARIABLE" visibility="ANY" specifier="ANY" prefix="" style="CAMEL_CASE" suffix="" />
       </rules>
     </Objective-C-extensions>
+    <Python>
+      <option name="SPACE_AROUND_EQ_IN_NAMED_PARAMETER" value="true" />
+      <option name="SPACE_AROUND_EQ_IN_KEYWORD_ARGUMENT" value="true" />
+      <option name="SPACE_AROUND_POWER_OPERATOR" value="false" />
+      <option name="OPTIMIZE_IMPORTS_SORT_NAMES_IN_FROM_IMPORTS" value="true" />
+    </Python>
     <files>
       <extensions>
         <pair source="cpp" header="hpp" fileNamingConvention="NONE" />
@@ -137,6 +143,10 @@
         <option name="TAB_SIZE" value="3" />
         <option name="SMART_TABS" value="true" />
       </indentOptions>
+    </codeStyleSettings>
+    <codeStyleSettings language="Python">
+      <option name="RIGHT_MARGIN" value="120" />
+      <option name="SOFT_MARGINS" value="80" />
     </codeStyleSettings>
     <codeStyleSettings language="Shell Script">
       <indentOptions>
