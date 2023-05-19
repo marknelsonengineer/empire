@@ -21,8 +21,8 @@ namespace empire {
 [[maybe_unused]] alignas( int ) const_version_number_t VERSION_MAJOR {  5 };
 [[maybe_unused]] alignas( int ) const_version_number_t VERSION_MINOR {  0 };
 [[maybe_unused]] alignas( int ) const_version_number_t VERSION_PATCH {  0 };
-[[maybe_unused]] alignas( int ) const_build_number_t   VERSION_BUILD { 24 };
+[[maybe_unused]] alignas( int ) const_build_number_t   VERSION_BUILD { 34 };
 
-[[maybe_unused]] alignas( const std::string ) constinit const std::string FULL_VERSION { "5.0.0+24" };
+[[maybe_unused]] alignas( const std::string ) constinit const std::string FULL_VERSION { "5.0.0+34" };
 
 } // namespace empire
