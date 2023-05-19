@@ -34,18 +34,15 @@ Issues:
 | Target            | Description                                               |
 |-------------------|-----------------------------------------------------------|
 | `All_Boost_Tests` | The [Boost Test] target                                   |
-| `empire`          | Compile memscan with debug mode ( `DEBUG` is defined)     |
+| `Document`        | Make a Doxygen website                                    |
+| `empire_client`   | A command-line client for Empire V                        |
+| `empire_server`   | The Core services of the `Empire V` server                |
+| `Publish`         | Push the Doxygen website to UH Unix                       |
+| `Lint`            | Use `clang-tidy` to do static analysis on the source code |
 | `Valgrind`        | Run All_Boost_Tests using [valgrind] and report any leaks |
-| `make static`     | Statically compile memscan                                |
-| `make clean`      | Remove all compiler-generated files                       |
-| `make doc`        | Make a Doxygen website and push it to UH UNIX             |
-| `make lint`       | Use `clang-tidy` to do static analysis on the source code |
 
-To statically compile memscan, you need to manually build and install libcap.
+To statically compile All_Boost_Tests, you need to manually build and install Boost Test.
 ArchLinux does not normally ship static libraries.
-
-
-
 
 
 ## Setup the development environment
