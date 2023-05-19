@@ -3,7 +3,7 @@
 #  #############################################################################
 #  Empire V - What you do is what you do
 #
-## Generate project statistics
+## Generate project statistics for `STATISTICS.md`
 ##
 ## This code depends on the Git Python module.  To install it, login as `root`:
 ## ````
