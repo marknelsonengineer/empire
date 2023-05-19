@@ -12,6 +12,7 @@
 
 # -cert-msc30-c,       # We can use the rand() function in C
 # -cert-msc50-cpp,     # We can use the rand() function in C++
+# -fuchsia-overloaded-operator   # We can overload operators (We'll probably ignore all the Fuchsia checks someday)
 # -google-build-using-namespace  # We can use namespaces
 # -llvm-header-guard   # We use #pragma once, not a traditional header guard
 # -llvmlibc-*,         # We aren't writing LLVM-libc code
@@ -22,6 +23,7 @@ Checks: >
   *,
   -cert-msc30-c,
   -cert-msc50-cpp,
+  -fuchsia-overloaded-operator,
   -google-build-using-namespace,
   -llvm-header-guard,
   -llvmlibc-*,
@@ -33,6 +35,7 @@ FormatStyle: none
 User: marknels
 CheckOptions:
   readability-identifier-length.IgnoredVariableNames: '[ijk]'
+  readability-identifier-length.IgnoredParameterNames: '[n]'
   llvm-else-after-return.WarnOnUnfixable: 'false'
   cert-msc32-c.DisallowedSeedTypes: 'time_t,std::time_t'
 UseColor: true
