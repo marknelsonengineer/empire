@@ -12,10 +12,12 @@
 
 #include "version.hpp"
 
+using namespace empire;
+
 /// A sample Hello World program
 ///
 /// @return Zero
-   int main() {
-      std::cout << "Empire version " << FULL_VERSION << std::endl;
-      return 0;
-   }
+int main() {
+   std::cout << "Empire version " << FULL_VERSION << std::endl;
+   return 0;
+}
