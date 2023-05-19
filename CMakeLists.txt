@@ -14,7 +14,7 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.26 )
 
 PROJECT( Empire
          VERSION 2.0
-         DESCRIPTION "More is better"
+         DESCRIPTION "What you do is what you do"
          LANGUAGES CXX )
 
 MESSAGE( STATUS "CMAKE_SOURCE_DIR = [${CMAKE_SOURCE_DIR}]" )
