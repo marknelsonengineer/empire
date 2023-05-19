@@ -18,7 +18,6 @@
       <option name="SUPERCLASS_LIST_COMMA_ON_NEXT_LINE" value="true" />
       <option name="SPACE_WITHIN_TEMPLATE_DECLARATION_LTGT" value="true" />
       <option name="SPACE_WITHIN_TEMPLATE_CALL_LTGT" value="true" />
-      <option name="SPACE_WITHIN_EMPTY_BRACES" value="true" />
       <option name="SPACE_WITHIN_FUNCTION_DECLARATION_PARENTHESES" value="true" />
       <option name="SPACE_WITHIN_FUNCTION_CALL_PARENTHESES" value="true" />
       <option name="SPACE_WITHIN_LAMBDA_CAPTURE_LIST_BRACKET" value="true" />
