@@ -22,7 +22,8 @@ Memscan 1 ...
 
 
 # CMake {#MakeTargets}
-Empire uses the following `CMake` targets:
+Empire uses the following `CMake` production targets:
+For development targets, see @todo
 
 | Command       | Purpose                                                       |
 |---------------|---------------------------------------------------------------|

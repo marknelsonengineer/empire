@@ -1,8 +1,7 @@
 Contribute to Empire
 ====================
 
-@brief Document the development environment, development philosophy, major
-design decisions, code conventions, et al.
+@brief Document the development environment, code conventions, et al.
 
 Empire V is a CMake-based C Linux usermode console program
 
@@ -11,6 +10,39 @@ For enums, the last element is called COUNT and has the number of elements in th
 
 I intend to let CLion reflow the source code
 
+
+# CMake {#DevelopmentMakeTargets}
+Empire uses the following `CMake` development targets:
+For production targets, see @todo
+
+## CMake Profiles
+
+| Profile      | Description                                                           |
+|--------------|-----------------------------------------------------------------------|
+| `Debug`      | Build with debugging support                                          |
+| `Release`    | Build optimized, static executables                                   |
+| `MinSizeRel` | Build non-static, somewhat less optimized executables                 |
+| `Clang`      | Compile with the clang compiler (the others use the default compiler) |
+
+Issues:
+[ ]: The Release profile is not building All_Boost_Tests because ArchLinux 
+     doesn't seem to have a static library package for [Boost Test].
+[ ]: Clang is not building All_Boost_Tests as there's an undefined reference
+
+## CMake Targets
+
+| Target            | Description                                               |
+|-------------------|-----------------------------------------------------------|
+| `All_Boost_Tests` | The [Boost Test] target                                   |
+| `empire`          | Compile memscan with debug mode ( `DEBUG` is defined)     |
+| `Valgrind`        | Run All_Boost_Tests using [valgrind] and report any leaks |
+| `make static`     | Statically compile memscan                                |
+| `make clean`      | Remove all compiler-generated files                       |
+| `make doc`        | Make a Doxygen website and push it to UH UNIX             |
+| `make lint`       | Use `clang-tidy` to do static analysis on the source code |
+
+To statically compile memscan, you need to manually build and install libcap.
+ArchLinux does not normally ship static libraries.
 
 
 
