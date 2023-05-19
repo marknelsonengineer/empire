@@ -14,6 +14,8 @@
 ## @copyright (c) 2023 Mark Nelson.  All rights reserved.
 #  #############################################################################
 
+from enum import Enum
+
 ## Path to version.cpp in C
 VERSION_SOURCE_FILE = "./src/version.cpp"
 
@@ -37,11 +39,11 @@ build_version = 0
 ##
 ## If the source file had a line like:
 ##
-## `const_version_number_t VERSION_BUILD { 4 }`
+## `const_build_number_t VERSION_BUILD { 4 }`
 ##
 ## then
 ##
-## `extract_int( "const_version_number_t VERSION_BUILD { ", line)` would return `4` as an `int`.
+## `extract_int( "const_build_number_t VERSION_BUILD { ", line)` would return `4` as an `int`.
 ##
 ## @param key The keyword to search for (needle)
 ## @param line The string to be searched (haystack)
@@ -71,19 +73,19 @@ def get_full_version() -> str:
     with open(VERSION_SOURCE_FILE, "rt") as versionFile:  # open for reading text
         for aLine in versionFile:  # For each line, read to a string,
             # print(myline)        # and print the string.
-            i = extract_int("const_version_number_t VERSION_MAJOR { ", aLine)
+            i = extract_int("VERSION_MAJOR { ", aLine)
             if i != -1:
                 major_version = i
 
-            i = extract_int("const_version_number_t VERSION_MINOR { ", aLine)
+            i = extract_int("VERSION_MINOR { ", aLine)
             if i != -1:
                 minor_version = i
 
-            i = extract_int("const_version_number_t VERSION_PATCH { ", aLine)
+            i = extract_int("VERSION_PATCH { ", aLine)
             if i != -1:
                 patch_version = i
 
-            i = extract_int("const_version_number_t VERSION_BUILD { ", aLine)
+            i = extract_int("VERSION_BUILD { ", aLine)
             if i != -1:
                 build_version = i
 
@@ -95,28 +97,40 @@ def get_full_version() -> str:
     return full_version
 
 
+## A switch to control what to replace in update_version()
+class ReplacementMode(Enum):
+    ## Replace with just the build number: `2202`
+    REPLACE_BUILD_NUMBER = 1
+    ## Replace with the full version: `5.0.2+2202`
+    REPLACE_FULL_VERSION = 2
+
+
 ## Update the build line in version.cpp
 ##
-## If the old build line was: `const_version_number_t VERSION_BUILD { 1045 }`
+## If the old build line was: `VERSION_BUILD { 1045 }`
 ##
-## Then the new build line will be:  `const_version_number_t VERSION_BUILD { 1046 }`
+## Then the new build line will be:  `VERSION_BUILD { 1046 }`
 ##
 ## This routine rewrites version.cpp
 ##
-## @param key The keyword to search for (needle)
+## @param find_str The keyword to search for (needle)
+## @param replacement_mode What to do if we find the needle
 ## @param filename The file to be searched (haystack)
 ## @return Nothing
-def update_version(key: str, filename: str):
+def update_version(find_str: str, replacement_mode: ReplacementMode, filename: str):
     line_array = []
 
     with open(filename, "rt") as versionFile:
         for line in versionFile:
             line = line.rstrip()  # Trim whitespace from the end of line
-            i = line.find(key)
-            if i >= 0:
-                old_build = extract_int(key, line)
+            find_index = line.find(find_str)
+            if find_index >= 0 and replacement_mode == ReplacementMode.REPLACE_BUILD_NUMBER:
+                old_build = extract_int(find_str, line)
                 new_build = old_build + 1
                 new_line = line.replace(str(old_build), str(new_build))
+                line_array.append(new_line)
+            elif find_index >= 0 and replacement_mode == ReplacementMode.REPLACE_FULL_VERSION:
+                new_line = line[0:find_index + len(find_str)] + "\"" + get_full_version() + "\" };"
                 line_array.append(new_line)
             else:
                 line_array.append(line)
@@ -130,6 +144,7 @@ def update_version(key: str, filename: str):
 
 
 # The main body
-update_version("const_version_number_t VERSION_BUILD { ", VERSION_SOURCE_FILE)
+update_version("VERSION_BUILD { ", ReplacementMode.REPLACE_BUILD_NUMBER, VERSION_SOURCE_FILE)
+update_version("FULL_VERSION { ", ReplacementMode.REPLACE_FULL_VERSION, VERSION_SOURCE_FILE)
 
 print(get_full_version())
