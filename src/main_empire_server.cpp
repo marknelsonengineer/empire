@@ -19,5 +19,7 @@ using namespace empire;
 /// @return Zero
 int main() {
    std::cout << "Empire version " << FULL_VERSION << std::endl;
+   std::cout << std::endl;
+   std::cout << LEGAL_NOTICE;
    return 0;
 }

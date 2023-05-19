@@ -36,4 +36,7 @@ namespace empire {
 /// The full version number as a string
 [[maybe_unused]] extern const std::string FULL_VERSION;
 
+/// A bit for the lawyers
+[[maybe_unused]] extern const std::string LEGAL_NOTICE;
+
 } // namespace empire
