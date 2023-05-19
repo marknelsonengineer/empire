@@ -22,9 +22,10 @@ MESSAGE( STATUS "CMAKE_SOURCE_DIR = [${CMAKE_SOURCE_DIR}]" )
 SET( CMAKE_CXX_STANDARD 20 )
 SET( CMAKE_VERBOSE_MAKEFILE false )
 
-SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}         -Wall -Wextra" )
-SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -mtune=native -O2" )
-SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}   -march=x86-64 -mtune=generic -O0 -DDEBUG -fno-inline" )
+SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -lstdc++" )
+SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -mtune=native -Ofast -funroll-loops -static -mfma" )
+SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=x86-64 -mtune=generic -O0 -DDEBUG -fno-inline" )
+SET( CMAKE_CXX_FLAGS_MINSIZEREL  "${CMAKE_CXX_FLAGS_DEBUG} -march=x86-64 -mtune=generic -Oz -DDEBUG -fno-inline" )
 
 ADD_CUSTOM_TARGET( Document
                    COMMENT "Generating documentation"

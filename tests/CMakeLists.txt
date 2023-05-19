@@ -22,13 +22,16 @@ IF( Boost_UNIT_TEST_FRAMEWORK_FOUND )
    ADD_EXECUTABLE( All_Boost_Tests test_Singleton.cpp ../src/lib/Singleton.hpp ../src/lib/Singleton.cpp ../src/version.hpp ../src/typedefs.h ../src/version.cpp test_version.cpp )
    TARGET_LINK_LIBRARIES( All_Boost_Tests ${Boost_LIBRARIES} )
    ADD_DEPENDENCIES( All_Boost_Tests update_version )
+   SET_TARGET_PROPERTIES(All_Boost_Tests PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD_RELEASE True)
+
+   ADD_CUSTOM_TARGET( Valgrind
+                      COMMENT "Grinding the tests"
+                      DEPENDS All_Boost_Tests
+                      COMMAND ${CMAKE_COMMAND} -E env DEBUGINFOD_URLS=https://debuginfod.archlinux.org valgrind --leak-check=full --track-origins=yes --error-exitcode=1 --quiet ./All_Boost_Tests --build_info --color_output --show_progress --report_format=HRF --report_level=short
+                      )
+
+   SET_TARGET_PROPERTIES(Valgrind PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD_RELEASE True)
 
 ELSE( Boost_UNIT_TEST_FRAMEWORK_FOUND )
    MESSAGE( "BOOST Test framework is missing" )
 ENDIF( Boost_UNIT_TEST_FRAMEWORK_FOUND )
-
-ADD_CUSTOM_TARGET( Valgrind
-                   COMMENT "Grinding the tests"
-                   DEPENDS All_Boost_Tests
-                   COMMAND ${CMAKE_COMMAND} -E env DEBUGINFOD_URLS=https://debuginfod.archlinux.org valgrind --leak-check=full --track-origins=yes --error-exitcode=1 --quiet ./All_Boost_Tests --build_info --color_output --show_progress --report_format=HRF --report_level=short
-                   )
