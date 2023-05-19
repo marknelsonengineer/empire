@@ -2,11 +2,13 @@
   <dictionary name="mark">
     <words>
       <w>authorname</w>
+      <w>autobrief</w>
       <w>blockfree</w>
       <w>calles</w>
       <w>cout</w>
       <w>creatordate</w>
       <w>doxyfile</w>
+      <w>doxywizard</w>
       <w>dtors</w>
       <w>enddd</w>
       <w>endl</w>
