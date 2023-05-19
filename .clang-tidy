@@ -10,9 +10,10 @@
 ### @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ###############################################################################
 
+# -cert-err58-cpp      # It's OK to have a static object that may throw an exception during initialization.  If it crashes, at least it happens fast.
 # -cert-msc30-c,       # We can use the rand() function in C
 # -cert-msc50-cpp,     # We can use the rand() function in C++
-# -fuchsia-overloaded-operator   # We can overload operators (We'll probably ignore all the Fuchsia checks someday)
+# -fuchsia*            # Ignore all Fuchsia checks - they don't apply to us and unnecessarily constrain what is permitted in this program.
 # -google-build-using-namespace  # We can use namespaces
 # -llvm-header-guard   # We use #pragma once, not a traditional header guard
 # -llvmlibc-*,         # We aren't writing LLVM-libc code
@@ -21,9 +22,10 @@
 ---
 Checks: >
   *,
+  -cert-err58-cpp,
   -cert-msc30-c,
   -cert-msc50-cpp,
-  -fuchsia-overloaded-operator,
+  -fuchsia-*,
   -google-build-using-namespace,
   -llvm-header-guard,
   -llvmlibc-*,
