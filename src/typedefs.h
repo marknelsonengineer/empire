@@ -18,8 +18,11 @@
 
 #include <cstdint>     // For uint8_t uint_16_t uint32_t, etc.
 
+namespace empire {
 /// The type definition for constant semantic version numbers
 using const_version_number_t = const uint8_t;
 
 /// The type definition for constant semantic build numbers
 using const_build_number_t = const uint32_t;
+
+} // namespace empire
