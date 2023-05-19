@@ -1,11 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Empire V - What you do is what you do
 //
-/// The Core services of the `Empire V` server.
+/// A command-line client for Empire V
 ///
-/// @file      main.cpp
-/// @author    Mark Nelson <mr_nelson@icloud.com>
-/// @copyright (c) 2021 Mark Nelson.  All rights reserved.
+/// @file      main_empire_client.cpp
+/// @author    Mark Nelson <marknels@hawaii.edu>
+/// @copyright (c) 2023 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <iostream>

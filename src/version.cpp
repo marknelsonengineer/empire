@@ -21,9 +21,9 @@ namespace empire {
 [[maybe_unused]] alignas( int ) const_version_number_t VERSION_MAJOR {  5 };
 [[maybe_unused]] alignas( int ) const_version_number_t VERSION_MINOR {  0 };
 [[maybe_unused]] alignas( int ) const_version_number_t VERSION_PATCH {  0 };
-[[maybe_unused]] alignas( int ) const_build_number_t   VERSION_BUILD { 72 };
+[[maybe_unused]] alignas( int ) const_build_number_t   VERSION_BUILD { 76 };
 
-[[maybe_unused]] alignas( const std::string ) constinit const std::string FULL_VERSION { "5.0.0+72" };
+[[maybe_unused]] alignas( const std::string ) constinit const std::string FULL_VERSION { "5.0.0+76" };
 
 // constinit const std::string LEGAL_NOTICE { "Copyright (c) 2023 Mark Nelson.  All rights reserved." };
 

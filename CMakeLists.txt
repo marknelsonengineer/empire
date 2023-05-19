@@ -53,12 +53,14 @@ ADD_CUSTOM_TARGET( Lint
                    COMMAND clang-tidy ${ALL_SOURCES} --quiet --extra-arg-before=-std=c++20 --
                    )
 
-ADD_EXECUTABLE( empire src/main.cpp src/version.hpp src/typedefs.h src/version.cpp )
+ADD_EXECUTABLE( empire_server src/main_empire_server.cpp src/version.hpp src/typedefs.h src/version.cpp )
+ADD_EXECUTABLE( empire_client src/main_empire_client.cpp src/version.hpp src/typedefs.h src/version.cpp )
 
 ADD_CUSTOM_TARGET( update_version
                    COMMENT "Update version"
                    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                    COMMAND .doxygen/update_version.py )
-ADD_DEPENDENCIES( empire update_version )
+ADD_DEPENDENCIES( empire_server update_version )
+ADD_DEPENDENCIES( empire_client update_version )
 
 ADD_SUBDIRECTORY( tests )
