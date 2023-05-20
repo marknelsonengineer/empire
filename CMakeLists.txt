@@ -54,7 +54,7 @@ ADD_CUSTOM_TARGET( Lint
                    )
 
 ADD_EXECUTABLE( empire_server src/main_empire_server.cpp src/version.hpp src/typedefs.h src/version.cpp )
-ADD_EXECUTABLE( empire_client src/main_empire_client.cpp src/version.hpp src/typedefs.h src/version.cpp src/Serialization_demo.cpp )
+ADD_EXECUTABLE( empire_client src/main_empire_client.cpp src/version.hpp src/typedefs.h src/version.cpp )
 
 FIND_PACKAGE( Boost REQUIRED COMPONENTS serialization )
 IF( Boost_SERIALIZATION_FOUND )
