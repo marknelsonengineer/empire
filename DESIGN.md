@@ -460,7 +460,7 @@ Here's a good question:  Can I create every sector at compile time?  Should I --
 How does that reconcile with marshalling?
 
 
-## TODO
+## Things to do
 - [ ] Do a UMLet drawing of the current Empire codebase
 - [ ] Expand on the UMLet drawing to include the design of the Business Domain / 
     data model.
