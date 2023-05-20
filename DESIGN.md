@@ -222,6 +222,22 @@ Question:  What are we giving up if we don't use a database?  Answer:  [ACID] pr
       - Mitigation:  This is not an iron-clad, database-level guarantee, but 
         we will periodically Marshall (save) the state of the object model.
 
+I experimented with [Boost Serialization].  The demo worked well and I was able
+to see text and binary formats.  Couldn't get the XML to work (bummer).  It feels
+rusty (not the language).  I don't think it's currently maintained.  Right now,
+I'm disinclined to use it.
+
+I also looked at BitSery.  It's fast and I can see why.  I think it'll tightly
+couple our dataset to byte sizes.  It's currently maintained.  It feels a little
+too lightweight, but maybe that's good.
+
+There's a good list of alternative serialization libraries here:
+https://github.com/fraillt/bitsery
+
+I think one of the main properties/functions of the data model needs to be
+serialization and (probably) lock management.  
+
+
 ## Threading
 
 Should Empire's core be a multi-threaded application?  What requirement is 
@@ -282,8 +298,36 @@ For review:
 `consteval` Declares a function or template to produce a compile time constant expression.  It forces calls to happen at compile-time.
 `constinit` Initializes a static variable at compile time.  It does not imply `const` nor `constexpr`.
 
+when I consider using the persistence model for holding configuration, here are
+my thoughts:
+  - Consideration:  Use it as the master for config.  Users would modify the persisted files and
+    then Empire imports it.
+    - Decision:  The persistence model does not store key-value pairs.
+I considered the persistence model for holding configuration.  The problem is
+that the model does not store key-value pairs.  Positional information in the
+model is implied by source order.  Therefore, users have no idea what they
+are configuring.
+
 I'm going to explore the persistence model before looking into Boost 
 Program Options.  Maybe we can get away with using persistence for config.
+
+Options come in 2 flavors:
+1. Compiled into the code (most of them - for efficiency)
+2. Runtime options
+
+
+Config flyweight??
+A configuration has
+A type
+Int, float, double, bool,
+Min and max values
+Validator
+Group
+Long description
+A config key
+Should return in reference to the configured item
+Is settable/resettable from a test
+Should have a default value
 
 
 
@@ -303,6 +347,7 @@ I'll explore GoF's Structural Patterns to build the object model...
 Then, explore their Behavioral Patterns to implement the business rules.
 
 I need to get smarter on delegates and composites
+
 
 ## Singletons
 
@@ -414,15 +459,12 @@ first piece works.
 Here's a good question:  Can I create every sector at compile time?  Should I --
 How does that reconcile with marshalling?
 
-## TODO
-[ ] Do a UMLet drawing of the current Empire codebase
-[ ] Expand on the UMLet drawing to include the design of the Business Domain / 
-    data model.
-[ ] Set the project icon in CLion
 
-Options come in 2 flavors:
-1. Compiled into the code (most of them - for efficiency)
-2. Runtime options
+## TODO
+- [ ] Do a UMLet drawing of the current Empire codebase
+- [ ] Expand on the UMLet drawing to include the design of the Business Domain / 
+    data model.
+- [ ] Set the project icon in CLion
 
 
 [Empire]:  http://www.wolfpackempire.com

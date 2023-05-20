@@ -12,12 +12,17 @@
 
 #include "version.hpp"
 
+extern void test_serial();
+
 using namespace empire;
 
 /// A sample Hello World program
 ///
 /// @return Zero
 int main() {
+
+   test_serial();
+
    std::cout << "Empire version " << FULL_VERSION << std::endl;
    return 0;
 }

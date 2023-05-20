@@ -17,7 +17,7 @@ FIND_PACKAGE( Boost REQUIRED COMPONENTS unit_test_framework )
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
 
 IF( Boost_UNIT_TEST_FRAMEWORK_FOUND )
-   MESSAGE( STATUS "Generating unit tests for BOOST Unit Test Framework" )
+   # SET( Boost_USE_STATIC_LIBS ON)  # I'll need to compile my own Boost libraries, then we can get into this
 
    ADD_EXECUTABLE( All_Boost_Tests test_Singleton.cpp ../src/lib/Singleton.hpp ../src/lib/Singleton.cpp ../src/version.hpp ../src/typedefs.h ../src/version.cpp test_version.cpp )
    TARGET_LINK_LIBRARIES( All_Boost_Tests ${Boost_LIBRARIES} )
