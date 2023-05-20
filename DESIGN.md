@@ -165,16 +165,17 @@ In no particular order, here are the things I'd like Empire V to do:
   - Uses a modern exception-handling mechanism
   - Is persistent
   - Uses modern Software Engineering practices like:
-    - Continuous integration (GitHub Actions)
-    - Source-level documentation [Doxygen]
-    - Unit testing (Boost Tests)
-    - Linting [clang-tidy]
-    - Build (CMake)
+    - Continuous integration with [GitHub Actions]
+    - Source-level documentation with [Doxygen]
+    - Unit testing with [Boost Test]
+    - Static analysis / linting with [clang-tidy]
+    - Build orchestration with [CMake]
   - Is secure
 
 ### Low Level Design Requirements
   - All major data structures should be aligned
-  - Works on several compilers (Visual Studio, clang, gcc, icc)
+  - Works on several compilers:  [Visual Studio], [clang], [gcc], [icc]
+  - Work on several 64-bit platforms:  Linux & Windows
 
 ### Persistence
 
@@ -183,19 +184,19 @@ database is the right way to go.  Here's why:
   1. Fundamentally, the data model will be an object-model in the C++ memory
      space.  This is notoriously difficult to synchronize with a database.
   2. Which database would be the best fit?  A SQL database would be challenging
-     to maintain.  A bag-of-words database like Mongo or Elastic is not a good fit.
+     to maintain.  A bag-of-words database like [Mongo] or [Elastic] is not a good fit.
 
 I think Empire is best served with a C++ object model (fast and object-oriented)
 hosted by a multi-threaded process (see Threading) that can be marshalled in/out
 of files for persistence.
 
 Outstanding questions:
-  [ ] What Marshalling technology to use
-  [ ] What file format will the data be in
-  [ ] How often is the in-memory object model backed up
-  [ ] How do you Marshall the object model in a concurrent environment
+  - [ ] What Marshalling technology to use
+  - [ ] What file format will the data be in
+  - [ ] How often is the in-memory object model backed up
+  - [ ] How do you Marshall the object model in a concurrent environment
 
-Q:  What are we giving up if we don't use a database?  A:  [ACID] properties.
+Question:  What are we giving up if we don't use a database?  Answer:  [ACID] properties.
   - **A**: Atomicity
     - Transactions occur in a single unit.  If we break down the transactions
       we will likely encounter in Empire, they fall into 4 big buckets:
@@ -236,7 +237,7 @@ If they can make it work, then I think we can make it work.
 
 ## API Model & Layers
 
-The original [Empire] had a Telnet-like interface.  Users connected with a hostname+port
+The original [Empire] has a Telnet-like interface.  Users connected with a hostname+port
 and used a username+password to login.  Sessions were not encrypted.  3rd
 party Empire Clients like [WinACE] and [PTkII2] had to use the same Telent 
 interface as a backend and then create a whole presentation layer on top of that.
@@ -280,6 +281,9 @@ For review:
 `constexpr` Means "to be evaluated at compile time".  Applies to variables.
 `consteval` Declares a function or template to produce a compile time constant expression.  It forces calls to happen at compile-time.
 `constinit` Initializes a static variable at compile time.  It does not imply `const` nor `constexpr`.
+
+I'm going to explore the persistence model before looking into Boost 
+Program Options.  Maybe we can get away with using persistence for config.
 
 
 
@@ -460,3 +464,9 @@ Options come in 2 flavors:
 [Rust]:  https://www.rust-lang.org
 [Swift]:  https://www.swift.org
 [constinit]:  https://en.cppreference.com/w/cpp/language/constinit
+[icc]:  https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compiler.html
+[CMake]:  https://cmake.org
+[GitHub actions]:  https://docs.github.com/en/actions
+[Mongo]:  https://www.mongodb.com
+[Elastic]:  https://www.elastic.co
+[gRPC]:  https://grpc.io
