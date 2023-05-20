@@ -81,6 +81,7 @@ fabric.properties
 
 # Ignore Doxygen generated content
 generated_docs/
+Doxyfile.bak
 
 # Ignore compiled files & libraries
 *.o
