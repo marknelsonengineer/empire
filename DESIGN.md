@@ -1,52 +1,182 @@
 The Design of Empire
 ====================
 
+<img src="images/design.png" style="width:300px; float: right; margin: 20px 10px 10px 10px;" alt="Design"/>
+
 @brief Document the development philosophy and major design decisions
 
 ## Design Philosophy
 
-1. Embrace modern Software Engineering design practices
+1. Embrace thoughtful, modern Software Engineering design practices
 2. Is correct & efficient
 3. Is fun
 
-To a large degree, I'm writing Empire because I want to learn more about
-Object-Oriented Programming.  Specifically, I want to become a practitioner of
-design patterns and modern C++.  [Empire] is well understood and documented 
-inasmuch as it's an existing program that I intend to replicate.  To that end, 
-my intent is to consider as many patterns as possible and select the best fit 
-for the application.
+I'm writing Empire V because I want to learn more about Object-Oriented 
+Programming.  Specifically, I want to become a practitioner of design patterns 
+and [modern C++].  [Empire] is well understood and documented inasmuch as it's 
+an existing program that I intend to replicate.  To that end, my intent is to 
+consider and document alternatives, then select the best fit for the 
+application.
 
-## High Level Design
+I intend to use an [Agile] development methodology similar to [XP].  The good 
+news is that I have an excellent "customer" -- the original design of [Empire].
+My customer is clear, always available and takes criticism very well.
 
-Options come in 2 flavors:
-1. Compiled into the code (most of them - for efficiency)
-2. Runtime options
+I don't intend to change the gameplay in any significant way.  I am rewriting it 
+from the ground up.  It will be designed with modern programming
+principles such that it'll be fully documented, tested, loosely coupled and 
+extensible.
+
+Like any project, there's a lot of things you have to get right upfront:
+  - Programming language:  [C++]
+  - Development environment:  [CLion]
+  - Version control:  [GitHub]
+  - Testing: [Boost test]
+  - Logging: [Boost log]
+  - Persistence: [Boost serialization]
+  - Internationalization:  [UTF-8]
+  - Static analysis / linting:  [clang-tidy]
+  - Documentation: [Doxygen]
+  - Compilers:  [gcc], [clang] and I'd love to get into [Visual Studio] ASAP
+
+This document will discuss the thinking behind several of these decisions.
+
+## The Choice of Language
+Empire was originally written in [C].  [An examination of the source] will both
+awe and terrify most programmers.  They really did an excellent job with the tools
+they had.  The codebase implements primitive _objects_ and makes use of some 
+design patterns.  The only criticism I'd level against the original is that 
+some variable names were _very_ cryptic:  `int m_m_p_d = 1440;  /* max mins of play per day (per country) */`
+
+Before choosing [C++], I considered a number of programming languages.  Also, 
+please refer to [High Level Design Requirements](DESIGN.md#high-level-design-requirements) 
+for the criteria:
+
+### Java (and C#)
+#### Pros
+  - In the last decade, [Java] has published some excellent, large, multi-platform, 
+    internationalized, programs: [Ghidra], [IntelliJ], [Eclipse], et. al.
+  - It has a huge library to draw from.
+  - It has a good ecosystem of tools: [Javadoc], code signing, etc.
+
+#### Cons
+  - Performance.  Although I think it's very good, it's simply not optimal.
+  - Fun factor.  I've written a lot of Java.  I want to dig into something new.
+
+I envision the client being written in one of these languages someday
+
+### Python (and Pearl and PHP)
+#### Pros
+  - [Python], [Pearl] and [PHP] have many of the same Pros as [Java], but... 
+
+#### Cons
+  - I continue to be concerned about the stability of [Python]
+  - Performance
+  - Lack of static analysis tools
+  - They are a scripting languages
+  - [Python] programs seem (to me, at least) to be fragile.  They break all the
+    time and I have to sort out what to fix.
+
+### Go
+#### Pros
+  - I'll be honest, [Go] has a lot going for it.  It was authored Bob Pike & Ken
+    Thompson.  Giants in our community.
+  - It's compiled to machine executables
+  - Strong typing
+  - Concurrent / native thread support
+
+#### Cons
+  - Lack of generics:  No templates.  No compile-time guarantees.
+  - I'd miss assertions
+
+### Rust
+#### Pros
+  - This is another tough call.  [Rust] is used in the Linux Kernel, which says a
+    lot about its suitability as a systems language.
+  - It's compiled to machine executables.  
+  - Strong typing.  
+  - Concurrent.
+  - Functional.  
+  - A decent standard library (not amazing).  
+  - Generics.  
+  - Ranges.
+  - It's fast.  In the same league as [C].
+
+#### Cons
+  - Stability.  Partly, the language and partly the standards body.
+
+Really, in hindsight, not going with [Rust] may be a mistake.  I'll leave this
+for Empire VI.
+
+### Swift (and Objective-C)
+#### Pros
+  - Messaging.  For Empire's core, this could be a game-changer.  Think about
+    how the internals of Empire would benefit from this.
+
+#### Cons
+  - [Swift]: The paint's still wet... it's so new
+  - Lack of libraries on non-Apple platforms
+  - Objective-C: It's based on [C], not [C++]
+  - Objective-C: I find the language to be ungainly
+
+It may also be a mistake not going with [Swift]
+
+### C++
+#### Pros
+  - It's fast.  
+  - Strong typing (although it's getting weaker.  If I want to use `auto`, I'll
+    write in JavaScript)
+  - Generics/templates.  
+  - Functional.  
+  - Has mature libraries, toolset and a variety of compilers
+
+#### Cons
+  - I really feel like the current standards committee is distorting the language.
+    - There's no fewer than 4 ways to make a `const` and one of them is still
+      mutable (I'm looking at you, [constinit]).
+  - It's not expressive.  I know they've added "expressive" features, but if
+    you look at a declaration for a range-based iterator that uses concepts, 
+    you'd be mystified (at least I am).  Also, the error messages can be byzantine.
+
+#### Bottom Line
+
+So, why did I go with [C++]?  Because I know it (well enough, that is) and I 
+want to get into it a bit more.  I don't like the idea of learning a new 
+language from scratch unless I'm getting paid for it.  It also takes a few 
+_years_ to gain competency in a language.
+
+I realize that this isn't a good basis for such a fundamental design decision, 
+but it boils down to this:  **Get it done**.  If we want to get it done, then 
+[C++] is the best choice because I can start now.  Otherwise, I'll need to wait 
+a few years.  Maybe someone will come along and rewrite Empire in [Rust] or [Swift], 
+incorporating some of the design patterns I'll be prototyping for them and 
+improving on others.
 
 
 ## High Level Design Requirements
-  - UNICODE / Wide-Character support
+
+In no particular order, here are the things I'd like Empire V to do:
+
+  - International UNICODE support
+    - I'm on the fence about number & date formatting
+    - I don't think I'll be supporting right-to-left languages
+    - Make it easy to translate from one language to another
   - Uses a modern logger for debugging, telemetry, etc.
   - Uses a modern exception-handling mechanism
   - Is persistent
   - Uses modern Software Engineering practices like:
     - Continuous integration (GitHub Actions)
-    - Source-level documentation (Doxygen)
+    - Source-level documentation [Doxygen]
     - Unit testing (Boost Tests)
-    - Linting (clang-tidy)
+    - Linting [clang-tidy]
     - Build (CMake)
   - Is secure
 
-## Low Level Design Requirements
+### Low Level Design Requirements
   - All major data structures should be aligned
   - Works on several compilers (Visual Studio, clang, gcc, icc)
 
-
-
-We chose C++ as the programming language because:
-  1.  It's efficient & modern
-  2. It supports object-oriented design
-
-## Persistence
+### Persistence
 
 Empire _could_ be a traditional [3-tiered application], but I don't think a 
 database is the right way to go.  Here's why:
@@ -196,7 +326,7 @@ The arguments against Singletons...
     coupling by making it easy for components to depend on them.
     - Agreed:  I'd have to think on this, but my initial reaction is that, for 
       the things I intend to make Singletons, those dependencies _will_ exist.
-  - Whether or not there needs to be a single instance of an object depends upon
+  - Whether there needs to be a single instance of an object depends upon
     the context in which that object is being used.
     - I will not be running multiple Empire programs in the same process space.
     - I won't be testing multiple Empire programs concurrently.  One Empire at
@@ -211,10 +341,10 @@ The arguments against Singletons...
   - How do you create mock worlds for testing?
     - How will we test multiple world sizes?  How will we test creating and destroying
       a world?  I'm going to have to think about my strategy of hardcoding a lot of
-      Empire's configuration for performance reasons... and reconsile that with
+      Empire's configuration for performance reasons... and reconcile that with
       a robust testing strategy.
   - You loose control of initializations
-    - Not true.  The Core will initialize all of the Singletons.  That's what
+    - Not true.  The Core will initialize all the Singletons.  That's what
       the core does.  Also, I will be using instances of Singletons (or the contents therein)
       as parameters when I create other objects.
   - Explicit reference passing makes garbage collection work.
@@ -236,10 +366,10 @@ The arguments against Singletons...
     - That's a little dramatic.  Especially, if you tell everyone up-front what
       our Singletons are and they are logical.  Still, I think it's good point.
       When do we pass a parameter and when do I grab from a Singleton.
-  - Globals provide invisible lines of influence across all of the code
+  - Globals provide invisible lines of influence across all the code
     - Agreed, in the context of raw variables...  but these globals are objects
       that have all of the protections an encapsulated class should have.
-  - Globals lead to sphgetti code.
+  - Globals lead to spaghetti code.
     - Agreed, when they are abused.  All global state will be maintained in the 
       object model.
   - When you go to include 3rd party libraries in your code, sometimes they use 
@@ -278,13 +408,17 @@ someone to access a second piece of code (the globals) to understand how the
 first piece works.
 
 Here's a good question:  Can I create every sector at compile time?  Should I --
-How does that reconsile with marshalling?
+How does that reconcile with marshalling?
 
 ## TODO
 [ ] Do a UMLet drawing of the current Empire codebase
 [ ] Expand on the UMLet drawing to include the design of the Business Domain / 
     data model.
 [ ] Set the project icon in CLion
+
+Options come in 2 flavors:
+1. Compiled into the code (most of them - for efficiency)
+2. Runtime options
 
 
 [Empire]:  http://www.wolfpackempire.com
@@ -296,3 +430,33 @@ How does that reconsile with marshalling?
 [Singletons are Pathological Liars]: https://testing.googleblog.com/2008/08/by-miko-hevery-so-you-join-new-project.html
 [Where Have All the Singletons Gone?]: https://testing.googleblog.com/2008/08/where-have-all-singletons-gone.html
 [Performant Singletons]: https://web.archive.org/web/20090303174418/http://scientificninja.com/advice/performant-singletons
+[modern c++]: https://www.modernescpp.com
+[Agile]: https://agilemanifesto.org
+[XP]: http://www.extremeprogramming.org
+[clang]: https://clang.llvm.org
+[C++]: https://en.cppreference.com
+[CLion]:  https://jetbrains.com/clion
+[GitHub]:  https://github.com
+[Boost test]: https://www.boost.org/doc/libs/1_82_0/libs/test/doc/html/index.html
+[Boost log]:  https://www.boost.org/doc/libs/1_82_0/libs/log/doc/html/index.html
+[clang-tidy]:  https://clang.llvm.org/extra/clang-tidy/
+[Doxygen]:  https://doxygen.nl
+[gcc]:  https://gcc.gnu.org
+[Visual Studio]:  https://visualstudio.microsoft.com
+[Boost serialization]:  https://www.boost.org/doc/libs/1_82_0/libs/serialization/doc/index.html
+[C]:  https://www.bell-labs.com/usr/dmr/www/chist.html
+[An examination of the source]: http://git.pond.sub.org/?p=empserver
+[UTF-8]: http://utf8everywhere.org
+[Java]:  https://java.com
+[C-Sharp]:  https://learn.microsoft.com/en-us/dotnet/csharp/
+[Ghidra]:  http://Ghidra-sre.org
+[IntelliJ]:  https://www.jetbrains.com/idea/
+[Eclipse]:  https://www.eclipse.org/ide/
+[Javadoc]:  https://en.wikipedia.org/wiki/Javadoc
+[Python]:  https://www.python.org
+[Pearl]:  https://www.perl.org
+[PHP]:  https://www.php.net
+[Go]:  https://go.dev
+[Rust]:  https://www.rust-lang.org
+[Swift]:  https://www.swift.org
+[constinit]:  https://en.cppreference.com/w/cpp/language/constinit
