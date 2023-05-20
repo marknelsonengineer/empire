@@ -61,11 +61,9 @@ You may need some of these tools...  As root:
 
 As a mortal user:
 ````
-     wget https://www.doxygen.nl/files/doxygen-1.9.6.src.tar.gz
-     gunzip doxygen-1.9.6.src.tar.gz
-     tar -xvf doxygen-1.9.6.src.tar
-     cd doxygen-1.9.6
-
+     git clone -b Release_1_9_7 https://github.com/doxygen/doxygen
+     cd doxygen
+     
      mkdir build
      cd build
 
@@ -75,8 +73,7 @@ As a mortal user:
      cmake -G "Unix Makefiles" -Dbuild_search=ON -Duse_libclang=ON -Dbuild_parse=ON ..
 
      time make -j 3   # Watch your memory and CPU utilization... This needs at least 4G of memory
-     time make -j 2   # Worked and took under 5 minutes to build in 2G of memory
-     time make -j 1   # Takes 10 minutes to build, but can be done in 2G of memory
+     time make -j 2   # Worked and took 10 minutes to build with 2G of memory
 
      make test   # One test failed, but it's OK
 
@@ -92,12 +89,16 @@ As root:
      sudo fstrim -av 
 ````
 
+## To update a Doxyfile
+Use `doxygen -u Doxyfile` to update an old Doxyfile
+
+
 ## To integrate (and run) Doxygen with Visual Studio
 - TODO... I wire it into Tools
 - Click Tools > Doxygen
 
 ## To integrate (and run) Doxygen with CLion
-- It's automatically integrated into CLion - CMake does all the work
+- It's automatically integrated into [CLion] - [CMake] does all the work
 - Select the Doxygen target and build the project.  Don't run it as there's no 
   run target.
 
@@ -113,3 +114,5 @@ As root:
 [Graphviz]:  https://graphviz.org
 [DOT]: https://graphviz.org
 [DIA]: http://dia-installer.de
+[CLion]: https://www.jetbrains.com/clion
+[CMake]:  https://cmake.org
