@@ -49,8 +49,7 @@ repo = git.Repo(".")
 
 # Initialize the sets of file	types	we	will process
 
-## The set of `.h` files from Git
-h_src_files = set()
+h_src_files = set()  ##< The set of `.h` files from Git
 
 ## The set of `.c` files from Git
 c_src_files = set()
