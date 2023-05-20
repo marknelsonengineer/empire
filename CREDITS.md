@@ -10,19 +10,20 @@ Chico in the mid-80s.  This was my introduction to the game.
 ## Toolchain
 This project is the product of a tremendous amount of R&D and would not be possible without the following world-class tools:
 
-| Tool           | Website                    |                                                      Logo                                                      |
-|----------------|----------------------------|:--------------------------------------------------------------------------------------------------------------:|
-| **gcc**        | https://gcc.gnu.org        |        <img src="images/logo_gcc.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="GCC"/>         |
-| **llvm/clang** | https://clang.llvm.org     |       <img src="images/logo_llvm.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="clang"/>       |
-| **Boost**      | https://boost.org          |      <img src="images/logo_boost.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="Boost"/>       |
-| **Doxygen**    | https://doxygen.nl         |    <img src="images/logo_doxygen.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="Doxygen"/>     |
-| **DOT**        | https://graphviz.org       |        <img src="images/logo_dot.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="Dot"/>         |
-| **Git**        | https://git-scm.com        |        <img src="images/logo_git.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="Git"/>         |
-| **GitHub**     | https://github.com         |     <img src="images/logo_github.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="GitHub"/>      |
-| **Linux**      | https://kernel.org         |      <img src="images/logo_linux.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="Linux"/>       |
-| **ArchLinux**  | https://archlinux.org      |  <img src="images/logo_archlinux.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="ArchLinux"/>   |
-| **VirtualBox** | https://www.virtualbox.org | <img src=".images/logo_virtualbox.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="VirtualBox"/> |
-| **Valgrind**   | https://valgrind.org       |   <img src="images/logo_valgrind.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="Valgrind"/>    |
+| Tool           | Website                     |                                                      Logo                                                      |
+|----------------|-----------------------------|:--------------------------------------------------------------------------------------------------------------:|
+| **gcc**        | https://gcc.gnu.org         |        <img src="images/logo_gcc.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="GCC"/>         |
+| **llvm/clang** | https://clang.llvm.org      |       <img src="images/logo_llvm.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="clang"/>       |
+| **Boost**      | https://boost.org           |      <img src="images/logo_boost.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="Boost"/>       |
+| **Doxygen**    | https://doxygen.nl          |    <img src="images/logo_doxygen.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="Doxygen"/>     |
+| **DOT**        | https://graphviz.org        |        <img src="images/logo_dot.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="Dot"/>         |
+| **Git**        | https://git-scm.com         |        <img src="images/logo_git.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="Git"/>         |
+| **GitHub**     | https://github.com          |     <img src="images/logo_github.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="GitHub"/>      |
+| **Linux**      | https://kernel.org          |      <img src="images/logo_linux.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="Linux"/>       |
+| **ArchLinux**  | https://archlinux.org       |  <img src="images/logo_archlinux.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="ArchLinux"/>   |
+| **VirtualBox** | https://www.virtualbox.org  | <img src=".images/logo_virtualbox.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="VirtualBox"/> |
+| **Valgrind**   | https://valgrind.org        |   <img src="images/logo_valgrind.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="Valgrind"/>    |
+| **CLion**      | https://jetbrains.com/clion |      <img src="images/logo_clion.png" style="height:40px; float: center; margin: 0 0 0 0;" alt="CLion"/>       |
 
 
 ## Abridged from the Wolfpack Empire site
