@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>840</x>
+      <y>72</y>
+      <w>224</w>
+      <h>440</h>
+    </coordinates>
+    <panel_attributes>template=T: Type
+Item
+--
+string configKey
+T value
+T default
+T minValue
+T maxValue
+string longDescription
+string group
+uint groupOrder
+?? Source
+Version asOf
+Version depricated
+Version desupported
+
+Printable _p
+Validatable _v
+Sourcable _userConfigFile
+Sourcable _persistance
+Sourcable _commandLine
+--
++ ConfigItem(Printable, ...)
+
++ T getValue()
++ bool tryThis(T)
++ void setValue(T v)
+
++ void print()
++ bool isValid()
++ void readFromFile()
++ void writeToConfigFile()
++ void updateConfigFile()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>128</x>
+      <y>80</y>
+      <w>264</w>
+      <h>416</h>
+    </coordinates>
+    <panel_attributes>Config::Singleton&lt;Config&gt;
+--
+ConfigItems items
+AbstractItem&lt;bool&gt;* techBleedItem;
+--
+# Config()
+  techBleedItem = make_unique&lt;Item&lt;bool&gt;(...)&gt;;
+  items[configKey, techBleedItem]
+  ...
+  
++ bool getTechBleed()
++ string getMotd()
++ enum UpdateDemand getUpdateDemand()
++ int getStartMob()
++ double getMoneyCiv()
++ float btuBuildRate()
+
++ getItem( configKey ) - !!
+
++ printConfig()
++ validate()
++ setDefault()
++ readFromConfigFile()
++ writeToConfigFile()
++ updateConfigFile()
++ readfromPersistance()
++ writeToPersistance()
++ readFromArgv
+
++ erase()
++ dump()
++ info()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>864</x>
+      <y>0</y>
+      <w>168</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>template=T: Type
+/AbstractItem/
+--
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>632</y>
+      <w>216</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>/Printable/
+--
+--
+/+ void print()/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>800</y>
+      <w>136</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>/Validatable/
+--
+--
+/+ bool isValid()/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>528</x>
+      <y>912</y>
+      <w>144</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>/Sourceable/
+--
+--
+/+ void read()/
+/+ void write()/
+/+ void update()/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>112</x>
+      <y>584</y>
+      <w>224</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>PrintConfig
+--
+AbstractItem&amp;
+--
++ PrintConfig( AbstractItem&amp; )
++ void print()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>112</x>
+      <y>680</y>
+      <w>120</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>NotPrintable
+--
+--
+NotPrintable()
++ void print()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>112</x>
+      <y>776</y>
+      <w>248</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>ValidateScalar
+--
+AbstractItem&amp;
+--
++ ValidateScalar( AbstractItem&amp; )
++ bool isValid()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>112</x>
+      <y>864</y>
+      <w>248</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>ValidateString
+--
+AbstractItem&amp;
+--
++ ValidateString( AbstractItem&amp; )
++ bool isValid()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>328</x>
+      <y>616</y>
+      <w>88</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>90.0;30.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>224</x>
+      <y>680</y>
+      <w>192</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>220.0;10.0;10.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>352</x>
+      <y>800</y>
+      <w>64</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>60.0;30.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>352</x>
+      <y>848</y>
+      <w>64</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>60.0;10.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>112</x>
+      <y>1040</y>
+      <w>224</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>PropertiesFile
+--
+AbstractItem&amp;
+--
+PropertiesFile( AbstractItem&amp; )
++ void read()
++ void write()
++ void update()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>352</x>
+      <y>1040</y>
+      <w>232</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>Persisted
+--
+AbstractItem&amp;
+--
+Persisted( AbstractItem&amp; )
++ void read()
++ void write()
++ void update()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>328</x>
+      <y>984</y>
+      <w>216</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>250.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>456</x>
+      <y>984</y>
+      <w>120</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>600</x>
+      <y>1040</y>
+      <w>216</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>Argv
+--
+AbstractItem&amp;
+--
+Argv( AbstractItem&amp; )
++ void read()
++ void write()
++ void update()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>584</x>
+      <y>984</y>
+      <w>312</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;370.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>832</x>
+      <y>1040</y>
+      <w>208</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>NotSourcable
+--
+AbstractItem&amp;
+--
+NotSourcable( AbstractItem&amp; )
++ void read()
++ void write()
++ void update()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>664</x>
+      <y>976</y>
+      <w>304</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;360.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>576</x>
+      <y>8</y>
+      <w>104</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>map&lt;K, T&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>928</x>
+      <y>48</y>
+      <w>24</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>544</x>
+      <y>800</y>
+      <w>256</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Note..
+bg=orange
+Everything should be validatable</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>968</x>
+      <y>488</y>
+      <w>88</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Composite
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>552</x>
+      <y>664</y>
+      <w>88</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Component
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>288</x>
+      <y>640</y>
+      <w>64</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Leaf
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>456</x>
+      <y>80</y>
+      <w>352</w>
+      <h>184</h>
+    </coordinates>
+    <panel_attributes>ConfigItems::map&lt;string:config_key, AbstractItem&gt;
+--
+--
+ConfigItems()
+
+print()
+validate()
+readPropertiesFile()
+readPersistedData()
+getFromArgv()
+
+dump()
+info()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>32</y>
+      <w>24</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>208</x>
+      <y>8</y>
+      <w>104</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>singleton&lt;T&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>248</x>
+      <y>32</y>
+      <w>24</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+</diagram>
