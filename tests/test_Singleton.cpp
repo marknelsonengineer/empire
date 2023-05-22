@@ -18,6 +18,7 @@
 
 using namespace empire;
 
+/// Create a basic Singleton class.
 class TestSingleton1 final : public Singleton< TestSingleton1 > {
 public:
    explicit TestSingleton1( [[maybe_unused]] token singletonToken ) {
@@ -31,7 +32,7 @@ public:
 };
 
 
-/// Create a 2nd test class... to verify that we can have
+/// Create a 2nd Singleton class... to verify that we can have
 /// multiple derived classes of Singleton
 class TestSingleton2 final : public Singleton< TestSingleton2 > {
 public:
@@ -75,6 +76,22 @@ BOOST_AUTO_TEST_CASE( Singleton_general ) {
    // Ensure they are different objects
    BOOST_CHECK_NE( (void*) &t11, (void*) &t21 );
 }
+
+
+/// Create a Singleton class where the constructor takes parameters.
+class TestSingleton3 final : public Singleton< TestSingleton3 > {
+public:
+   explicit TestSingleton3( [[maybe_unused]] token singletonToken ) {
+      // cout << "TestSingleton1 constructed" << endl;
+   }
+
+
+   void use() const {
+      // cout << "TestSingleton3 in use" << endl;
+   }
+};
+
+
 
 
 BOOST_AUTO_TEST_SUITE_END()

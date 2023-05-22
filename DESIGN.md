@@ -467,7 +467,7 @@ The arguments against Singletons...
   - When you go to include 3rd party libraries in your code, sometimes they use 
    the same names as yours.
     - All of our globals will be in the Empire namespace.
-    
+
 Detractors say that Singletons actively work against separation of duties by 
 introducing implicit, hidden dependencies on external systems and allowing 
 instant access from any location, even if that location is illogical.  True, but
