@@ -307,7 +307,6 @@ Options come in many flavors:
 4. Command line
 5. Settable via unit tests
 
-
 Config flyweight??
 A configuration has:
 - A type: Int, float, double, bool,
@@ -320,18 +319,21 @@ A configuration has:
 - Is settable/resettable from a test
 - ?? Source
 
-Doxygen version x.x.x shipped a few days ago.  They made an enhancement I requested and I was impressed with how they 
-migrate configuration files.  It occured to me (while doing the dishes) that I really liked Doxygen's configuration system.  I should emulate, strike that, copy it.
+Doxygen version x.x.x shipped a few days ago.  They made an enhancement I 
+requested and I was impressed with how they migrate configuration files.  It 
+occurred to me (while doing the dishes) that I really liked Doxygen's 
+configuration system.  I should emulate, strike that, copy it.
 
-Doxygen's "master" configuration is a large XML file.  Their configuration souce is a mix of C and C++.  
+Doxygen's "master" configuration is a large XML file.  Their configuration 
+source is a mix of C and C++.  
 
-This is how a a controller would use the config;
+This is how a controller would use the config;
 
     int& theConfig.getSomeValue();
 
-#### Config Requirements
+### Configuration Requirements
 
-- It should **NOT** return a reference.  The reference would be mutable.
+- getSomeConfig() should **NOT** return a reference.  The reference would be mutable.
 - The config model (may) be persisted and restored with the game.
   - This will allow certain values to be updated during the game.
   - More importantly
@@ -356,7 +358,7 @@ This is how a a controller would use the config;
 
 ?? Should we create an object for a version?  It might be used in configuration.
 
-## Other Notes (for now)
+## Other Notes - for now
 
 We are going to work very hard to keep the object model separate from the 
 business rules.  We will call the object model the "Business Domain", or a set
@@ -410,7 +412,7 @@ The arguments against Singletons...
     - I will not be running multiple instances of Empire in the same process space.
     - I won't be testing multiple Empire programs concurrently.  One Empire at a time.
     - We should have the ability to shutdown and restart the core in the same process.
-  - Have the self control and awareness to create as many instances as you 
+  - Have the self-control and awareness to create as many instances as you 
     need — one, if that’s all it takes.
     - I'd rather have the object guarantee this.  Isn't that the argument for 
       Encapsulation; The object hides its data to protect itself.
@@ -427,7 +429,7 @@ The arguments against Singletons...
         example). But this sacrifices a lot of unit testing capabilities.  
         Therefore, we will make a testability-over-performance tradeoff and make
         configuration dynamic.
-      - #empire::Singleton will have a `scratch()` method which will destroy it 
+      - empire::Singleton will have a `scratch()` method which will destroy it 
         and allow it to be recreated.
   - You loose control of initializations
     - Not true.  The Core will initialize all the Singletons.  That's what
@@ -455,7 +457,7 @@ The arguments against Singletons...
   - Globals provide invisible lines of influence across all the code
     - Let's distinguish between reading & writing globals.  Unexpected writing 
       to a global is bad.  We can all agree on that.  Reading from read-only 
-      globals are not too different than constants, which is fine.
+      globals are not too different from constants, which is fine.
     - So, let's not make native datatypes (anything with public scope) a Singleton.
     - Agreed, in the context of raw variables...  but these globals are objects
      that have all of the protections an encapsulated class should have.
@@ -477,7 +479,7 @@ under the sun.  That's not happening.
 I agree that Globals should be used with utmost care, and functions should 
 clearly scope out the variables they use via an API, locals, what have you.
 
-Another way to manage this is to carefully contreol the creation of Singletons.  We aren't
+Another way to manage this is to carefully control the creation of Singletons.  We aren't
 letting just any variable, say `auto i`, to be used as a global iterator.
 
 The important thing is to remember the overall goal: clarity

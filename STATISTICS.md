@@ -11,16 +11,16 @@ Project Statistics
 |Unit Tests|2|114|3136|50|1530|
 |Python|3|620|19026|288|10464|
 |HTML|1|59|1419|n/a|n/a|
-|Markdown|12|1501|68596|n/a|n/a|
+|Markdown|12|1509|68950|n/a|n/a|
 |Images|22|n/a|7350489|n/a|n/a|
-|Other	Files|41|n/a|253131|n/a|n/a|
+|Other	Files|42|n/a|263266|n/a|n/a|
 
 ## Tags
 No tags
 
 ## Software Engineering Metrics
 
-Number of commits:  202
+Number of commits:  205
 
 Number of test cases:  2
 
@@ -31,4 +31,4 @@ Number of test assertions:  9
 |--------------------------------------|---------------------------|-------------------------|---------------------------|
 | ![X](https://img.shields.io/github/languages/code-size/marknelsonengineer/empire?style=plastic) <br/> ![X](https://img.shields.io/github/repo-size/marknelsonengineer/empire?style=plastic) <br/> ![X](https://img.shields.io/github/contributors/marknelsonengineer/empire?style=plastic) | ![X](https://img.shields.io/github/commit-activity/w/marknelsonengineer/empire?style=plastic) <br/> ![X](https://img.shields.io/github/last-commit/marknelsonengineer/empire?style=plastic) | ![X](https://img.shields.io/github/issues-raw/marknelsonengineer/empire?style=plastic) <br/> ![X](https://img.shields.io/github/issues-closed-raw/marknelsonengineer/empire?style=plastic) | ![X](https://img.shields.io/github/forks/marknelsonengineer/empire?style=plastic) <br/> ![X](https://img.shields.io/github/stars/marknelsonengineer/empire?style=plastic) |
 
-Automatically generated on Mon May 22 10:01:33 2023
+Automatically generated on Mon May 22 10:22:05 2023
