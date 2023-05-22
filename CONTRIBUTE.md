@@ -10,6 +10,34 @@ For enums, the last element is called COUNT and has the number of elements in th
 
 I intend to let CLion reflow the source code
 
+Use https://tinypng.com to shrink the size of our .PNG files
+
+# Constants
+
+For review:
+`const var` Means the variable won't change after it's initialized. Variables may be initialized at runtime, though.
+`method() const` Means the method won't change the state of the object
+`constexpr` Means "to be evaluated at compile time".  Applies to variables.
+`consteval` Declares a function or template to produce a compile time constant expression.  It forces calls to happen at compile-time.
+`constinit` Initializes a static variable at compile time.  It does not imply `const` nor `constexpr`.
+
+
+
+## C++ Naming Conventions
+
+https://lefticus.gitbooks.io/cpp-best-practices/content/03-Style.html
+
+Types start with upper case: `MyClass`
+Functions and variables start with lower case: `myMethod`
+Constants are all upper case: const double `PI=3.14159265358979323;`
+Macro names use upper case with underscores: `INT_MAX`
+Template parameter names use camel case: `InputIterator`
+All other names use snake case: `unordered_map`
+
+Name private data with a `m_` prefix to distinguish it from public data. `m_` stands for "member" data.
+
+
+
 
 # CMake {#DevelopmentMakeTargets}
 Empire uses the following `CMake` development targets:
@@ -81,6 +109,15 @@ need to manually install `libcap`.
     make test
     make sudotest
     sudo make install
+
+
+## Declaration order
+
+Google favors this order: "Typedefs and Enums, Constants, Constructors, Destructor, Methods, including static methods, Data Members, including static data members."
+
+Matthew Wilson (Safari subscription required) recommends the following order: "Construction, Operations, Attributes, Iteration, State, Implementation, Members, and my favorite, Not to be implemented."
+
+They offer good reasons, and this kind of approach seems to be fairly standard, but whatever you do, be consistent about it.
 
 
 ## Handling errors & warnings in a testing framework

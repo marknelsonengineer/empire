@@ -7,6 +7,8 @@ The Design of Empire
 
 ## Design Philosophy
 
+Design First.  Then code.
+
 1. Embrace thoughtful, modern Software Engineering design practices
 2. Is correct & efficient
 3. Is fun
@@ -285,19 +287,6 @@ for a session.  For example:
 
 ## Configuration
 
-Classic Empire had a number of text-based configuration files that were pretty
-easy to override and configure.  For the sake of efficiency and because I think
-we can structure our source code to be pretty user-friendly, I'm going to make
-all of those configurable elements part of the C++ source.  Specifically, they
-will be built in as `inline constexpr`.
-
-For review:
-`const var` Means the variable won't change after it's initialized. Variables may be initialized at runtime, though.
-`method() const` Means the method won't change the state of the object
-`constexpr` Means "to be evaluated at compile time".  Applies to variables.
-`consteval` Declares a function or template to produce a compile time constant expression.  It forces calls to happen at compile-time.
-`constinit` Initializes a static variable at compile time.  It does not imply `const` nor `constexpr`.
-
 when I consider using the persistence model for holding configuration, here are
 my thoughts:
   - Consideration:  Use it as the master for config.  Users would modify the persisted files and
@@ -311,25 +300,61 @@ are configuring.
 I'm going to explore the persistence model before looking into Boost 
 Program Options.  Maybe we can get away with using persistence for config.
 
-Options come in 2 flavors:
+Options come in many flavors:
 1. Compiled into the code (most of them - for efficiency)
 2. Runtime options
+3. Config file
+4. Command line
+5. Settable via unit tests
 
 
 Config flyweight??
-A configuration has
-A type
-Int, float, double, bool,
-Min and max values
-Validator
-Group
-Long description
-A config key
-Should return in reference to the configured item
-Is settable/resettable from a test
-Should have a default value
+A configuration has:
+- A type: Int, float, double, bool,
+- A default value
+- Min and max values
+- Validator
+- Group & order within the group
+- Long description
+- A config key
+- Is settable/resettable from a test
+- ?? Source
 
+Doxygen version x.x.x shipped a few days ago.  They made an enhancement I requested and I was impressed with how they 
+migrate configuration files.  It occured to me (while doing the dishes) that I really liked Doxygen's configuration system.  I should emulate, strike that, copy it.
 
+Doxygen's "master" configuration is a large XML file.  Their configuration souce is a mix of C and C++.  
+
+This is how a a controller would use the config;
+
+    int& theConfig.getSomeValue();
+
+#### Config Requirements
+
+- It should **NOT** return a reference.  The reference would be mutable.
+- The config model (may) be persisted and restored with the game.
+  - This will allow certain values to be updated during the game.
+  - More importantly
+- Everything should (probably) have a value.  For those that do, the order is:
+  - Default
+  - Config from a file
+  - Config from saved state
+  - Config from a setter (for example, from a unit test)
+  - Config from command line??
+
+- The following iterators:
+  - Iterate over all config to read them in from a file
+  - Iterate over all config to print out the current configuration
+  - Iterate over all config to write a new file
+  - Iterate over all config to update a file
+  - Iterate over all config and validate the values
+
+- There should be one single class that contains all config getters.
+- Improvement over classic Empire:  Consolidate all config in one place
+
+## Object Model
+
+?? Should we create an object for a version?  It might be used in configuration.
 
 ## Other Notes (for now)
 
@@ -351,83 +376,100 @@ I need to get smarter on delegates and composites
 
 ## Singletons
 
-What are we talking about?  What objects to I intend to make globally available
-via Singleton:
+What are we talking about?  The objects I'd like to make globally available
+via Singleton are:
 - Core:  The core services object
+- Config: The server configuration state
 - Nations:  The collection of nations
-- Entities:  The collection of all entities
+- Units:  The collection of all units
 - World:  The collection of all sectors
 - Logger:  The global logger
 
 I've read [Singletons are Pathological Liars], [Where Have All the Singletons Gone?] 
 and [Performant Singletons].
 
-The Singleton is probably one of the most controversial design patterns, 
-sparking perennial debate on forums and discussion boards, and prompting 
-analysis and dissection in many articles and papers.
+> The Singleton is probably one of the most controversial design patterns, 
+> sparking perennial debate on forums and discussion boards, and prompting 
+> analysis and dissection in many articles and papers.
+
+> -- <cite>Performant Singletons</cite>
 
 The Singleton pattern should be applied only when:
 1. Singularity must exist
 2. Global accessibility must exist
 
+I think this applies to the objects listed above.
+
 The arguments against Singletons...
   - Well-designed systems isolate responsibility.  Singletons encourage tight
     coupling by making it easy for components to depend on them.
     - Agreed:  I'd have to think on this, but my initial reaction is that, for 
-      the things I intend to make Singletons, those dependencies _will_ exist.
-  - Whether there needs to be a single instance of an object depends upon
-    the context in which that object is being used.
-    - I will not be running multiple Empire programs in the same process space.
-    - I won't be testing multiple Empire programs concurrently.  One Empire at
-      a time.  Even if I need to shutdown and restart the core.
+      the things I intend to make Singletons, those dependencies do exist.
+  - Whether there needs to be a single instance of an object depends on the
+    context that object is being used.
+    - I will not be running multiple instances of Empire in the same process space.
+    - I won't be testing multiple Empire programs concurrently.  One Empire at a time.
+    - We should have the ability to shutdown and restart the core in the same process.
   - Have the self control and awareness to create as many instances as you 
     need — one, if that’s all it takes.
-    - I'd rather have the object guarantee this.  Isn't that what OOP is all about?
+    - I'd rather have the object guarantee this.  Isn't that the argument for 
+      Encapsulation; The object hides its data to protect itself.
   - When you encounter a scenario where you need to depend on another object or 
-   subsystem, stop and ask yourself why you need that dependency.
+    subsystem, stop and ask yourself why you need that dependency.
     - Yea, sometimes we really do.  Even if I have Coreable, Loggable, and Nationable 
       interfaces, sooner or later, I'll need an actual object to reference.
+    - It's global state.  It is what it is.  The trick is to make is usable, 
+      extendable **and** safe.
   - How do you create mock worlds for testing?
-    - How will we test multiple world sizes?  How will we test creating and destroying
-      a world?  I'm going to have to think about my strategy of hardcoding a lot of
-      Empire's configuration for performance reasons... and reconcile that with
-      a robust testing strategy.
+    - How will we test multiple world sizes?  How will we test creating and 
+      destroying a world?
+      - To achieve optimal performance, we'd hardcode configuration (for 
+        example). But this sacrifices a lot of unit testing capabilities.  
+        Therefore, we will make a testability-over-performance tradeoff and make
+        configuration dynamic.
+      - #empire::Singleton will have a `scratch()` method which will destroy it 
+        and allow it to be recreated.
   - You loose control of initializations
     - Not true.  The Core will initialize all the Singletons.  That's what
       the core does.  Also, I will be using instances of Singletons (or the contents therein)
       as parameters when I create other objects.
+    - The test harness will manage the test Singletons.
   - Explicit reference passing makes garbage collection work.
-    - All of these objects will begin with Empire and end with Empire.  I'll
-      have to think about tests, however.
-    - I think I need a method on my Singleton to destroy or reset it.  There's 
-      nothing wrong with that.  The Singleton guarantees only one object will
-      exist (which is still true).  It also makes it globally available, which
-      will also continue to be true.
+    - All of these objects will begin with Empire and end with Empire.
+    - The `scratch()` method on Singleton will destroy.  There's nothing wrong 
+      with that.  The Singleton guarantees only one object will
+      exist after you ask for it (which is still true).  It also makes it 
+      globally available, which will also continue to be true.
   - Singletons are nothing more than global state. Global state makes it so your
     objects can secretly get hold of things which are not declared in their APIs, 
     and, as a result, Singletons make your APIs into pathological liars.
     - It's true... I'm collaborating with more objects than the API claims.  I'll
       give this some thought.
   - As the original author of the code, I know the true dependencies.  Anyone 
-    who comes after you is baffled, since not all of the dependencies are 
+    who comes after is baffled, since not all of the dependencies are 
     declared and information flows in some secret paths which are not clear from
     the API.  You live in a society full of liars.
     - That's a little dramatic.  Especially, if you tell everyone up-front what
       our Singletons are and they are logical.  Still, I think it's good point.
-      When do we pass a parameter and when do I grab from a Singleton.
+      When do we pass a parameter and when do I grab from a Singleton?
   - Globals provide invisible lines of influence across all the code
+    - Let's distinguish between reading & writing globals.  Unexpected writing 
+      to a global is bad.  We can all agree on that.  Reading from read-only 
+      globals are not too different than constants, which is fine.
+    - So, let's not make native datatypes (anything with public scope) a Singleton.
     - Agreed, in the context of raw variables...  but these globals are objects
-      that have all of the protections an encapsulated class should have.
+     that have all of the protections an encapsulated class should have.
   - Globals lead to spaghetti code.
     - Agreed, when they are abused.  All global state will be maintained in the 
       object model.
   - When you go to include 3rd party libraries in your code, sometimes they use 
    the same names as yours.
     - All of our globals will be in the Empire namespace.
+    
 Detractors say that Singletons actively work against separation of duties by 
 introducing implicit, hidden dependencies on external systems and allowing 
 instant access from any location, even if that location is illogical.  True, but
-I can't see why having access to any of the above would ever be illogical.
+I can't see why having access to any of the above would be illogical.
 
 I also do _**not**_ want to pass these into every function, constructor, et. al. 
 under the sun.  That's not happening.
@@ -435,7 +477,7 @@ under the sun.  That's not happening.
 I agree that Globals should be used with utmost care, and functions should 
 clearly scope out the variables they use via an API, locals, what have you.
 
-Another way to manage this is to carefully the creation of Singletons.  We aren't
+Another way to manage this is to carefully contreol the creation of Singletons.  We aren't
 letting just any variable, say `auto i`, to be used as a global iterator.
 
 The important thing is to remember the overall goal: clarity
@@ -456,15 +498,23 @@ However, remember the drop in clarity that automatically ensues when you force
 someone to access a second piece of code (the globals) to understand how the 
 first piece works.
 
-Here's a good question:  Can I create every sector at compile time?  Should I --
-How does that reconcile with marshalling?
-
+## SOLID
+The SOLID ideas are
+The Single-responsibility principle: "There should never be more than one reason for a class to change."[5] In other words, every class should have only one responsibility.[6]
+The Open–closed principle: "Software entities ... should be open for extension, but closed for modification."[7]
+The Liskov substitution principle: "Functions that use pointers or references to base classes must be able to use objects of derived classes without knowing it."[8] See also design by contract.[8]
+The Interface segregation principle: "Clients should not be forced to depend upon interfaces that they do not use."[9][4]
+The Dependency inversion principle: "Depend upon abstractions, [not] concretions."[10][4]
 
 ## Things to do
 - [ ] Do a UMLet drawing of the current Empire codebase
 - [ ] Expand on the UMLet drawing to include the design of the Business Domain / 
     data model.
 - [ ] Set the project icon in CLion
+
+- Here's a good question:  Can I create every sector at compile time?  Should I --
+  How does that reconcile with marshalling?
+
 
 
 [Empire]:  http://www.wolfpackempire.com
