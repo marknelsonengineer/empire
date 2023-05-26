@@ -14,7 +14,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "Core.hpp"
-#include "../lib/Log.hpp"
+#include "../../src/lib/Log.hpp"
 
 
 using namespace std;

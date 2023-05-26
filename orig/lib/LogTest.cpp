@@ -27,7 +27,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/execution_monitor.hpp>
 
-#include "Log.hpp"
+#include "../../src/lib/Log.hpp"
 
 using namespace empire;
 

@@ -17,7 +17,7 @@
 #include <boost/algorithm/string/trim_all.hpp>
 
 #include "Nation.hpp"
-#include "../lib/Log.hpp"
+#include "../../src/lib/Log.hpp"
 
 
 using namespace std;
