@@ -11,6 +11,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#include <iostream>
+
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
+
 #include <memory>
 
 namespace empire {
@@ -35,10 +42,21 @@ public:
 
    virtual ~Singleton() = default;
 
-   static T* s_pStaticInstance;  ///< Holds a pointer to the Singleton class
+   static T* s_pStaticInstance;  ///< Pointer to the Singleton instance
+
+   /// @return Return a Universally Unique IDentifier or UUID for the Singleton
+   [[nodiscard]] boost::uuids::uuid getUUID() const {
+      return uuid;
+   }
+
 
 protected:
-   Singleton() = default;  ///< The empty constructor may be overridden
+   /// Construct a Singleton (on first use or after erase())
+   Singleton() {
+      uuid = boost::uuids::random_generator()();
+
+      // std::cout << "Singleton " << to_string( uuid ) << " constructed" << std::endl;
+   }
 
 
    /// Inherited, concrete singleton classes will use `token` to call the base
@@ -46,11 +64,17 @@ protected:
    struct token {
    };
 
+private:
+   static boost::uuids::uuid uuid;  ///< UUID for this Singleton
+
 }; // Singleton
 
 
 template< typename T >
 T* Singleton< T >::s_pStaticInstance = nullptr;
+
+template< typename T >
+boost::uuids::uuid Singleton< T >::uuid = boost::uuids::nil_generator()();
 
 
 /// Get an instance of a Singleton
@@ -78,12 +102,14 @@ inline T& Singleton< T >::get() {
 /// @tparam T The Singleton class
 template< typename T >
 void Singleton< T >::erase() {
-   if( !s_pStaticInstance ) {
+   if( s_pStaticInstance == nullptr ) {
       return;
    }
 
    delete s_pStaticInstance;
    s_pStaticInstance = nullptr;
+   // std::cout << "Singleton " << to_string( uuid ) << " erased" << std::endl;
+   uuid = boost::uuids::nil_generator()();
 }
 
 }  // namespace empire
