@@ -86,7 +86,7 @@ public:  // /////////////////// Constructors & Destructors /////////////////////
    virtual ~Singleton() {
       std::cout << "Destructor for " << info() << std::endl;
 
-      s_pStaticInstance = nullptr;
+      s_pStaticInstance1 = nullptr;
       uuid = boost::uuids::nil_generator()();
       destructCounter += 1;
       validate();
@@ -130,7 +130,7 @@ public:  // ///////////////////////// Static Methods ///////////////////////////
    ///
    /// @return `true` if this Singleton has been instantiated.  `false` if not.
    [[nodiscard]] static bool isInstantiated() {
-      return s_pStaticInstance != nullptr;
+      return s_pStaticInstance1 != nullptr;
    }
 
    /// Validate the health of this Singleton
@@ -187,12 +187,12 @@ public:  // ///////////////////////// Static Methods ///////////////////////////
    static void erase() {
       std::cout << "Erase " << info() << std::endl;
 
-      if( s_pStaticInstance == nullptr ) {
+      if( !isInstantiated() ) {
          return;
       }
 
       // Fires ~Singleton which resets all the member variables
-      delete s_pStaticInstance;
+      delete s_pStaticInstance1;
    }
 
 
@@ -207,13 +207,13 @@ protected:  // /////////////// Protected Methods & Members /////////////////////
    Singleton() {
       std::cout << "Base class constructor for " << info() << std::endl;
 
-      if( s_pStaticInstance != nullptr ) {
+      if( isInstantiated() ) {
          throw std::logic_error( "Attempt to create a new Singleton on top of an existing one" );
       }
 
       uuid = boost::uuids::random_generator()();
       constructCounter += 1;
-      s_pStaticInstance = dynamic_cast<T*>(this);
+      s_pStaticInstance1 = dynamic_cast<T*>(this);
 
       std::cout << "Instantiated " << info() << std::endl;
       // validate();  // It's not safe to call validate() at this point because
@@ -221,7 +221,7 @@ protected:  // /////////////// Protected Methods & Members /////////////////////
    }
 
 private:  // //////////////////// Private Static Members ///////////////////////
-   static T* s_pStaticInstance;  ///< Pointer to the Singleton instance
+   static T* s_pStaticInstance1;  ///< Pointer to the Singleton instance
 
    static boost::uuids::uuid uuid;               ///< Universally Unique IDentifier for this Singleton
    static singleton_counter_t constructCounter;  ///< Number of times this Singleton has been constructed
@@ -231,7 +231,7 @@ private:  // //////////////////// Private Static Members ///////////////////////
 
 
 template< typename T >
-T* Singleton< T >::s_pStaticInstance = nullptr;
+T* Singleton< T >::s_pStaticInstance1 = nullptr;
 
 template< typename T >
 boost::uuids::uuid Singleton< T >::uuid = boost::uuids::nil_generator()();
@@ -252,14 +252,14 @@ singleton_counter_t Singleton< T >::destructCounter = 0;
 template< typename T >
 inline T& Singleton< T >::get() {
 
-   if( s_pStaticInstance == nullptr ) {
+   if( !isInstantiated() ) {
       /// @todo Implement smart pointers
-      s_pStaticInstance = new T( token { } );
+      s_pStaticInstance1 = new T( token { } );
    }
 
    validate();
 
-   return *s_pStaticInstance;
+   return *s_pStaticInstance1;
 }
 
 }  // namespace empire
