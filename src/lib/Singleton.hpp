@@ -17,8 +17,9 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
-
 #include <memory>
+
+#include "../typedefs.h"  // For singleton_counter_t
 
 namespace empire {
 
@@ -36,24 +37,58 @@ public:
    Singleton& operator=( const Singleton& ) = delete;  // Copy assignment (One of these is wrong)
    Singleton& operator=( const Singleton&& ) = delete;  // Move assignment
 
+   virtual ~Singleton() {
+      destructCounter += 1;
+      uuid = boost::uuids::nil_generator()();
+      /// @todo: Actually destroy the instance
+   };
+
    static T& get();
 
    static void erase();
 
-   virtual ~Singleton() = default;
-
-   static T* s_pStaticInstance;  ///< Pointer to the Singleton instance
-
-   /// @return Return a Universally Unique IDentifier or UUID for the Singleton
+   /// @return A Universally Unique IDentifier or UUID for the Singleton
    [[nodiscard]] boost::uuids::uuid getUUID() const {
       return uuid;
    }
 
+   /// @return Number of times the Singleton has been constructed
+   [[nodiscard]] singleton_counter_t getConstructedCount() const {
+      return constructCounter;
+   }
+
+   /// @return Number of times the Singleton has been destroyed
+   [[nodiscard]] singleton_counter_t getDestroyedCount() const {
+      return destructCounter;
+   }
+
+   /// Validate the health of the Singleton
+   ///
+   ///
+   void validate() const {
+      /// @throws range_error if the #constructCounter is <= 0
+      if( constructCounter <= 0 ) {
+         throw std::range_error( "constructCounter is <= 0" );
+      }
+
+      /// @throws range_error if the #destructCounter is anything other than #constructCounter - 1
+      if( destructCounter != constructCounter - 1 ) {
+         throw std::range_error( "destructCounter is not one less than constructCounter" );
+      }
+
+      /// @throws logic_error if the #uuid is not set
+      if( uuid == boost::uuids::nil_generator()() ) {
+         throw std::logic_error( "Singleton UUID is not set and it should be");
+      }
+   }
 
 protected:
+   static T* s_pStaticInstance;  ///< Pointer to the Singleton instance
+
    /// Construct a Singleton (on first use or after erase())
    Singleton() {
       uuid = boost::uuids::random_generator()();
+      constructCounter += 1;
 
       // std::cout << "Singleton " << to_string( uuid ) << " constructed" << std::endl;
    }
@@ -65,7 +100,9 @@ protected:
    };
 
 private:
-   static boost::uuids::uuid uuid;  ///< UUID for this Singleton
+   static boost::uuids::uuid uuid;               ///< UUID for this Singleton
+   singleton_counter_t constructCounter  { 0 };  ///< Number of times this Singleton has been constructed
+   singleton_counter_t destructCounter { 0 };    ///< Number of times this Singleton has been destroyed
 
 }; // Singleton
 

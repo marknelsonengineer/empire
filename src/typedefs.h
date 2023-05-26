@@ -25,4 +25,7 @@ using const_version_number_t = const uint8_t;
 /// The type definition for constant semantic build numbers
 using const_build_number_t = const uint32_t;
 
+/// The type definition for counters used by Singleton
+using singleton_counter_t = uint16_t;
+
 } // namespace empire
