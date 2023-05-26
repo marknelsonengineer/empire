@@ -20,33 +20,35 @@ using namespace std;
 using namespace empire;
 
 
-/// Create a basic Singleton class.
+/// Create a basic Singleton class
 class TestSingleton1 final : public Singleton< TestSingleton1 > {
 public:
    explicit TestSingleton1( [[maybe_unused]] token singletonToken ) {
       // cout << "TestSingleton1 constructed" << endl;
    }
 
-
+   // Do something useful with this Singleton
    void use() const {
       // cout << "TestSingleton1 in use" << endl;
    }
 };
 
 
-/// Create a 2nd Singleton class.
+/// Create another Singleton with a destructor.
 class TestSingleton2 final : public Singleton< TestSingleton2 > {
 public:
    explicit TestSingleton2( [[maybe_unused]] token singletonToken ) {
       // cout << "TestSingleton2 constructed" << endl;
    }
 
-   void use() const {
-      // cout << "TestSingleton2 " << to_string ( TestSingleton2::get().getUUID() ) << " in use" << endl;
+protected:
+   ~TestSingleton2() override {
+      cout << "Overridden Destructor " << TestSingleton2::info() << endl;
    }
 
-   ~TestSingleton2() override {
-      // cout << "TestSingleton2 destroyed" << endl;
+public:
+   void use() const {
+      // cout << "TestSingleton2 " << to_string ( TestSingleton2::get().getUUID() ) << " in use" << endl;
    }
 };
 
@@ -183,6 +185,13 @@ BOOST_AUTO_TEST_CASE( Singleton_bulk_erase ) {
 
 
 /// Create a Singleton class where the constructor takes parameters.
+///
+/// Introducing Singletons with parameters is tricky.  You don't really want
+/// to pass them in with every get() call.  That's wasteful as you really only
+/// need it when you instantiate the underlying object.
+///
+/// If you make a constructor with parameters, it will never get called unless
+/// you override get(), which is a terrible idea.
 class TestSingleton3 final : public empire::Singleton< TestSingleton3 > {
 public:
    explicit TestSingleton3( [[maybe_unused]] token singletonToken ) {

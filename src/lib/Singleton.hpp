@@ -26,10 +26,44 @@ namespace empire {
 
 /// Template for a Singleton class
 ///
+/// This is more like a Singleton helper.  Users of Singleton will inherit this
+/// class and create their own Singleton like this:
+///
+///     /// Create a basic Singleton class
+///     class TestSingleton1 final : public Singleton< TestSingleton1 > {
+///     public:
+///        explicit TestSingleton1( [[maybe_unused]] token singletonToken ) {
+///           cout << "Constructor1  " << TestSingleton1::info() << endl;
+///        }
+///
+///        // Do something useful with this Singleton
+///        void use() const {
+///           cout << "Use1 " << TestSingleton1::info() << endl;
+///        }
+///     };
+///
+/// This of this as more of a helper to manage Singletons.  There are many ways
+/// you can get something that's not a Singleton to compile and run.  As soon
+/// as you start using them, they should start throwing exceptions.  In other
+/// words the guarantees of Singleton are runtime and (I'd estimate) to be
+/// relatively weak.
+///
+/// This class is also, as it's written, not thread-safe.
+///
+/// Singletons that need configuration parameters should probably... @todo Finish this
+///
 /// @pattern Singleton:  This is a base class for Singleton
+/// @tparam T This derived class will be a Singleton
 template< typename T >
 class Singleton {
-public:
+public:  // /////////////////// Constructors & Destructors /////////////////////
+
+   /// This is mechanism Singleton uses to ensure objects inherit from Singleton.
+   /// Inherited, concrete Singleton classes should pass `token` to their
+   /// constructors.  If you can't access #Singleton.token, then you are not
+   /// overriding Singleton.
+   using token = struct token {};
+
    Singleton( Singleton& ) = delete;  ///< Disable copy constructor
    Singleton( const Singleton& ) = delete;  ///< Disable copy constructor
    Singleton( const Singleton&& ) = delete;  ///< Disable move constructor
@@ -48,9 +82,10 @@ public:
       validate();
    };
 
-   static T& get();
 
-   static void erase();
+public:  // ///////////////////////// Static Methods ///////////////////////////
+
+   static T& get();  // Defined below, so it can use `inline`
 
    /// Return a string about this object
    ///
@@ -116,26 +151,53 @@ public:
       return uuid;
    }
 
-protected:
-   static T* s_pStaticInstance;  ///< Pointer to the Singleton instance
+
+   /// Erase the Singleton instance
+   ///
+   /// Singleton guarantees that only one instance of the object can exist at a
+   /// time, but it does not guarantee that it can't be deleted and re-created.
+   /// The ability to delete and recreate a Singleton is beneficial for unit
+   /// testing and is one of the (few) things that makes having a Singleton
+   /// palatable.
+   static void erase() {
+      std::cout << "Erase " << info() << std::endl;
+
+      if( s_pStaticInstance == nullptr ) {
+         return;
+      }
+
+      // Fires ~Singleton which resets all the member variables
+      delete s_pStaticInstance;
+   }
+
+
+protected:  // /////////////// Protected Methods & Members /////////////////////
 
    /// Construct an empty Singleton
    ///
    /// The Singleton is initially empty and is only instantiated when
    /// a client calls get().  This way, we don't pay for what we don't use.
+   ///
+   /// This is protected so `<T>` can override it should it choose.
    Singleton() {
-      std::cout << "Constructor for " << info() << std::endl;
-      validate();
+      std::cout << "Base class constructor for " << info() << std::endl;
+
+      if( s_pStaticInstance != nullptr ) {
+         throw std::logic_error( "Attempt to create a new Singleton on top of an existing one" );
+      }
+
+      uuid = boost::uuids::random_generator()();
+      constructCounter += 1;
+      s_pStaticInstance = dynamic_cast<T*>(this);
+
+      std::cout << "Instantiated " << info() << std::endl;
+      // validate();  // It's not safe to call validate() at this point because
+                      // the child-class's constructor has not run yet.
    }
 
+private:  // //////////////////// Private Static Members ///////////////////////
+   static T* s_pStaticInstance;  ///< Pointer to the Singleton instance
 
-   /// This is the Singleton enforcement mechanism.  Inherited, concrete
-   /// Singleton classes constructors should use `token` to access the base
-   /// class without having to be a friend class.
-   struct token {
-   };
-
-private:
    static boost::uuids::uuid uuid;               ///< UUID for this Singleton
    static singleton_counter_t constructCounter;  ///< Number of times this Singleton has been constructed
    static singleton_counter_t destructCounter;   ///< Number of times this Singleton has been destroyed
@@ -158,6 +220,8 @@ singleton_counter_t Singleton< T >::destructCounter = 0;
 
 /// Get an instance of a Singleton
 ///
+/// Inlined to maximize performance
+///
 /// @tparam T The Singleton class
 /// @return The one and only instance of `T`
 template< typename T >
@@ -166,34 +230,11 @@ inline T& Singleton< T >::get() {
    if( s_pStaticInstance == nullptr ) {
       /// @todo Implement smart pointers
       s_pStaticInstance = new T( token { } );
-      uuid = boost::uuids::random_generator()();
-      constructCounter += 1;
-      std::cout << "Instantiate " << info() << std::endl;
    }
+
+   validate();
 
    return *s_pStaticInstance;
-}
-
-
-/// Delete the Singleton instance
-///
-/// Singleton guarantees that only one instance of the object can exist at a
-/// time, but it does not guarantee that it can't be deleted and re-created.
-/// The ability to delete and recreate a Singleton is beneficial for unit
-/// testing and is one of the (few) things that makes having a Singleton
-/// palatable.
-///
-/// @tparam T The Singleton class
-template< typename T >
-void Singleton< T >::erase() {
-   std::cout << "Erase " << info() << std::endl;
-
-   if( s_pStaticInstance == nullptr ) {
-      return;
-   }
-
-   // Fires ~Singleton which resets all the member variables
-   delete s_pStaticInstance;
 }
 
 }  // namespace empire
