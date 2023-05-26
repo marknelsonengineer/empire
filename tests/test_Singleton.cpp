@@ -36,7 +36,7 @@ public:
 
 
 /// Create another Singleton with a destructor.
-class TestSingleton2 final : public Singleton< TestSingleton2 > {
+class TestSingleton2 final : public Singleton< TestSingleton2 > {  /// @NOLINT( cppcoreguidelines-special-member-functions, hicpp-special-member-functions ): Copy and Move assignment constructors are in the template
 public:  // /////////////////// Constructors & Destructors /////////////////////
    explicit TestSingleton2( [[maybe_unused]] token singletonToken ) {
       // cout << "Constructor2  " << TestSingleton2::info() << endl;
@@ -50,10 +50,6 @@ public:  // /////////////////// Constructors & Destructors /////////////////////
    TestSingleton2( TestSingleton2& ) = delete;  ///< Disable copy constructor
    TestSingleton2( const TestSingleton2& ) = delete;  ///< Disable copy constructor
    TestSingleton2( const TestSingleton2&& ) = delete;  ///< Disable move constructor
-
-   TestSingleton2& operator=( const TestSingleton2 rvalue ) override = delete;  ///< Disable copy assignment
-   TestSingleton2& operator=( const TestSingleton2& rvalue ) override = delete;  ///< Disable copy assignment
-   TestSingleton2& operator=( const TestSingleton2&& rvalue ) override = delete;  ///< Disable move assignment
 
 public:  // ///////////////////////// Public Methods ///////////////////////////
    void use() const {

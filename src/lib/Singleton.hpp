@@ -82,9 +82,9 @@ public:  // /////////////////// Constructors & Destructors /////////////////////
    Singleton& operator=( const Singleton& ) = delete;  ///< Disable copy assignment
    Singleton& operator=( const Singleton&& ) = delete;  ///< Disable move assignment
 
-   virtual T& operator=( const T rvalue ) = delete;  ///< Disable copy assignment
-   virtual T& operator=( const T& rvalue ) = delete;  ///< Disable copy assignment
-   virtual T& operator=( const T&& rvalue ) = delete;  ///< Disable move assignment
+   T& operator=( const T ) = delete;  ///< Disable copy assignment for derived classes
+   T& operator=( const T& ) = delete;  ///< Disable copy assignment for derived classes
+   T& operator=( const T&& ) = delete;  ///< Disable move assignment for derived classes
 
    /// Destructor for Singleton
    virtual ~Singleton() {
