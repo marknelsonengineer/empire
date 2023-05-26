@@ -3,6 +3,7 @@
     <words>
       <w>authorname</w>
       <w>autobrief</w>
+      <w>autotoc</w>
       <w>blockfree</w>
       <w>calles</w>
       <w>constinit</w>
@@ -18,18 +19,24 @@
       <w>infod</w>
       <w>interdd</w>
       <w>keywordflow</w>
+      <w>libiconv</w>
       <w>llvmlibc</w>
       <w>lockfree</w>
       <w>marknels</w>
       <w>marknelsonengineer</w>
+      <w>memb</w>
       <w>mkpath</w>
       <w>myline</w>
+      <w>noenv</w>
+      <w>nolintbegin</w>
       <w>ofast</w>
       <w>refname</w>
+      <w>sideeffect</w>
       <w>startdd</w>
       <w>telent</w>
       <w>tful</w>
       <w>uhunix</w>
+      <w>undoc</w>
       <w>xrefitem</w>
     </words>
   </dictionary>

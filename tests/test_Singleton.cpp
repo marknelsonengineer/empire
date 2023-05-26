@@ -8,6 +8,7 @@
 /// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
 /// @cond Suppress Doxygen warnings
+/// @NOLINTBEGIN( cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers ): Magic numbers are OK in tests
 
 #define BOOST_TEST_MODULE Empire_Server
 #define BOOST_TEST_MAIN  // Include this to get Boost Test's main()
@@ -24,30 +25,39 @@ using namespace empire;
 class TestSingleton1 final : public Singleton< TestSingleton1 > {
 public:
    explicit TestSingleton1( [[maybe_unused]] token singletonToken ) {
-      // cout << "TestSingleton1 constructed" << endl;
+      // cout << "Constructor1  " << TestSingleton1::info() << endl;
    }
 
    // Do something useful with this class
    void use() const {
-      // cout << "TestSingleton1 in use" << endl;
+      // cout << "Use1 " << TestSingleton1::info() << endl;
    }
 };
 
 
 /// Create another Singleton with a destructor.
 class TestSingleton2 final : public Singleton< TestSingleton2 > {
-public:
+public:  // /////////////////// Constructors & Destructors /////////////////////
    explicit TestSingleton2( [[maybe_unused]] token singletonToken ) {
-      // cout << "TestSingleton2 constructed" << endl;
+      // cout << "Constructor2  " << TestSingleton2::info() << endl;
    }
 
    ~TestSingleton2() override {
-      cout << "Overridden Destructor " << TestSingleton2::info() << endl;
+      (void) 0;  // Avoid a lint warning
+      // cout << "Overridden Destructor " << TestSingleton2::info() << endl;
    }
 
-public:
+   TestSingleton2( TestSingleton2& ) = delete;  ///< Disable copy constructor
+   TestSingleton2( const TestSingleton2& ) = delete;  ///< Disable copy constructor
+   TestSingleton2( const TestSingleton2&& ) = delete;  ///< Disable move constructor
+
+   TestSingleton2& operator=( const TestSingleton2 rvalue ) override = delete;  ///< Disable copy assignment
+   TestSingleton2& operator=( const TestSingleton2& rvalue ) override = delete;  ///< Disable copy assignment
+   TestSingleton2& operator=( const TestSingleton2&& rvalue ) override = delete;  ///< Disable move assignment
+
+public:  // ///////////////////////// Public Methods ///////////////////////////
    void use() const {
-      // cout << "TestSingleton2 " << to_string ( TestSingleton2::get().getUUID() ) << " in use" << endl;
+      // cout << "Use2 " << TestSingleton2::info() << endl;
    }
 };
 
@@ -220,26 +230,28 @@ BOOST_AUTO_TEST_CASE( Singleton_bulk_erase ) {
 /// set the parameters as statics before instantiating the Singleton.
 class TestSingleton3 final : public empire::Singleton< TestSingleton3 > {
 public:
-   explicit TestSingleton3( int parm1, string parm2 ) {
-      cout << "Construct (param1, param2) ";
-      cout << TestSingleton3::info();
-      cout << " param1=" << sm_parameter1;
-      cout << " param2=" << sm_parameter2;
-      cout << endl;
+   explicit TestSingleton3( int parm1, string_view parm2 ) {
+      (void) parm1;  // Avoid lint warnings
+      (void) parm2;
+      // cout << "Construct (param1, param2) ";
+      // cout << TestSingleton3::info();
+      // cout << " param1=" << sm_parameter1;
+      // cout << " param2=" << sm_parameter2;
+      // cout << endl;
    }
 
    explicit TestSingleton3( [[maybe_unused]] token singletonToken ) : TestSingleton3( sm_parameter1, sm_parameter2 ) {
-      cout << "Construct (token)" << TestSingleton3::info() << endl;
+      // cout << "Construct (token)" << TestSingleton3::info() << endl;
    }
 
    static TestSingleton3& get() {
-      std::cout << "Instantiate3 " << info() << std::endl;
+      // std::cout << "Instantiate3 " << info() << std::endl;
 
       return Singleton< TestSingleton3 >::get();
    }
 
    void use() const {
-      // cout << "TestSingleton3 in use" << endl;
+      // cout << "Use " << TestSingleton3::info() << endl;
    }
 
    static void setParameter1( int parameter1 ) {
@@ -250,7 +262,7 @@ public:
       return sm_parameter1;
    }
 
-   static void setParameter2( string parameter2 ) {
+   static void setParameter2( string_view parameter2 ) {
       sm_parameter2 = parameter2;
    }
 
@@ -259,12 +271,12 @@ public:
    }
 
 protected:
-   static int sm_parameter1;
-   static string sm_parameter2;
+   static int    sm_parameter1;  ///< @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): This is not really a global
+   static string sm_parameter2;  ///< @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): This is not really a global
 };
 
-int    TestSingleton3::sm_parameter1 { 0 };
-string TestSingleton3::sm_parameter2 {};
+int    TestSingleton3::sm_parameter1 { 0 };  ///< @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): This is not really a global
+string TestSingleton3::sm_parameter2 {};     ///< @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): This is not really a global
 
 BOOST_AUTO_TEST_CASE( Singleton_with_parameters ) {
    TestSingleton3::setParameter1( 16 );
@@ -316,4 +328,5 @@ BOOST_AUTO_TEST_CASE( Singleton_with_parameters ) {
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+/// @NOLINTEND( cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers )
 /// @endcond

@@ -36,7 +36,7 @@ namespace empire {
 ///           cout << "Constructor1  " << TestSingleton1::info() << endl;
 ///        }
 ///
-///        // Do something useful with this Singleton
+///        // Do something useful with this class
 ///        void use() const {
 ///           cout << "Use1 " << TestSingleton1::info() << endl;
 ///        }
@@ -82,9 +82,13 @@ public:  // /////////////////// Constructors & Destructors /////////////////////
    Singleton& operator=( const Singleton& ) = delete;  ///< Disable copy assignment
    Singleton& operator=( const Singleton&& ) = delete;  ///< Disable move assignment
 
+   virtual T& operator=( const T rvalue ) = delete;  ///< Disable copy assignment
+   virtual T& operator=( const T& rvalue ) = delete;  ///< Disable copy assignment
+   virtual T& operator=( const T&& rvalue ) = delete;  ///< Disable move assignment
+
    /// Destructor for Singleton
    virtual ~Singleton() {
-      std::cout << "Destructor for " << info() << std::endl;
+      // std::cout << "Destructor for " << info() << std::endl;
 
       uuid = boost::uuids::nil_generator()();
       destructCounter += 1;
@@ -130,6 +134,7 @@ public:  // ///////////////////////// Static Methods ///////////////////////////
    ///
    /// @return `true` if this Singleton has been instantiated.  `false` if not.
    [[nodiscard]] static bool isInstantiated() {
+      /// @NOLINTNEXTLINE( readability-simplify-boolean-expr ): `unique_ptr<T>` has an implicit cast to a bool to indicate if it's set or not. There's no explicit cast, so we have to do this
       return s_instance ? true : false;
    }
 
@@ -185,7 +190,7 @@ public:  // ///////////////////////// Static Methods ///////////////////////////
    /// testing and is one of the (few) things that makes having a Singleton
    /// palatable.
    static void erase() {
-      std::cout << "Erase " << info() << std::endl;
+      // std::cout << "Erase " << info() << std::endl;
 
       if( !isInstantiated() ) {
          return;
@@ -207,7 +212,7 @@ protected:  // /////////////// Protected Methods & Members /////////////////////
    ///
    /// This is protected and `<T>` must override it.
    Singleton() {
-      std::cout << "Base class constructor for " << info() << std::endl;
+      // std::cout << "Base class constructor for " << info() << std::endl;
 
       if( isInstantiated() ) {
          throw std::logic_error( "Attempt to create a new Singleton on top of an existing one" );
@@ -216,32 +221,31 @@ protected:  // /////////////// Protected Methods & Members /////////////////////
       uuid = boost::uuids::random_generator()();
       constructCounter += 1;
 
-      std::cout << "Instantiated " << info() << std::endl;
+      // std::cout << "Instantiated " << info() << std::endl;
       // validate();  // It's not safe to call validate() at this point because
                       // the derived class's constructor has not run yet.
    }
 
 private:  // //////////////////// Private Static Members ///////////////////////
-   static std::unique_ptr<T> s_instance;         ///< A unique "smart pointer" to an instance of this Singleton
-
-   static boost::uuids::uuid uuid;               ///< Universally Unique IDentifier for this Singleton
-   static singleton_counter_t constructCounter;  ///< Number of times this Singleton has been constructed
-   static singleton_counter_t destructCounter;   ///< Number of times this Singleton has been destroyed
+   static std::unique_ptr<T>  s_instance;        ///< A unique "smart pointer" to an instance of this Singleton  @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): This is not really a global
+   static boost::uuids::uuid  uuid;              ///< Universally Unique IDentifier for this Singleton           @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): This is not really a global
+   static singleton_counter_t constructCounter;  ///< Number of times this Singleton has been constructed        @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): This is not really a global
+   static singleton_counter_t destructCounter;   ///< Number of times this Singleton has been destroyed          @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): This is not really a global
 
 }; // Singleton
 
 
 template< typename T >
-std::unique_ptr< T > Singleton< T >::s_instance;
+std::unique_ptr< T > Singleton< T >::s_instance;  ///< @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): This is not really a global
 
 template< typename T >
-boost::uuids::uuid Singleton< T >::uuid = boost::uuids::nil_generator()();
+boost::uuids::uuid Singleton< T >::uuid = boost::uuids::nil_generator()();  ///< @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): This is not really a global
 
 template< typename T >
-singleton_counter_t Singleton< T >::constructCounter = 0;
+singleton_counter_t Singleton< T >::constructCounter = 0;  ///< @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): This is not really a global
 
 template< typename T >
-singleton_counter_t Singleton< T >::destructCounter = 0;
+singleton_counter_t Singleton< T >::destructCounter = 0;  ///< @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): This is not really a global
 
 
 /// Get an instance of this Singleton
