@@ -43,6 +43,8 @@ Like any project, there's a lot of things you have to get right upfront:
 
 This document will discuss the thinking behind several of these decisions.
 
+Here's an interesting question:  What would a Microkernel-based Empire look like?
+
 ## The Choice of Language
 Empire was originally written in [C].  [An examination of the source] will both
 awe and terrify most programmers.  They really did an excellent job with the tools
@@ -406,7 +408,7 @@ The arguments against Singletons...
   - Well-designed systems isolate responsibility.  Singletons encourage tight
     coupling by making it easy for components to depend on them.
     - Agreed:  I'd have to think on this, but my initial reaction is that, for 
-      the things I intend to make Singletons, those dependencies do exist.
+      the things I intend to make Singletons, those dependencies are inherent.
   - Whether there needs to be a single instance of an object depends on the
     context that object is being used.
     - I will not be running multiple instances of Empire in the same process space.
@@ -429,16 +431,16 @@ The arguments against Singletons...
         example). But this sacrifices a lot of unit testing capabilities.  
         Therefore, we will make a testability-over-performance tradeoff and make
         configuration dynamic.
-      - empire::Singleton will have a `scratch()` method which will destroy it 
+      - empire::Singleton will have an `erase()` method which will destroy it 
         and allow it to be recreated.
   - You loose control of initializations
     - Not true.  The Core will initialize all the Singletons.  That's what
-      the core does.  Also, I will be using instances of Singletons (or the contents therein)
-      as parameters when I create other objects.
+      the core does.  Also, I will be using instances of Singletons (or the 
+      contents therein) as parameters when I create other objects.
     - The test harness will manage the test Singletons.
   - Explicit reference passing makes garbage collection work.
     - All of these objects will begin with Empire and end with Empire.
-    - The `scratch()` method on Singleton will destroy.  There's nothing wrong 
+    - The `erase()` method on Singleton will destroy.  There's nothing wrong 
       with that.  The Singleton guarantees only one object will
       exist after you ask for it (which is still true).  It also makes it 
       globally available, which will also continue to be true.
@@ -458,12 +460,13 @@ The arguments against Singletons...
     - Let's distinguish between reading & writing globals.  Unexpected writing 
       to a global is bad.  We can all agree on that.  Reading from read-only 
       globals are not too different from constants, which is fine.
-    - So, let's not make native datatypes (anything with public scope) a Singleton.
+    - So, let's not make native datatypes a Singleton.
     - Agreed, in the context of raw variables...  but these globals are objects
-     that have all of the protections an encapsulated class should have.
+      that have all of the protections an encapsulated class should have.
   - Globals lead to spaghetti code.
     - Agreed, when they are abused.  All global state will be maintained in the 
       object model.
+    - I'm not creating `static int i, j, k` as global iterators.
   - When you go to include 3rd party libraries in your code, sometimes they use 
    the same names as yours.
     - All of our globals will be in the Empire namespace.

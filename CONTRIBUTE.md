@@ -36,7 +36,14 @@ All other names use snake case: `unordered_map`
 
 Name private data with a `m_` prefix to distinguish it from public data. `m_` stands for "member" data.
 
+Prefixes:
+m for members
+c for constants/readonlys
+p for pointer (and pp for pointer to pointer)
+s for static
 
+Variable names:
+i, j & k for indexes and iterators
 
 
 # CMake {#DevelopmentMakeTargets}
