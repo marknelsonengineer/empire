@@ -206,26 +206,114 @@ BOOST_AUTO_TEST_CASE( Singleton_bulk_erase ) {
 }
 
 
-/// Create a Singleton class where the constructor takes parameters.
+/// Create a Singleton class where the constructor needs parameters.
 ///
-/// Introducing Singletons with parameters is tricky.  You don't really want
-/// to pass them in with every get() call.  That's wasteful as you really only
-/// need it when you instantiate the underlying object.
+/// Singletons that need configuration parameters are tricky.  You don't really
+/// want to pass them in with every get() call.  That's wasteful as you really
+/// only need them when you instantiate the underlying object.
 ///
 /// If you make a constructor with parameters, it will never get called unless
 /// you override get(), which is a terrible idea.
+///
+/// You can't override get() to call a constructor with parameters.  Instead,
+/// the Boost Test `Singleton_with_parameters` demonstrates a technique where you
+/// set the parameters as statics before instantiating the Singleton.
 class TestSingleton3 final : public empire::Singleton< TestSingleton3 > {
 public:
-   explicit TestSingleton3( [[maybe_unused]] token singletonToken ) {
-      // cout << "TestSingleton1 constructed" << endl;
+   explicit TestSingleton3( int parm1, string parm2 ) {
+      cout << "Construct (param1, param2) ";
+      cout << TestSingleton3::info();
+      cout << " param1=" << sm_parameter1;
+      cout << " param2=" << sm_parameter2;
+      cout << endl;
    }
 
+   explicit TestSingleton3( [[maybe_unused]] token singletonToken ) : TestSingleton3( sm_parameter1, sm_parameter2 ) {
+      cout << "Construct (token)" << TestSingleton3::info() << endl;
+   }
+
+   static TestSingleton3& get() {
+      std::cout << "Instantiate3 " << info() << std::endl;
+
+      return Singleton< TestSingleton3 >::get();
+   }
 
    void use() const {
       // cout << "TestSingleton3 in use" << endl;
    }
+
+   static void setParameter1( int parameter1 ) {
+      sm_parameter1 = parameter1;
+   }
+
+   static int getParameter1() {
+      return sm_parameter1;
+   }
+
+   static void setParameter2( string parameter2 ) {
+      sm_parameter2 = parameter2;
+   }
+
+   static string getParameter2() {
+      return sm_parameter2;
+   }
+
+protected:
+   static int sm_parameter1;
+   static string sm_parameter2;
 };
 
+int    TestSingleton3::sm_parameter1 { 0 };
+string TestSingleton3::sm_parameter2 {};
+
+BOOST_AUTO_TEST_CASE( Singleton_with_parameters ) {
+   TestSingleton3::setParameter1( 16 );
+   TestSingleton3::setParameter2( "I am Sam" );
+
+   BOOST_CHECK( !TestSingleton3::isInstantiated() );
+
+   // Populate t31 w/ TestSingleton3
+   const TestSingleton3& t31 = TestSingleton3::get();
+   BOOST_CHECK_NO_THROW( TestSingleton3::validate() );
+   BOOST_CHECK( TestSingleton3::isInstantiated() );
+   BOOST_CHECK_NO_THROW( t31.use() );
+   BOOST_CHECK( !TestSingleton3::info().empty() );
+   BOOST_CHECK_NE( TestSingleton3::info().find( "UUID=" ), std::string::npos );
+   BOOST_CHECK_NE( TestSingleton3::info().find( "constructed" ), std::string::npos );
+   BOOST_CHECK_NE( TestSingleton3::info().find( "destroyed" ), std::string::npos );
+   BOOST_CHECK_EQUAL( t31.getParameter1(), 16 );
+   BOOST_CHECK_EQUAL( t31.getParameter2(), "I am Sam" );
+
+   const boost::uuids::uuid uuid_t31 = t31.getUUID();
+   BOOST_CHECK_NE( uuid_t31, boost::uuids::nil_generator()() );
+
+   TestSingleton3::erase();
+   BOOST_CHECK( !TestSingleton3::isInstantiated() );
+
+   TestSingleton3::setParameter1( 32 );
+   TestSingleton3::setParameter2( "Sam I am" );
+
+   // Populate t32 w/ TestSingleton3
+   const TestSingleton3& t32 = TestSingleton3::get();
+   BOOST_CHECK_NO_THROW( TestSingleton3::validate() );
+   BOOST_CHECK( TestSingleton3::isInstantiated() );
+   BOOST_CHECK_NO_THROW( t32.use() );
+   BOOST_CHECK_EQUAL( t31.getParameter1(), 32 );
+   BOOST_CHECK_EQUAL( t31.getParameter2(), "Sam I am" );
+
+   const boost::uuids::uuid uuid_t32 = t32.getUUID();
+   BOOST_CHECK_NE( uuid_t31, boost::uuids::nil_generator()() );
+
+   // Ensure the two Singletons are different objects
+   BOOST_CHECK_NE( uuid_t31, uuid_t32 );
+
+
+   // The following will compile and run, but will fail at runtime.
+   // TestSingleton3 x1 = TestSingleton3( 100 );
+   // TestSingleton3 x2 = TestSingleton3( 100 );
+
+   BOOST_CHECK( true );
+}
 
 BOOST_AUTO_TEST_SUITE_END()
 /// @endcond

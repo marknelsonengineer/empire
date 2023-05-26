@@ -42,18 +42,24 @@ namespace empire {
 ///        }
 ///     };
 ///
-/// This template is helper to manage Singletons.  It's not a guarantee of
-/// Singleness.  There are many ways you can override this and then create
+/// This template is a helper to manage Singletons.  It's not a guarantee of
+/// Singleness.  There are many ways you can override this and create
 /// multiple instances.  This Singleton, on the other hand, should detect when
 /// it happens and throw an exception.  Unfortunately, these programs will
 /// compile and run.  We can't detect the problem until it happens.
 ///
 /// The assurances of singleness are at runtime and (I'd estimate) to be
-/// relatively weak.
+/// relatively weak against a determined hacker.
 ///
 /// This class is also, as it's written, not thread-safe.
 ///
-/// Singletons that need configuration parameters should probably... @todo Finish this
+/// Singletons that need configuration parameters are tricky.  You don't really
+/// want to pass them in with every get() call.  That's wasteful as you really
+/// only need them when you instantiate the underlying object.
+///
+/// You can't override get() to call a constructor with parameters.  Instead,
+/// the Boost Test `Singleton_with_parameters` demonstrates a technique where you
+/// set the parameters as statics before instantiating the Singleton.
 ///
 /// @pattern Singleton:  This is a base class for Singleton
 /// @tparam T This derived class will be a Singleton
@@ -61,7 +67,8 @@ template< typename T >
 class Singleton {
 public:  // /////////////////// Constructors & Destructors /////////////////////
 
-   /// This is mechanism Singleton uses to ensure objects inherit from Singleton.
+   /// The mechanism to ensure objects inherit from Singleton.
+   ///
    /// Inherited, concrete Singleton classes should pass `token` to their
    /// constructors.  If you can't access #Singleton.token, then you are not
    /// overriding Singleton.
@@ -90,7 +97,7 @@ public:  // ///////////////////////// Static Methods ///////////////////////////
 
    static T& get();  // Defined below, so it can use `inline`
 
-   /// Return a string about this object
+   /// Get some details about this object
    ///
    ///     TestSingleton1 UUID=0982ec0e-34c2-4769-837e-abd90834e407 constructed 14 times destroyed 13 times
    ///
@@ -105,38 +112,35 @@ public:  // ///////////////////////// Static Methods ///////////////////////////
       return infoString;
    }
 
-   /// @return Number of times the Singleton has been constructed
+   /// Get the number of times this Singleton has been constructed
+   ///
+   /// @return Number of times this Singleton has been constructed
    [[nodiscard]] static singleton_counter_t getConstructedCount() {
       return constructCounter;
    }
 
-   /// @return Number of times the Singleton has been destroyed
+   /// Get the number of times this Singleton has been destroyed
+   ///
+   /// @return Number of times this Singleton has been destroyed
    [[nodiscard]] static singleton_counter_t getDestroyedCount() {
       return destructCounter;
    }
 
+   /// Determine if this Singleton has been instantiated or not.
+   ///
    /// @return `true` if this Singleton has been instantiated.  `false` if not.
    [[nodiscard]] static bool isInstantiated() {
       return s_pStaticInstance != nullptr;
    }
 
-   /// Validate the health of the Singleton
+   /// Validate the health of this Singleton
    static void validate() {
       /// @throws logic_error if the info() string is not constructed correctly
       if( info().find( "UUID" ) == std::string::npos ) {
          throw std::logic_error( "The Singleton's info string was not constructed correctly");
       }
 
-      if( s_pStaticInstance == nullptr ) {
-         if( uuid != boost::uuids::nil_generator()() ) {
-            /// @throws logic_error if an empty Singleton has a populated #uuid
-            throw std::logic_error( "UUID should be nil for an empty Singleton");
-         }
-         if( constructCounter != destructCounter ) {
-            /// @throws range_error if an empty Singleton's #constructCounter and #destructCounter are not equal
-            throw std::range_error( "The constructCounter should equal the destructCounter in an empty Singleton" );
-         }
-      } else {
+      if( isInstantiated() ) {
          /// @throws range_error if a populated Singleton's #constructCounter is <= 0
          if( constructCounter <= 0 ) {
             throw std::range_error( "A Singleton's constructCounter should be > 0" );
@@ -151,16 +155,29 @@ public:  // ///////////////////////// Static Methods ///////////////////////////
          if( uuid == boost::uuids::nil_generator()() ) {
             throw std::logic_error( "A Singleton's UUID should be set");
          }
+      } else {
+         if( uuid != boost::uuids::nil_generator()() ) {
+            /// @throws logic_error if an empty Singleton has a populated #uuid
+            throw std::logic_error( "UUID should be nil for an empty Singleton");
+         }
+         if( constructCounter != destructCounter ) {
+            /// @throws range_error if an empty Singleton's #constructCounter and #destructCounter are not equal
+            throw std::range_error( "The constructCounter should equal the destructCounter in an empty Singleton" );
+         }
       }
    }
 
-   /// @return A Universally Unique IDentifier or UUID for the Singleton
+   /// Get the Universally Unique IDentifier or UUID for this Singleton
+   ///
+   /// @return A Universally Unique IDentifier or UUID for this Singleton or
+   ///         `00000000-0000-0000-0000-000000000000` if it hasn't been
+   ///         instantiated yet.
    [[nodiscard]] boost::uuids::uuid getUUID() const {
       return uuid;
    }
 
 
-   /// Erase the Singleton instance
+   /// Erase this Singleton instance
    ///
    /// Singleton guarantees that only one instance of the object can exist at a
    /// time, but it does not guarantee that it can't be deleted and re-created.
@@ -186,7 +203,7 @@ protected:  // /////////////// Protected Methods & Members /////////////////////
    /// The Singleton is initially empty and is only instantiated when
    /// a client calls get().  This way, we don't pay for what we don't use.
    ///
-   /// This is protected so `<T>` can override it should it choose.
+   /// This is protected and `<T>` must override it.
    Singleton() {
       std::cout << "Base class constructor for " << info() << std::endl;
 
@@ -206,7 +223,7 @@ protected:  // /////////////// Protected Methods & Members /////////////////////
 private:  // //////////////////// Private Static Members ///////////////////////
    static T* s_pStaticInstance;  ///< Pointer to the Singleton instance
 
-   static boost::uuids::uuid uuid;               ///< UUID for this Singleton
+   static boost::uuids::uuid uuid;               ///< Universally Unique IDentifier for this Singleton
    static singleton_counter_t constructCounter;  ///< Number of times this Singleton has been constructed
    static singleton_counter_t destructCounter;   ///< Number of times this Singleton has been destroyed
 
@@ -226,9 +243,9 @@ template< typename T >
 singleton_counter_t Singleton< T >::destructCounter = 0;
 
 
-/// Get an instance of a Singleton
+/// Get an instance of this Singleton
 ///
-/// Inlined to maximize performance
+/// Uses `inline` to maximize performance
 ///
 /// @tparam T The Singleton class
 /// @return The one and only instance of `T`
