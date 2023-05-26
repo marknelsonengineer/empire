@@ -27,7 +27,7 @@ public:
       // cout << "TestSingleton1 constructed" << endl;
    }
 
-   // Do something useful with this Singleton
+   // Do something useful with this class
    void use() const {
       // cout << "TestSingleton1 in use" << endl;
    }
@@ -41,7 +41,6 @@ public:
       // cout << "TestSingleton2 constructed" << endl;
    }
 
-protected:
    ~TestSingleton2() override {
       cout << "Overridden Destructor " << TestSingleton2::info() << endl;
    }
@@ -57,9 +56,12 @@ BOOST_AUTO_TEST_SUITE( Singleton )
 
 BOOST_AUTO_TEST_CASE( Singleton_general ) {
 
+   BOOST_CHECK( !TestSingleton1::isInstantiated() );
+
    // Populate t11 w/ TestSingleton1
    const TestSingleton1& t11 = TestSingleton1::get();
    BOOST_CHECK_NO_THROW( TestSingleton1::validate() );
+   BOOST_CHECK( TestSingleton1::isInstantiated() );
    BOOST_CHECK_NO_THROW( t11.use() );
    BOOST_CHECK( !TestSingleton1::info().empty() );
    BOOST_CHECK_NE( TestSingleton1::info().find( "UUID=" ), std::string::npos );
@@ -70,8 +72,10 @@ BOOST_AUTO_TEST_CASE( Singleton_general ) {
    BOOST_CHECK_NE( uuid_t11, boost::uuids::nil_generator()() );
 
    // Populate t12 with the same singleton
+   BOOST_CHECK( TestSingleton1::isInstantiated() );
    const TestSingleton1& t12 = TestSingleton1::get();
    BOOST_CHECK_NO_THROW( t12.validate() );
+   BOOST_CHECK( TestSingleton1::isInstantiated() );
    BOOST_CHECK_NO_THROW( t12.use() );
 
    const boost::uuids::uuid uuid_t12 = t12.getUUID();
@@ -82,15 +86,21 @@ BOOST_AUTO_TEST_CASE( Singleton_general ) {
 
 
    // Test our second Singleton
+   BOOST_CHECK( !TestSingleton2::isInstantiated() );
+
    const TestSingleton2& t21 = TestSingleton2::get();
    BOOST_CHECK_NO_THROW( t21.validate() );
+   BOOST_CHECK( TestSingleton2::isInstantiated() );
    BOOST_CHECK_NO_THROW( t21.use() );
 
    const boost::uuids::uuid uuid_t21 = t21.getUUID();
    BOOST_CHECK_NE( uuid_t21, boost::uuids::nil_generator()() );
 
+   // Populate t22 with the same singleton
+   BOOST_CHECK( TestSingleton2::isInstantiated() );
    const TestSingleton2& t22 = TestSingleton2::get();
    BOOST_CHECK_NO_THROW( t22.validate() );
+   BOOST_CHECK( TestSingleton2::isInstantiated() );
    BOOST_CHECK_NO_THROW( t22.use() );
 
    const boost::uuids::uuid uuid_t22 = t22.getUUID();
@@ -108,12 +118,15 @@ BOOST_AUTO_TEST_CASE( Singleton_general ) {
 BOOST_AUTO_TEST_CASE( Singleton_erase ) {
    BOOST_CHECK_NO_THROW( TestSingleton1::get().validate() );
    const boost::uuids::uuid uuid_t11 = TestSingleton1::get().getUUID();
+   BOOST_CHECK( TestSingleton1::isInstantiated() );
 
    TestSingleton1::erase();
 
    // Get TestSingleton1 after erasing it (it should create a new one)
+   BOOST_CHECK( !TestSingleton1::isInstantiated() );
    BOOST_CHECK_NO_THROW( TestSingleton1::get().validate() );
    const boost::uuids::uuid uuid_t12 = TestSingleton1::get().getUUID();
+   BOOST_CHECK( TestSingleton1::isInstantiated() );
 
    BOOST_CHECK_NE( uuid_t11, uuid_t12 );
 }
@@ -122,6 +135,7 @@ BOOST_AUTO_TEST_CASE( Singleton_erase ) {
 BOOST_AUTO_TEST_CASE( Singleton_bulk_get ) {
    const TestSingleton1& t11 = TestSingleton1::get();
    BOOST_CHECK_NO_THROW( t11.validate() );
+   BOOST_CHECK( t11.isInstantiated() );
    BOOST_CHECK_NO_THROW( t11.use() );
    const boost::uuids::uuid uuid_t11 = t11.getUUID();
    const singleton_counter_t t11_constructed = TestSingleton1::getConstructedCount();
@@ -131,6 +145,7 @@ BOOST_AUTO_TEST_CASE( Singleton_bulk_get ) {
    for( int i = 0 ; i < 16 ; i++ ) {
       const TestSingleton1& t12 = TestSingleton1::get();
       BOOST_CHECK_NO_THROW( t12.validate() );
+      BOOST_CHECK( t12.isInstantiated() );
       BOOST_CHECK_NO_THROW( t12.use() );
       const boost::uuids::uuid uuid_t12 = t12.getUUID();
 
@@ -144,21 +159,25 @@ BOOST_AUTO_TEST_CASE( Singleton_bulk_get ) {
 
 BOOST_AUTO_TEST_CASE( Singleton_bulk_get_and_erase ) {
    for( int i = 0 ; i < 16 ; i++ ) {
-      const TestSingleton1& t21 = TestSingleton1::get();
+      const TestSingleton2& t21 = TestSingleton2::get();
       BOOST_CHECK_NO_THROW( t21.validate() );
+      BOOST_CHECK( t21.isInstantiated() );
       BOOST_CHECK_NO_THROW( t21.use() );
       const boost::uuids::uuid uuid_t21 = t21.getUUID();
-      const singleton_counter_t t21_constructed = TestSingleton1::getConstructedCount();
-      const singleton_counter_t t21_destructed = TestSingleton1::getDestroyedCount();
+      const singleton_counter_t t21_constructed = TestSingleton2::getConstructedCount();
+      const singleton_counter_t t21_destructed = TestSingleton2::getDestroyedCount();
 
-      TestSingleton1::erase();
+      TestSingleton2::erase();
 
-      const TestSingleton1& t22 = TestSingleton1::get();
+      BOOST_CHECK( !TestSingleton2::isInstantiated() );
+
+      const TestSingleton2& t22 = TestSingleton2::get();
       BOOST_CHECK_NO_THROW( t22.validate() );
+      BOOST_CHECK( TestSingleton2::isInstantiated() );
       BOOST_CHECK_NO_THROW( t22.use() );
       const boost::uuids::uuid uuid_t22 = t22.getUUID();
-      const singleton_counter_t t22_constructed = TestSingleton1::getConstructedCount();
-      const singleton_counter_t t22_destructed = TestSingleton1::getDestroyedCount();
+      const singleton_counter_t t22_constructed = TestSingleton2::getConstructedCount();
+      const singleton_counter_t t22_destructed = TestSingleton2::getDestroyedCount();
 
 
       // Ensure they are different objects
@@ -172,12 +191,15 @@ BOOST_AUTO_TEST_CASE( Singleton_bulk_get_and_erase ) {
 
 BOOST_AUTO_TEST_CASE( Singleton_bulk_erase ) {
    TestSingleton1::erase();
+   BOOST_CHECK( !TestSingleton1::isInstantiated() );
+
    const singleton_counter_t t11_constructed = TestSingleton1::getConstructedCount();
    const singleton_counter_t t11_destructed = TestSingleton1::getDestroyedCount();
 
    for( int i = 0 ; i < 16 ; i++ ) {
       TestSingleton1::erase();
       BOOST_CHECK_NO_THROW( TestSingleton1::validate() );
+      BOOST_CHECK( !TestSingleton1::isInstantiated() );
       BOOST_CHECK_EQUAL( t11_constructed, TestSingleton1::getConstructedCount() );
       BOOST_CHECK_EQUAL( t11_destructed, TestSingleton1::getDestroyedCount() );
    }

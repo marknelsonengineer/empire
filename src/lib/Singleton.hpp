@@ -42,10 +42,13 @@ namespace empire {
 ///        }
 ///     };
 ///
-/// This of this as more of a helper to manage Singletons.  There are many ways
-/// you can get something that's not a Singleton to compile and run.  As soon
-/// as you start using them, they should start throwing exceptions.  In other
-/// words the guarantees of Singleton are runtime and (I'd estimate) to be
+/// This template is helper to manage Singletons.  It's not a guarantee of
+/// Singleness.  There are many ways you can override this and then create
+/// multiple instances.  This Singleton, on the other hand, should detect when
+/// it happens and throw an exception.  Unfortunately, these programs will
+/// compile and run.  We can't detect the problem until it happens.
+///
+/// The assurances of singleness are at runtime and (I'd estimate) to be
 /// relatively weak.
 ///
 /// This class is also, as it's written, not thread-safe.
@@ -110,6 +113,11 @@ public:  // ///////////////////////// Static Methods ///////////////////////////
    /// @return Number of times the Singleton has been destroyed
    [[nodiscard]] static singleton_counter_t getDestroyedCount() {
       return destructCounter;
+   }
+
+   /// @return `true` if this Singleton has been instantiated.  `false` if not.
+   [[nodiscard]] static bool isInstantiated() {
+      return s_pStaticInstance != nullptr;
    }
 
    /// Validate the health of the Singleton
