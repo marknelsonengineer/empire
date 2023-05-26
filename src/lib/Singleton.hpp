@@ -18,9 +18,9 @@
 #include <boost/uuid/uuid_generators.hpp>  // For nil_generator() random_generator()
 #include <boost/uuid/uuid_io.hpp>          // For uuid::to_string()
 
-// #include <memory>  // For unique_ptr make_unique()
+#include <memory>                          // For unique_ptr make_unique()
 
-#include "../typedefs.h"  // For singleton_counter_t
+#include "../typedefs.h"                   // For singleton_counter_t
 
 namespace empire {
 
@@ -42,16 +42,16 @@ namespace empire {
 ///        }
 ///     };
 ///
-/// This template is a helper to manage Singletons.  It's not a guarantee of
-/// Singleness.  There are many ways you can override this and create
-/// multiple instances.  This Singleton, on the other hand, should detect when
-/// it happens and throw an exception.  Unfortunately, these programs will
-/// compile and run.  We can't detect the problem until it happens.
+/// This template not a guarantee of Singleness.  There are many ways you can
+/// override this and create multiple instances.  This Singleton, on the other
+/// hand, should detect if it happens and throw an exception.  Unfortunately,
+/// these programs will compile and run.  We can't detect the problem until it
+/// happens.
 ///
 /// The assurances of singleness are at runtime and (I'd estimate) to be
 /// relatively weak against a determined hacker.
 ///
-/// This class is also, as it's written, not thread-safe.
+/// This class is also not thread-safe.
 ///
 /// Singletons that need configuration parameters are tricky.  You don't really
 /// want to pass them in with every get() call.  That's wasteful as you really
@@ -86,10 +86,10 @@ public:  // /////////////////// Constructors & Destructors /////////////////////
    virtual ~Singleton() {
       std::cout << "Destructor for " << info() << std::endl;
 
-      s_pStaticInstance1 = nullptr;
       uuid = boost::uuids::nil_generator()();
       destructCounter += 1;
-      validate();
+      // validate();  // It's not safe to call validate() yet because
+      // the derived class's destructor has not fired yet.
    };
 
 
@@ -130,7 +130,7 @@ public:  // ///////////////////////// Static Methods ///////////////////////////
    ///
    /// @return `true` if this Singleton has been instantiated.  `false` if not.
    [[nodiscard]] static bool isInstantiated() {
-      return s_pStaticInstance1 != nullptr;
+      return s_instance ? true : false;
    }
 
    /// Validate the health of this Singleton
@@ -191,8 +191,10 @@ public:  // ///////////////////////// Static Methods ///////////////////////////
          return;
       }
 
-      // Fires ~Singleton which resets all the member variables
-      delete s_pStaticInstance1;
+      // Fires ~Singleton which resets the member variables
+      s_instance.reset(nullptr);
+
+      validate();
    }
 
 
@@ -213,15 +215,14 @@ protected:  // /////////////// Protected Methods & Members /////////////////////
 
       uuid = boost::uuids::random_generator()();
       constructCounter += 1;
-      s_pStaticInstance1 = dynamic_cast<T*>(this);
 
       std::cout << "Instantiated " << info() << std::endl;
       // validate();  // It's not safe to call validate() at this point because
-                      // the child-class's constructor has not run yet.
+                      // the derived class's constructor has not run yet.
    }
 
 private:  // //////////////////// Private Static Members ///////////////////////
-   static T* s_pStaticInstance1;  ///< Pointer to the Singleton instance
+   static std::unique_ptr<T> s_instance;         ///< A unique "smart pointer" to an instance of this Singleton
 
    static boost::uuids::uuid uuid;               ///< Universally Unique IDentifier for this Singleton
    static singleton_counter_t constructCounter;  ///< Number of times this Singleton has been constructed
@@ -231,7 +232,7 @@ private:  // //////////////////// Private Static Members ///////////////////////
 
 
 template< typename T >
-T* Singleton< T >::s_pStaticInstance1 = nullptr;
+std::unique_ptr< T > Singleton< T >::s_instance;
 
 template< typename T >
 boost::uuids::uuid Singleton< T >::uuid = boost::uuids::nil_generator()();
@@ -253,13 +254,12 @@ template< typename T >
 inline T& Singleton< T >::get() {
 
    if( !isInstantiated() ) {
-      /// @todo Implement smart pointers
-      s_pStaticInstance1 = new T( token { } );
+      s_instance = std::make_unique<T>( token {} ) ;
    }
 
    validate();
 
-   return *s_pStaticInstance1;
+   return *s_instance;
 }
 
 }  // namespace empire
