@@ -22,7 +22,7 @@ MESSAGE( STATUS "CMAKE_SOURCE_DIR = [${CMAKE_SOURCE_DIR}]" )
 SET( CMAKE_CXX_STANDARD 20 )
 SET( CMAKE_VERBOSE_MAKEFILE false )
 
-SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -lstdc++" )
+SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -lstdc++ -fuse-ld=gold" )
 SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -mtune=native -Ofast -funroll-loops -static -mfma" )
 SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=x86-64 -mtune=generic -O0 -DDEBUG -fno-inline" )
 SET( CMAKE_CXX_FLAGS_MINSIZEREL  "${CMAKE_CXX_FLAGS_DEBUG} -march=native -mtune=native -Oz -mfma" )
@@ -55,6 +55,7 @@ ADD_CUSTOM_TARGET( Lint
 
 ADD_EXECUTABLE( empire_server src/main_empire_server.cpp src/version.hpp src/typedefs.h src/version.cpp )
 ADD_EXECUTABLE( empire_client src/main_empire_client.cpp src/version.hpp src/typedefs.h src/version.cpp )
+ADD_LIBRARY( empire STATIC src/lib/Singleton.hpp src/lib/Singleton.cpp )
 
 FIND_PACKAGE( Boost REQUIRED COMPONENTS serialization )
 IF( Boost_SERIALIZATION_FOUND )
