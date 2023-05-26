@@ -12,4 +12,6 @@
 
 #include "Singleton.hpp"
 
+using namespace empire;
+
 /// Singleton is a header-only class, but we need Singleton.cpp for linting.

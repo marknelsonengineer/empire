@@ -29,7 +29,7 @@ namespace empire {
 /// Increments with bugfixes
 [[maybe_unused]] extern const_version_number_t VERSION_PATCH;
 
-/// Monotonic counter, set by update_version.py, to track the number of
+/// Monotonic constructCounter, set by update_version.py, to track the number of
 /// compilations.
 [[maybe_unused]] extern const_build_number_t VERSION_BUILD;
 

@@ -11,6 +11,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#include <memory>
+
 namespace empire {
 
 /// Template for a Singleton class
@@ -19,6 +21,7 @@ namespace empire {
 template< typename T >
 class Singleton {
 public:
+   Singleton( Singleton& ) = delete;  // Copy constructor
    Singleton( const Singleton& ) = delete;  // Copy constructor
    Singleton( const Singleton&& ) = delete;  // Move constructor
 
@@ -28,10 +31,15 @@ public:
 
    static T& get();
 
+   static void erase();
+
    virtual ~Singleton() = default;
+
+   static T* s_pStaticInstance;  ///< Holds a pointer to the Singleton class
 
 protected:
    Singleton() = default;  ///< The empty constructor may be overridden
+
 
    /// Inherited, concrete singleton classes will use `token` to call the base
    /// class without having to be a friend class.
@@ -41,14 +49,41 @@ protected:
 }; // Singleton
 
 
+template< typename T >
+T* Singleton< T >::s_pStaticInstance = nullptr;
+
+
 /// Get an instance of a Singleton
 ///
 /// @tparam T The Singleton class
 /// @return The one and only instance of `T`
 template< typename T >
 inline T& Singleton< T >::get() {
-   static T instance { token { } };
-   return instance;
+
+   if( s_pStaticInstance == nullptr ) {
+      s_pStaticInstance = new T( token { } );
+   }
+   return *s_pStaticInstance;
+}
+
+
+/// Delete the Singleton instance
+///
+/// Singleton guarantees that only one instance of the object can exist at a
+/// time, but it does not guarantee that it can't be deleted and re-created.
+/// The ability to delete and recreate a Singleton is beneficial for unit
+/// testing and is one of the (few) things that makes having a Singleton
+/// palatable.
+///
+/// @tparam T The Singleton class
+template< typename T >
+void Singleton< T >::erase() {
+   if( !s_pStaticInstance ) {
+      return;
+   }
+
+   delete s_pStaticInstance;
+   s_pStaticInstance = nullptr;
 }
 
 }  // namespace empire
