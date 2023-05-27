@@ -22,7 +22,18 @@ MESSAGE( STATUS "CMAKE_SOURCE_DIR = [${CMAKE_SOURCE_DIR}]" )
 SET( CMAKE_CXX_STANDARD 20 )
 SET( CMAKE_VERBOSE_MAKEFILE false )
 
-SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -lstdc++ -fuse-ld=gold" )
+MESSAGE( STATUS "CMAKE_CXX_COMPILER = [${CMAKE_CXX_COMPILER}]" )
+
+IF( "${CMAKE_CXX_COMPILER}" STREQUAL "/usr/bin/c++" )
+   MESSAGE( STATUS "Compile with g++" )
+   SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lstdc++ -fuse-ld=gold" )
+ELSEIF( "${CMAKE_CXX_COMPILER}" STREQUAL "/usr/bin/clang++" )
+   MESSAGE( STATUS "Compile with clang++" )
+   SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20" )
+ENDIF()
+
+
+SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra" )
 SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -mtune=native -Ofast -funroll-loops -static -mfma" )
 SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=x86-64 -mtune=generic -O0 -DDEBUG -fno-inline" )
 SET( CMAKE_CXX_FLAGS_MINSIZEREL  "${CMAKE_CXX_FLAGS_DEBUG} -march=native -mtune=native -Oz -mfma" )
