@@ -10,9 +10,6 @@
 /// @cond Suppress Doxygen warnings
 /// @NOLINTBEGIN( cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers ): Magic numbers are OK in tests
 
-#define BOOST_TEST_MODULE Empire_Server
-#define BOOST_TEST_MAIN  // Include this to get Boost Test's main()
-
 #include <boost/test/unit_test.hpp>
 
 #include "../src/lib/Singleton.hpp"

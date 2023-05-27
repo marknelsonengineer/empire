@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Empire V
+//  Empire V - What you do is what you do
 //
 /// Test Boost global logging services for Empire V
 ///
@@ -12,39 +12,36 @@
 /// @internal  Compile with
 ///            g++ -std=c++11 test_log_default.cpp -DBOOST_LOG_DYN_LINK -lboost_log -lboost_thread -lpthread -lboost_system
 ///
-/// @file      lib/LogTest.cpp
-/// @version   1.0
-///
+/// @file      tests/test_Log.cpp
 /// @author    Mark Nelson <mr_nelson@icloud.com>
-/// @date      18 Mar 2021
-/// @copyright (c) 2021 Mark Nelson
+/// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
+/// @cond Suppress Doxygen warnings
 
-/// The name of this test module is Empire_Server
-#define BOOST_TEST_MODULE Empire_Server
+#define BOOST_TEST_MODULE Empire
+#define BOOST_TEST_MAIN  // Include this to get Boost Test's main()
 
-#include <boost/assert.hpp>
-#include <boost/test/unit_test.hpp>
 #include <boost/test/execution_monitor.hpp>
+#include <boost/test/unit_test.hpp>
 
-#include "../../src/lib/Log.hpp"
+#include "../src/lib/Log.hpp"
 
 using namespace empire;
 
 
-/// @internal  Name the test suite after the directory that it's in.  Also,
-/// the name should not conflict with other objects in the test suite.
-BOOST_AUTO_TEST_SUITE( Log_test_suite )
+BOOST_AUTO_TEST_SUITE( Log )
 
-/// Test an enabled Commodity constructor
+
 BOOST_AUTO_TEST_CASE( Log_general ) {
-	LOG_TRACE    << "A trace message";
-	LOG_DEBUG    << "A debug message";
-	LOG_INFO     << "An info message";
-	LOG_WARN     << "A warning message";
-	LOG_ERROR    << "An error message";
-	LOG_CRITICAL << "A critical message";
-	LOG_FATAL    << "A fatal message";
+   LOG_TRACE << "A trace message";
+   LOG_DEBUG << "A debug message";
+   LOG_INFO << "An info message";
+   LOG_WARN << "A warning message";
+   LOG_ERROR << "An error message";
+   LOG_CRITICAL << "A critical message";
+   LOG_FATAL << "A fatal message";
 }
 
+
 BOOST_AUTO_TEST_SUITE_END()
+/// @endcond

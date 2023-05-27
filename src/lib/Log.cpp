@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Empire V
+//  Empire V - What you do is what you do
 //
 /// Boost global logging services for Empire V
 ///
@@ -13,11 +13,8 @@
 ///            g++ -std=c++11 test_log_default.cpp -DBOOST_LOG_DYN_LINK -lboost_log -lboost_thread -lpthread -lboost_system
 ///
 /// @file      lib/Log.cpp
-/// @version   1.0 - Initial version
-///
 /// @author    Mark Nelson <mr_nelson@icloud.com>
-/// @date      17 Mar 2021
-/// @copyright (c) 2021 Mark Nelson
+/// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
 
 
