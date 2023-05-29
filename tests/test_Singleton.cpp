@@ -12,6 +12,11 @@
 
 #include <boost/test/unit_test.hpp>
 
+namespace empire {
+constexpr const std::string LOG_CHANNEL { "test_Singleton" };
+}  // namespace empire
+#include "../src/lib/Log.hpp"
+
 #include "../src/lib/Singleton.hpp"
 
 using namespace std;
@@ -36,7 +41,7 @@ public:
 class TestSingleton2 final : public Singleton< TestSingleton2 > {  /// @NOLINT( cppcoreguidelines-special-member-functions, hicpp-special-member-functions ): Copy and Move assignment constructors are in the template
 public:  // /////////////////// Constructors & Destructors /////////////////////
    explicit TestSingleton2( [[maybe_unused]] token singletonToken ) {
-      // cout << "Constructor2  " << TestSingleton2::info() << endl;
+      LOG_TEST << "Constructor2  " << TestSingleton2::info() << endl;
    }
 
    ~TestSingleton2() override {
