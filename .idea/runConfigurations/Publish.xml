@@ -1,7 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Publish" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--recursive --checksum --delete --compress --stats --chmod=o+r,Do+x $CMakeProjectDir$/.doxygen/generated_docs/html/ marknels@uhunix.hawaii.edu:~/public_html/$ProjectName$" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$CMakeCurrentBuildDir$/.." PASS_PARENT_ENVS_2="true" PROJECT_NAME="Empire" TARGET_NAME="Document" CONFIG_NAME="Debug" RUN_PATH="/usr/bin/rsync">
-    <method v="2">
-      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-    </method>
+  <configuration default="false" name="Publish" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--recursive --checksum --delete --compress --stats --chmod=o+r,Do+x ./.doxygen/generated_docs/html/ marknels@uhunix.hawaii.edu:~/public_html/$ProjectName$" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$CMakeCurrentBuildDir$/.." PASS_PARENT_ENVS_2="true" PROJECT_NAME="Empire" TARGET_NAME="Document" CONFIG_NAME="Debug" RUN_PATH="/usr/bin/rsync">
+    <method v="2" />
   </configuration>
 </component>
