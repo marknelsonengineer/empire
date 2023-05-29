@@ -5,6 +5,7 @@
       <w>autobrief</w>
       <w>autotoc</w>
       <w>blockfree</w>
+      <w>booststrap</w>
       <w>calles</w>
       <w>constinit</w>
       <w>cout</w>
@@ -19,6 +20,7 @@
       <w>fpreprocessed</w>
       <w>infod</w>
       <w>interdd</w>
+      <w>iostreams</w>
       <w>keywordflow</w>
       <w>lboost</w>
       <w>libiconv</w>
@@ -32,6 +34,7 @@
       <w>myline</w>
       <w>noenv</w>
       <w>nolintbegin</w>
+      <w>nowide</w>
       <w>ofast</w>
       <w>refname</w>
       <w>sideeffect</w>
