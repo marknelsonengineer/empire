@@ -20,6 +20,9 @@
 /// All things Empire
 namespace empire {
 
+/// A grammatically correct title for the application
+[[maybe_unused]] extern const std::string_view PROGRAM_TITLE;
+
 /// Increments with __major__ functional changes
 [[maybe_unused]] extern const_version_number_t VERSION_MAJOR;
 
