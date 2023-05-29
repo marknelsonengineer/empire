@@ -21,6 +21,8 @@ For review:
 `consteval` Declares a function or template to produce a compile time constant expression.  It forces calls to happen at compile-time.
 `constinit` Initializes a static variable at compile time.  It does not imply `const` nor `constexpr`.
 
+## Directories
+ - `./lib` There's a need for common functionality between all of the Empire programs.  For the sake of efficiency, let's make them static libraries.
 
 
 ## C++ Naming Conventions
