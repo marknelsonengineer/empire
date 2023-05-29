@@ -9,6 +9,7 @@
       <w>constinit</w>
       <w>cout</w>
       <w>creatordate</w>
+      <w>dboost</w>
       <w>dentifier</w>
       <w>doxyfile</w>
       <w>doxywizard</w>
@@ -19,9 +20,11 @@
       <w>infod</w>
       <w>interdd</w>
       <w>keywordflow</w>
+      <w>lboost</w>
       <w>libiconv</w>
       <w>llvmlibc</w>
       <w>lockfree</w>
+      <w>lpthread</w>
       <w>marknels</w>
       <w>marknelsonengineer</w>
       <w>memb</w>
