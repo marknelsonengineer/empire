@@ -41,7 +41,7 @@ public:
 class TestSingleton2 final : public Singleton< TestSingleton2 > {  /// @NOLINT( cppcoreguidelines-special-member-functions, hicpp-special-member-functions ): Copy and Move assignment constructors are in the template
 public:  // /////////////////// Constructors & Destructors /////////////////////
    explicit TestSingleton2( [[maybe_unused]] token singletonToken ) {
-      LOG_TEST << "Constructor2  " << TestSingleton2::info() << endl;
+      cout << "Constructor2  " << TestSingleton2::info() << endl;
    }
 
    ~TestSingleton2() override {
