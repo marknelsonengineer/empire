@@ -3,7 +3,7 @@
 //
 /// Boost global logging services for Empire V
 ///
-/// @see https://www.boost.org/doc/libs/1_75_0/libs/log/doc/html/index.html
+/// @see https://www.boost.org/doc/libs/1_82_0/libs/log/doc/html/index.html
 /// @see https://github.com/snikulov/boost-log-example/blob/master/src/main.cpp
 /// @see https://gist.github.com/silgon/9bbf3cff69aabe1027e8
 ///
@@ -22,10 +22,10 @@
 
 // Additional Boost Log #includes
 #include <boost/log/expressions.hpp>                      // For BOOST_LOG_ATTRIBUTE_KEYWORD
-#include <boost/log/utility/setup/file.hpp>               // For add_file_log
-#include <boost/log/utility/setup/console.hpp>            // For add_console_log
-#include <boost/log/utility/setup/common_attributes.hpp>  // For add_common_attributes
 #include <boost/log/support/date_time.hpp>                // For timestamp in logs
+#include <boost/log/utility/setup/common_attributes.hpp>  // For add_common_attributes
+#include <boost/log/utility/setup/console.hpp>            // For add_console_log
+#include <boost/log/utility/setup/file.hpp>               // For add_file_log
 
 namespace logging  = boost::log;
 namespace expr     = boost::log::expressions;
@@ -36,14 +36,19 @@ namespace sinks    = boost::log::sinks;
 namespace empire {
 
 
-/// Define an override for the << operator that will map
-/// severity_level to a text description.
+/// Define an override for the << operator that will map severity_level to a
+/// text description.
 ///
-/// @implementation This list must match (in the same order) as
-///                 the severity_level enum.
+/// @internal This list must match (in the same order) as
+///           the severity_level enum.
+///
+/// @param strm  Stream @todo
+/// @param level Log level @todo
+/// @return Not sure, but we'll sort it out @todo
 std::ostream& operator<< (std::ostream& strm, severity_level level) {
 	static const char* strings[] = {
-		"trace"
+      "test"
+	  ,"trace"
 	  ,"debug"
 	  ,"info"
 	  ,"warning"
@@ -68,8 +73,8 @@ BOOST_LOG_ATTRIBUTE_KEYWORD(channel  ,"Channel", std::string)
 
 /// Initialize the global logger.
 ///
-///   - Adds a file logger
-///   - Adds a console logger
+///   - Add a file logger
+///   - Add a console logger
 ///   - Initialize the default logging level
 ///
 /// The Channel is the filename of the source of the log, which is a good proxy
@@ -81,7 +86,7 @@ BOOST_LOG_ATTRIBUTE_KEYWORD(channel  ,"Channel", std::string)
 /// @todo Implement a log-level API to change the log level in realtime
 ///
 BOOST_LOG_GLOBAL_LOGGER_INIT(empireLogger, logger_t) {
-	logger_t lg;
+	logger_t logger;
 
 	boost::log::add_common_attributes();
 
@@ -110,7 +115,7 @@ BOOST_LOG_GLOBAL_LOGGER_INIT(empireLogger, logger_t) {
 		)
 	);
 
-	return lg;
+	return logger;
 }
 
 

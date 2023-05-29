@@ -3,7 +3,7 @@
 //
 /// Test Boost global logging services for Empire V
 ///
-/// @see https://www.boost.org/doc/libs/1_75_0/libs/log/doc/html/index.html
+/// @see https://www.boost.org/doc/libs/1_82_0/libs/log/doc/html/index.html
 /// @see https://github.com/snikulov/boost-log-example/blob/master/src/main.cpp
 /// @see https://gist.github.com/silgon/9bbf3cff69aabe1027e8
 ///
@@ -24,6 +24,10 @@
 #include <boost/test/execution_monitor.hpp>
 #include <boost/test/unit_test.hpp>
 
+namespace empire {
+/// LOG_CHANNEL should be set by each user of Log before `#include "Log.hpp"`
+constexpr const std::string LOG_CHANNEL { "test_Log" };
+}  // namespace empire
 #include "../src/lib/Log.hpp"
 
 using namespace empire;
@@ -33,12 +37,12 @@ BOOST_AUTO_TEST_SUITE( Log )
 
 
 BOOST_AUTO_TEST_CASE( Log_general ) {
+   LOG_TEST  <<  "A test message";
    LOG_TRACE << "A trace message";
    LOG_DEBUG << "A debug message";
-   LOG_INFO << "An info message";
-   LOG_WARN << "A warning message";
+   LOG_INFO  << "An info message";
+   LOG_WARN  << "A warning message";
    LOG_ERROR << "An error message";
-   LOG_CRITICAL << "A critical message";
    LOG_FATAL << "A fatal message";
 }
 
