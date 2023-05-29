@@ -78,6 +78,13 @@ ADD_CUSTOM_TARGET( Lint
                    COMMAND clang-tidy ${ALL_SOURCES} --quiet --extra-arg-before=-std=c++20 --
                    )
 
+IF( ${CMAKE_BUILD_TYPE} STREQUAL "Release" )  # We build our own Boost libraries to get these static libraries
+   ADD_LIBRARY( empire STATIC src/lib/Singleton.hpp src/lib/Singleton.cpp src/lib/Log.hpp src/lib/Log.cpp )
+ELSE()
+   ADD_LIBRARY( empire SHARED src/lib/Singleton.hpp src/lib/Singleton.cpp src/lib/Log.hpp src/lib/Log.cpp )
+   ADD_COMPILE_DEFINITIONS( BOOST_TEST_DYN_LINK )
+ENDIF()
+
 ADD_EXECUTABLE( empire_server src/main_empire_server.cpp src/version.hpp src/typedefs.h src/version.cpp )
 ADD_EXECUTABLE( empire_client src/main_empire_client.cpp src/version.hpp src/typedefs.h src/version.cpp )
 TARGET_LINK_LIBRARIES( empire_client ${Boost_LIBRARIES} )
