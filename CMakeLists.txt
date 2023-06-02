@@ -23,8 +23,8 @@ PROJECT( Empire
 # MESSAGE( STATUS "CMAKE_CXX_COMPILER_ID = [${CMAKE_CXX_COMPILER_ID}]" )
 
 SET( CMAKE_CXX_STANDARD 20 )
-SET( CMAKE_CXX_STANDARD_REQUIRED true )
-SET( CMAKE_VERBOSE_MAKEFILE false )
+SET( CMAKE_CXX_STANDARD_REQUIRED TRUE )
+SET( CMAKE_VERBOSE_MAKEFILE FALSE )
 
 ############################## Boost Library Configuration #####################
 # see https://cmake.org/cmake/help/latest/module/FindBoost.html
@@ -48,7 +48,7 @@ IF( ${PROFILE_NAME} STREQUAL "Clang" )
 ELSEIF( ${PROFILE_NAME} STREQUAL "Clang-Tidy" )
    MESSAGE( STATUS "Lint with clang-tidy" )
    SET( CMAKE_CXX_COMPILER /usr/bin/true )
-   set( CMAKE_CXX_CLANG_TIDY clang-tidy --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy )
+   SET( CMAKE_CXX_CLANG_TIDY clang-tidy --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy )
    #  set( CMAKE_CXX_CPPCHECK cppcheck --quiet --enable=all -I ${Boost_INCLUDE_DIRS} -i ./tests/ )
 ELSEIF( ${PROFILE_NAME} STREQUAL "Doxygen" )
    MESSAGE( STATUS "Generate documentation with Doxygen" )
@@ -68,7 +68,6 @@ MESSAGE( STATUS "Boost_INCLUDE_DIRS = [${Boost_INCLUDE_DIRS}]" )
 SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -mtune=native -Ofast -funroll-loops -static -mfma" )
 SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=x86-64 -mtune=generic -O0 -DDEBUG -fno-inline" )
 SET( CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_DEBUG} -march=native -mtune=native -Oz -mfma" )
-
 
 
 ADD_CUSTOM_TARGET( Document
