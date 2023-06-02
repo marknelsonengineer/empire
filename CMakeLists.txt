@@ -24,12 +24,11 @@ PROJECT( Empire
 
 SET( CMAKE_CXX_STANDARD 20 )
 SET( CMAKE_CXX_STANDARD_REQUIRED TRUE )
-SET( CMAKE_VERBOSE_MAKEFILE FALSE )
 
 ############################## Boost Library Configuration #####################
 # see https://cmake.org/cmake/help/latest/module/FindBoost.html
-SET( Boost_USE_RELEASE_LIBS ON )  # Boost is production-for-us (we're not developing Boost code), so it's always release
-SET( Boost_USE_DEBUG_LIBS OFF )  # Boost is production-for-us (we're not developing Boost code), so it's never debug
+SET( Boost_USE_RELEASE_LIBS ON )  # Boost is production-for-us (we're not developing Boost code), so we'd always use their released libraries
+SET( Boost_USE_DEBUG_LIBS OFF )  # Boost is production-for-us (we're not developing Boost code), so we'd never use debug libraries
 SET( Boost_USE_STATIC_LIBS OFF )  # By default, use shared libraries, but on Release builds, use static libs
 
 IF( ${CMAKE_BUILD_TYPE} STREQUAL "Release" )  # We build our own Boost libraries to get these static libraries
@@ -40,21 +39,15 @@ FIND_PACKAGE( Boost REQUIRED COMPONENTS unit_test_framework serialization )  # N
 
 INCLUDE_DIRECTORIES( BEFORE SYSTEM ${Boost_INCLUDE_DIRS} )
 
-
 ADD_COMPILE_OPTIONS( -Wall -Wextra )
 
-IF( ${PROFILE_NAME} STREQUAL "Clang" )
-   SET( CMAKE_CXX_COMPILER clang++ )
-ELSEIF( ${PROFILE_NAME} STREQUAL "Clang-Tidy" )
+IF( ${CMAKE_BUILD_TYPE} STREQUAL "Clang-Tidy" )
    MESSAGE( STATUS "Lint with clang-tidy" )
-   SET( CMAKE_CXX_COMPILER /usr/bin/true )
    SET( CMAKE_CXX_CLANG_TIDY clang-tidy --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy )
-   #  set( CMAKE_CXX_CPPCHECK cppcheck --quiet --enable=all -I ${Boost_INCLUDE_DIRS} -i ./tests/ )
-ELSEIF( ${PROFILE_NAME} STREQUAL "Doxygen" )
+   # set( CMAKE_CXX_CPPCHECK cppcheck --quiet --enable=all -I ${Boost_INCLUDE_DIRS} -i ./tests/ )
+ELSEIF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
    MESSAGE( STATUS "Generate documentation with Doxygen" )
-   SET( CMAKE_CXX_COMPILER clang++ )
 ENDIF()
-
 
 IF( ${CMAKE_COMPILER_IS_GNUCXX} )
    MESSAGE( STATUS "Compile with g++" )
@@ -62,8 +55,8 @@ IF( ${CMAKE_COMPILER_IS_GNUCXX} )
 ELSEIF( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
    MESSAGE( STATUS "Compile with clang++" )
 ENDIF()
-MESSAGE( STATUS "Boost_INCLUDE_DIRS = [${Boost_INCLUDE_DIRS}]" )
 
+MESSAGE( STATUS "Boost_INCLUDE_DIRS = [${Boost_INCLUDE_DIRS}]" )
 
 SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -mtune=native -Ofast -funroll-loops -static -mfma" )
 SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=x86-64 -mtune=generic -O0 -DDEBUG -fno-inline" )
@@ -88,9 +81,6 @@ ADD_CUSTOM_TARGET( PublishXX
                    COMMAND rsync --recursive --checksum --delete --compress --stats --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/ marknels@uhunix.hawaii.edu:~/public_html/${CMAKE_PROJECT_NAME}
                    )
 
-FILE( GLOB_RECURSE ALL_SOURCES ./src/*.cpp ./tests/*.cpp )
-MESSAGE( STATUS "Sources to lint ${ALL_SOURCES}" )
-
 IF( ${CMAKE_BUILD_TYPE} STREQUAL "Release" )  # We build our own Boost libraries to get these static libraries
    SET( BUILD_SHARED_LIBS FALSE )
 ELSE()
@@ -99,7 +89,6 @@ ELSE()
 ENDIF()
 
 ADD_LIBRARY( empire src/lib/Singleton.hpp src/lib/Singleton.cpp src/lib/Log.hpp src/lib/Log.cpp )
-
 
 ADD_EXECUTABLE( empire_server src/main_empire_server.cpp src/version.hpp src/typedefs.h src/version.cpp )
 ADD_EXECUTABLE( empire_client src/main_empire_client.cpp src/version.hpp src/typedefs.h src/version.cpp )
