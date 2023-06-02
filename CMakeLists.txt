@@ -22,6 +22,7 @@ PROJECT( Empire
 # MESSAGE( STATUS "CMAKE_CXX_COMPILER = [${CMAKE_CXX_COMPILER}]" )
 
 SET( CMAKE_CXX_STANDARD 20 )
+SET( CMAKE_CXX_STANDARD_REQUIRED true )
 SET( CMAKE_VERBOSE_MAKEFILE false )
 
 ADD_COMPILE_OPTIONS( -Wall -Wextra )
@@ -79,11 +80,14 @@ ADD_CUSTOM_TARGET( Lint
                    )
 
 IF( ${CMAKE_BUILD_TYPE} STREQUAL "Release" )  # We build our own Boost libraries to get these static libraries
-   ADD_LIBRARY( empire STATIC src/lib/Singleton.hpp src/lib/Singleton.cpp src/lib/Log.hpp src/lib/Log.cpp )
+   SET( BUILD_SHARED_LIBS FALSE )
 ELSE()
-   ADD_LIBRARY( empire SHARED src/lib/Singleton.hpp src/lib/Singleton.cpp src/lib/Log.hpp src/lib/Log.cpp )
+   SET( BUILD_SHARED_LIBS TRUE )
    ADD_COMPILE_DEFINITIONS( BOOST_TEST_DYN_LINK )
 ENDIF()
+
+ADD_LIBRARY( empire src/lib/Singleton.hpp src/lib/Singleton.cpp src/lib/Log.hpp src/lib/Log.cpp )
+
 
 ADD_EXECUTABLE( empire_server src/main_empire_server.cpp src/version.hpp src/typedefs.h src/version.cpp )
 ADD_EXECUTABLE( empire_client src/main_empire_client.cpp src/version.hpp src/typedefs.h src/version.cpp )
