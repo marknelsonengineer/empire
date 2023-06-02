@@ -25,21 +25,7 @@ SET( CMAKE_CXX_STANDARD 20 )
 SET( CMAKE_CXX_STANDARD_REQUIRED true )
 SET( CMAKE_VERBOSE_MAKEFILE false )
 
-ADD_COMPILE_OPTIONS( -Wall -Wextra )
-
-IF( "${CMAKE_CXX_COMPILER}" STREQUAL "/usr/bin/c++" )
-   MESSAGE( STATUS "Compile with g++" )
-   ADD_COMPILE_OPTIONS( -lstdc++ -fuse-ld=gold )
-ELSEIF( "${CMAKE_CXX_COMPILER}" STREQUAL "/usr/bin/clang++" )
-   MESSAGE( STATUS "Compile with clang++" )
-   ADD_COMPILE_OPTIONS( -std=c++20 )
-ENDIF()
-
-SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -mtune=native -Ofast -funroll-loops -static -mfma" )
-SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=x86-64 -mtune=generic -O0 -DDEBUG -fno-inline" )
-SET( CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_DEBUG} -march=native -mtune=native -Oz -mfma" )
-
-# Boost Library Configuration
+############################## Boost Library Configuration #####################
 # see https://cmake.org/cmake/help/latest/module/FindBoost.html
 SET( Boost_USE_RELEASE_LIBS ON )  # Boost is production-for-us (we're not developing Boost code), so it's always release
 SET( Boost_USE_DEBUG_LIBS OFF )  # Boost is production-for-us (we're not developing Boost code), so it's never debug
@@ -52,6 +38,37 @@ ENDIF()
 FIND_PACKAGE( Boost REQUIRED COMPONENTS unit_test_framework serialization )  # Needed for libraries (not Boost header-only components).
 
 INCLUDE_DIRECTORIES( BEFORE SYSTEM ${Boost_INCLUDE_DIRS} )
+
+
+ADD_COMPILE_OPTIONS( -Wall -Wextra )
+
+IF( ${PROFILE_NAME} STREQUAL "Clang" )
+   SET( CMAKE_CXX_COMPILER clang++ )
+ELSEIF( ${PROFILE_NAME} STREQUAL "Clang-Tidy" )
+   MESSAGE( STATUS "Lint with clang-tidy" )
+   SET( CMAKE_CXX_COMPILER /usr/bin/true )
+   set( CMAKE_CXX_CLANG_TIDY clang-tidy --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy )
+   #  set( CMAKE_CXX_CPPCHECK cppcheck --quiet --enable=all -I ${Boost_INCLUDE_DIRS} -i ./tests/ )
+ELSEIF( ${PROFILE_NAME} STREQUAL "Doxygen" )
+   MESSAGE( STATUS "Generate documentation with Doxygen" )
+   SET( CMAKE_CXX_COMPILER clang++ )
+ENDIF()
+
+
+IF( ${CMAKE_COMPILER_IS_GNUCXX} )
+   MESSAGE( STATUS "Compile with g++" )
+   ADD_COMPILE_OPTIONS( -lstdc++ -fuse-ld=gold )
+ELSEIF( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
+   MESSAGE( STATUS "Compile with clang++" )
+ENDIF()
+MESSAGE( STATUS "Boost_INCLUDE_DIRS = [${Boost_INCLUDE_DIRS}]" )
+
+
+SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -mtune=native -Ofast -funroll-loops -static -mfma" )
+SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=x86-64 -mtune=generic -O0 -DDEBUG -fno-inline" )
+SET( CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_DEBUG} -march=native -mtune=native -Oz -mfma" )
+
+
 
 ADD_CUSTOM_TARGET( Document
                    COMMENT "Generating documentation"
