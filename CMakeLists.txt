@@ -20,6 +20,7 @@ PROJECT( Empire
 # MESSAGE( STATUS "CMAKE_SOURCE_DIR = [${CMAKE_SOURCE_DIR}]" )
 # MESSAGE( STATUS "CMAKE_BUILD_TYPE = [${CMAKE_BUILD_TYPE}]" )
 # MESSAGE( STATUS "CMAKE_CXX_COMPILER = [${CMAKE_CXX_COMPILER}]" )
+# MESSAGE( STATUS "CMAKE_CXX_COMPILER_ID = [${CMAKE_CXX_COMPILER_ID}]" )
 
 SET( CMAKE_CXX_STANDARD 20 )
 SET( CMAKE_CXX_STANDARD_REQUIRED true )
@@ -90,11 +91,6 @@ ADD_CUSTOM_TARGET( PublishXX
 
 FILE( GLOB_RECURSE ALL_SOURCES ./src/*.cpp ./tests/*.cpp )
 MESSAGE( STATUS "Sources to lint ${ALL_SOURCES}" )
-
-ADD_CUSTOM_TARGET( Lint
-                   COMMENT "Linting source"
-                   COMMAND clang-tidy ${ALL_SOURCES} --quiet --extra-arg-before=-std=c++20 --
-                   )
 
 IF( ${CMAKE_BUILD_TYPE} STREQUAL "Release" )  # We build our own Boost libraries to get these static libraries
    SET( BUILD_SHARED_LIBS FALSE )
