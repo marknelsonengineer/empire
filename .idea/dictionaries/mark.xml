@@ -19,6 +19,7 @@
       <w>endl</w>
       <w>fpreprocessed</w>
       <w>infod</w>
+      <w>ingroup</w>
       <w>interdd</w>
       <w>iostreams</w>
       <w>keywordflow</w>
@@ -36,6 +37,9 @@
       <w>nolintbegin</w>
       <w>nowide</w>
       <w>ofast</w>
+      <w>propget</w>
+      <w>propput</w>
+      <w>punctations</w>
       <w>refname</w>
       <w>sideeffect</w>
       <w>startdd</w>

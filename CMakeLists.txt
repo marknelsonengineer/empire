@@ -62,19 +62,26 @@ SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -mtune=na
 SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=x86-64 -mtune=generic -O0 -DDEBUG -fno-inline" )
 SET( CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_DEBUG} -march=native -mtune=native -Oz -mfma" )
 
+IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
 
-ADD_CUSTOM_TARGET( Document
-                   COMMENT "Generating documentation"
-                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-                   COMMAND .doxygen/stats.py
-                   COMMAND rsync --recursive --checksum --delete --mkpath --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/images ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/
-                   COMMAND doxygen .doxygen/Doxyfile
-                   )
+   CONFIGURE_FILE(
+           .doxygen/Doxyfile.in
+           Doxyfile
+   )
 
-SET_TARGET_PROPERTIES( Document
+   ADD_CUSTOM_TARGET( Doxygen
+                      COMMENT "Generating documentation"
+                      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                      COMMAND .doxygen/stats.py
+                      COMMAND rsync --recursive --checksum --delete --mkpath --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/images ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/
+                      COMMAND doxygen ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+                      )
+
+   SET_TARGET_PROPERTIES( Doxygen
                        PROPERTIES
                        ADDITIONAL_CLEAN_FILES "${CMAKE_SOURCE_DIR}/.doxygen/generated_docs"
                        )
+ENDIF()
 
 ADD_CUSTOM_TARGET( PublishXX
                    COMMENT "Pushing files to UHUnix"
