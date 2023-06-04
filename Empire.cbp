@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Empire"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\opt\;CMake Files\..\..\..\..\opt\boost\;CMake Files\..\..\..\..\opt\boost\lib\;CMake Files\..\..\..\..\opt\boost\lib\cmake\;CMake Files\..\..\..\..\opt\boost\lib\cmake\Boost-1.82.0\;CMake Files\..\..\..\..\opt\boost\lib\cmake\boost_headers-1.82.0\;CMake Files\..\..\..\..\opt\boost\lib\cmake\boost_unit_test_framework-1.82.0\;CMake Files\..\..\..\..\opt\boost\lib\cmake\boost_serialization-1.82.0\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Document">
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 Document"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="PublishXX">
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 PublishXX"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="empire">
+				<Option output="/home/marknels/src/empire/libempire.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_TEST_DYN_LINK"/>
+					<Add directory="/opt/boost/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 empire"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="empire/fast">
+				<Option output="/home/marknels/src/empire/libempire.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_TEST_DYN_LINK"/>
+					<Add directory="/opt/boost/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 empire/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="empire_server">
+				<Option output="/home/marknels/src/empire/empire_server" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_TEST_DYN_LINK"/>
+					<Add directory="/opt/boost/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 empire_server"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="empire_server/fast">
+				<Option output="/home/marknels/src/empire/empire_server" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_TEST_DYN_LINK"/>
+					<Add directory="/opt/boost/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 empire_server/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="empire_client">
+				<Option output="/home/marknels/src/empire/empire_client" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_TEST_DYN_LINK"/>
+					<Add option="-DBOOST_UNIT_TEST_FRAMEWORK_NO_LIB"/>
+					<Add option="-DBOOST_UNIT_TEST_FRAMEWORK_DYN_LINK"/>
+					<Add option="-DBOOST_SERIALIZATION_NO_LIB"/>
+					<Add option="-DBOOST_SERIALIZATION_DYN_LINK"/>
+					<Add directory="/opt/boost/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 empire_client"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="empire_client/fast">
+				<Option output="/home/marknels/src/empire/empire_client" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_TEST_DYN_LINK"/>
+					<Add option="-DBOOST_UNIT_TEST_FRAMEWORK_NO_LIB"/>
+					<Add option="-DBOOST_UNIT_TEST_FRAMEWORK_DYN_LINK"/>
+					<Add option="-DBOOST_SERIALIZATION_NO_LIB"/>
+					<Add option="-DBOOST_SERIALIZATION_DYN_LINK"/>
+					<Add directory="/opt/boost/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 empire_client/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="update_version">
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 update_version"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="All_Boost_Tests">
+				<Option output="/home/marknels/src/empire/All_Boost_Tests" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_TEST_DYN_LINK"/>
+					<Add option="-DBOOST_UNIT_TEST_FRAMEWORK_NO_LIB"/>
+					<Add option="-DBOOST_UNIT_TEST_FRAMEWORK_DYN_LINK"/>
+					<Add option="-DBOOST_SERIALIZATION_NO_LIB"/>
+					<Add option="-DBOOST_SERIALIZATION_DYN_LINK"/>
+					<Add directory="/opt/boost/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 All_Boost_Tests"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="All_Boost_Tests/fast">
+				<Option output="/home/marknels/src/empire/All_Boost_Tests" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_TEST_DYN_LINK"/>
+					<Add option="-DBOOST_UNIT_TEST_FRAMEWORK_NO_LIB"/>
+					<Add option="-DBOOST_UNIT_TEST_FRAMEWORK_DYN_LINK"/>
+					<Add option="-DBOOST_SERIALIZATION_NO_LIB"/>
+					<Add option="-DBOOST_SERIALIZATION_DYN_LINK"/>
+					<Add directory="/opt/boost/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 All_Boost_Tests/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/marknels/src/empire"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/marknels/src/empire/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/marknels/src/empire/src/lib/Log.cpp">
+			<Option target="empire"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/src/lib/Log.hpp">
+			<Option target="empire"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/src/lib/Singleton.cpp">
+			<Option target="empire"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/src/lib/Singleton.hpp">
+			<Option target="empire"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/src/main_empire_client.cpp">
+			<Option target="empire_client"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/src/main_empire_server.cpp">
+			<Option target="empire_server"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/src/typedefs.h">
+			<Option target="empire_server"/>
+			<Option target="empire_client"/>
+			<Option target="All_Boost_Tests"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/src/version.cpp">
+			<Option target="empire_server"/>
+			<Option target="empire_client"/>
+			<Option target="All_Boost_Tests"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/src/version.hpp">
+			<Option target="empire_server"/>
+			<Option target="empire_client"/>
+			<Option target="All_Boost_Tests"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/tests/test_Log.cpp">
+			<Option target="All_Boost_Tests"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/tests/test_Singleton.cpp">
+			<Option target="All_Boost_Tests"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/tests/test_version.cpp">
+			<Option target="All_Boost_Tests"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/../../../../opt/boost/lib/cmake/BoostDetectToolset-1.82.0.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\boost\lib\cmake\"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/../../../../opt/boost/lib/cmake/Boost-1.82.0/BoostConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\boost\lib\cmake\Boost-1.82.0\"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/../../../../opt/boost/lib/cmake/Boost-1.82.0/BoostConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\boost\lib\cmake\Boost-1.82.0\"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/../../../../opt/boost/lib/cmake/boost_headers-1.82.0/boost_headers-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\boost\lib\cmake\boost_headers-1.82.0\"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/../../../../opt/boost/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\boost\lib\cmake\boost_headers-1.82.0\"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/../../../../opt/boost/lib/cmake/boost_unit_test_framework-1.82.0/boost_unit_test_framework-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\boost\lib\cmake\boost_unit_test_framework-1.82.0\"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/../../../../opt/boost/lib/cmake/boost_unit_test_framework-1.82.0/boost_unit_test_framework-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\boost\lib\cmake\boost_unit_test_framework-1.82.0\"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/../../../../opt/boost/lib/cmake/boost_unit_test_framework-1.82.0/libboost_unit_test_framework-variant-shared.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\boost\lib\cmake\boost_unit_test_framework-1.82.0\"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/../../../../opt/boost/lib/cmake/boost_unit_test_framework-1.82.0/libboost_unit_test_framework-variant-static.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\boost\lib\cmake\boost_unit_test_framework-1.82.0\"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/../../../../opt/boost/lib/cmake/boost_serialization-1.82.0/boost_serialization-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\boost\lib\cmake\boost_serialization-1.82.0\"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/../../../../opt/boost/lib/cmake/boost_serialization-1.82.0/boost_serialization-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\boost\lib\cmake\boost_serialization-1.82.0\"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/../../../../opt/boost/lib/cmake/boost_serialization-1.82.0/libboost_serialization-variant-shared.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\boost\lib\cmake\boost_serialization-1.82.0\"/>
+		</Unit>
+		<Unit filename="/home/marknels/src/empire/../../../../opt/boost/lib/cmake/boost_serialization-1.82.0/libboost_serialization-variant-static.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\boost\lib\cmake\boost_serialization-1.82.0\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
