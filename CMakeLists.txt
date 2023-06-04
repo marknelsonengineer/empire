@@ -12,7 +12,7 @@
 
 CMAKE_MINIMUM_REQUIRED( VERSION 3.26 )
 
-PROJECT( Empire
+PROJECT( "Empire V"
          VERSION 5.0.0
          DESCRIPTION "What you do is what you do"
          LANGUAGES CXX )
