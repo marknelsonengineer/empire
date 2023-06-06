@@ -14,19 +14,7 @@
 
 namespace empire {
 
-/// Define the name of the logfile
-///
-/// Date and time placeholders are specified by Boost.DateTime library.
-/// @see https://www.boost.org/doc/libs/1_82_0/doc/html/date_time/date_time_io.html
-/// ...and...
-/// File counter (%N) with an optional width specification (%3N) in a
-/// printf-like format. The file counter will always be decimal, zero filled
-/// to the specified width.
-/// ...or a percent sign (%%).
-constinit const char LOGFILE[] = "./empire_%Y%m%d_%H%M.log";
-
-
-/// Empire-specific severity levels.
+/// Severity levels
 ///
 /// This list is in order of severity (from lowest to highest).
 enum severity_level {
@@ -46,17 +34,15 @@ enum severity_level {
 ///
 /// This default severity level is the same for both console
 /// and file-based logging.  Furthermore, it's the same for
-/// all channels.  Future programmers may want to create
-/// custom log levels for different sinks and/or channels.
+/// all channels.
 constinit const severity_level default_log_severity_level = test;
 
 
-//#ifndef LOG_CHANNEL
 /// LOG_CHANNEL should be set by each user of Log before the `#include`
-//#define LOG_CHANNEL "Unknown"
-
-//constinit const std::string LOG_CHANNEL { "Unknown" };
-//#endif
+#ifndef LOG_CHANNEL
+   #pragma GCC warning "LOG_CHANNEL should be set by each user of Log before the #include"
+   #define LOG_CHANNEL "Unknown"
+#endif
 
 /// Define the Log sinks...
 ///

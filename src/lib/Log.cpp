@@ -11,6 +11,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+#define LOG_CHANNEL "Log"  /// @NOLINT( cppcoreguidelines-macro-usage ): A #define is OK here
 #include "Log.hpp"
 
 // Additional Boost Log #includes

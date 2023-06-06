@@ -12,9 +12,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-namespace empire {
-constexpr const std::string LOG_CHANNEL { "test_Singleton" };
-}  // namespace empire
+#define LOG_CHANNEL "test_Singleton"  /// @NOLINT( cppcoreguidelines-macro-usage ): A #define is OK here
 #include "../src/lib/Log.hpp"
 
 #include "../src/lib/Singleton.hpp"

@@ -24,6 +24,7 @@
 #include <boost/test/execution_monitor.hpp>
 #include <boost/test/unit_test.hpp>
 
+#define LOG_CHANNEL "test_Log"  /// @NOLINT( cppcoreguidelines-macro-usage ): A #define is OK here
 #include "../src/lib/Log.hpp"
 
 using namespace empire;
