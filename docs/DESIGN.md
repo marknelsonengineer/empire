@@ -16,9 +16,11 @@ Design First.  Then code.
 I'm writing Empire V because I want to learn more about Object-Oriented 
 Programming.  Specifically, I want to become a practitioner of design patterns 
 and [modern C++].  [Empire] is well understood and documented inasmuch as it's 
-an existing program that I intend to replicate.  To that end, my intent is to 
-consider and document alternatives, then select the best fit for the 
-application.
+an existing program that I intend to replicate.  The requirements for Empire
+are reasonably well understood, which a large body of work that I don't need to
+worry about.  My focus is to implement the requirements using a solid design 
+philosophy.  To that end, my intent is to consider and document alternatives, 
+then select the best fit for the requirements.
 
 I intend to use an [Agile] development methodology similar to [XP].  The good 
 news is that I have an excellent "customer" -- the original design of [Empire].
