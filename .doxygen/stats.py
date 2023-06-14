@@ -49,7 +49,7 @@ repo = git.Repo(".")
 
 # Initialize the sets of file	types	we	will process
 
-h_src_files = set()  ##< The set of `.h` files from Git
+h_src_files = set()  ##< The set of `.h` and `.hpp` files from Git
 
 ## The set of `.c` files from Git
 c_src_files = set()
@@ -325,7 +325,7 @@ def process_files_in_git():
         # print( "Path = " + _path + "    Name = " + "XXXX" + "   Extension = " +	file_extension	)
 
         # If it's a C++ unit test, then count the test cases and test points
-        if _path[0:6] == "tests/" and file_extension in ['.h', '.c', '.cpp']:
+        if _path[0:6] == "tests/" and file_extension in ['.h', '.hpp', '.c', '.cpp']:
             unit_test_files.add(_path)
             file = open(_path, "r")
             for line in file:
@@ -339,6 +339,8 @@ def process_files_in_git():
         elif "fileTemplates" in _path:
             other_files.add(_path)
         elif file_extension == '.h':
+            h_src_files.add(_path)
+        elif file_extension == '.hpp':
             h_src_files.add(_path)
         elif file_extension == '.c':
             c_src_files.add(_path)
@@ -357,7 +359,7 @@ def process_files_in_git():
         else:
             other_files.add(_path)
 
-    process_gcc_files(".h Source", h_src_files)
+    process_gcc_files("Headers", h_src_files)
     process_gcc_files(".c Source", c_src_files)
     process_gcc_files(".cpp Source", cpp_src_files)
     process_gcc_files("Unit Tests", unit_test_files)
