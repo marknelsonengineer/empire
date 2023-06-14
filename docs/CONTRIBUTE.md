@@ -67,6 +67,8 @@ Issues:
 [ ]: Clang is not building All_Boost_Tests as there's an undefined reference
 
 ## CMake Targets
+Empire uses the following `CMake` production targets:
+For development targets, see @todo
 
 | Target            | Description                                               |
 |-------------------|-----------------------------------------------------------|

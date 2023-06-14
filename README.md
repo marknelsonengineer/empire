@@ -9,31 +9,20 @@ diplomatic, and economic goals.
 Empire is the pinnacle of strategy games in today's world. There is none better.
 
 #### Links
-The project's home page:  https://github.com/marknelsonengineer-sp23/sre_lab4_memscan  (hosted by GitHub)
+The project's home page:  https://github.com/marknelsonengineer/empire  (hosted by GitHub)
 
-The source code is documented at:  https://www2.hawaii.edu/~marknels/sre/memscan  (hosted by The University of Hawaiʻi at Mānoa)
+The source code is documented at:  https://www2.hawaii.edu/~marknels/empire  (hosted by The University of Hawaiʻi at Mānoa)
 
-### Empire
-Memscan 1 ...
+#### Documentation
+There's quite a bit of documentation for this project...
 
-## Usage Notes
-- Lorem ipsum
+[Doxygen](./docs/DOXYGEN.md)
+[License](./LICENSE.md)
 
 
-
-# CMake {#MakeTargets}
-Empire uses the following `CMake` production targets:
-For development targets, see @todo
-
-| Command       | Purpose                                                       |
-|---------------|---------------------------------------------------------------|
-| `make`        | Compile memscan                                               |
-| `make test`   | Compile memscan and run it.  Run as `root` to pass all tests. |
-| `make debug`  | Compile memscan with debug mode ( `DEBUG` is defined)         |
-| `make static` | Statically compile memscan                                    |
-| `make clean`  | Remove all compiler-generated files                           |
-| `make doc`    | Make a Doxygen website and push it to UH UNIX                 |
-| `make lint`   | Use `clang-tidy` to do static analysis on the source code     |
-
-To statically compile memscan, you need to manually build and install libcap.
-ArchLinux does not normally ship static libraries.
+| Package                | Debian / apt-get                |
+|------------------------|---------------------------------|
+| [Design]               |                                 |
+| FAQ                    | `# apt-get install graphviz`    |
+| Credits                | `# apt-get install python3-pip` |
+| Source Code Statistics | `# apt-get install doxygen`     |
