@@ -1,7 +1,7 @@
 Empire V
 ========
 
-<img src=".doxygen/images/logo_memscan_660x495.png" style="width:300px; float: left; margin: 0 10px 10px 0;" alt="Tinfoil Hat Cat"/>
+<img src="images/logo_empire_500x500.png" style="width:100px; float: left; margin: 0 10px 10px 0;" alt="Empire Logo"/>
 
 Empire is a real time, multiplayer, Internet-based game, featuring military, 
 diplomatic, and economic goals.
