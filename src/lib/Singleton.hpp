@@ -20,7 +20,7 @@
 
 #include <memory>                          // For unique_ptr make_unique()
 
-#include "../typedefs.h"                   // For singleton_counter_t
+#include "../typedefs.hpp"                   // For singleton_counter_t
 
 namespace empire {
 

@@ -10,7 +10,7 @@
 ///     functions and variables
 ///   - Implementations
 ///
-/// @file      typedefs.h
+/// @file      typedefs.hpp
 /// @author    Mark Nelson <marknels@hawaii.edu>
 /// @copyright (c) 2023 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////

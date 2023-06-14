@@ -15,7 +15,7 @@
 
 #include <string>
 
-#include "typedefs.h"  // For const_version_number_t
+#include "typedefs.hpp"  // For const_version_number_t
 
 /// All things Empire
 namespace empire {

@@ -105,8 +105,8 @@ ENDIF()
 IF( ${BUILDABLE} )
    ADD_LIBRARY( empire src/lib/Singleton.hpp src/lib/Singleton.cpp src/lib/Log.hpp src/lib/Log.cpp )
 
-   ADD_EXECUTABLE( empire_server src/main_empire_server.cpp src/version.hpp src/typedefs.h src/version.cpp )
-   ADD_EXECUTABLE( empire_client src/main_empire_client.cpp src/version.hpp src/typedefs.h src/version.cpp )
+   ADD_EXECUTABLE( empire_server src/main_empire_server.cpp src/version.hpp src/typedefs.hpp src/version.cpp )
+   ADD_EXECUTABLE( empire_client src/main_empire_client.cpp src/version.hpp src/typedefs.hpp src/version.cpp )
    TARGET_LINK_LIBRARIES( empire_client ${Boost_LIBRARIES} )
 
    ADD_CUSTOM_TARGET( update_version
@@ -116,7 +116,7 @@ IF( ${BUILDABLE} )
    ADD_DEPENDENCIES( empire_server update_version )
    ADD_DEPENDENCIES( empire_client update_version )
 
-   ADD_EXECUTABLE( All_Boost_Tests tests/test_Log.cpp tests/test_Singleton.cpp tests/test_version.cpp src/typedefs.h src/version.hpp src/version.cpp )
+   ADD_EXECUTABLE( All_Boost_Tests tests/test_Log.cpp tests/test_Singleton.cpp tests/test_version.cpp src/typedefs.hpp src/version.hpp src/version.cpp )
    TARGET_LINK_LIBRARIES( All_Boost_Tests ${Boost_LIBRARIES} )
    TARGET_LINK_LIBRARIES( All_Boost_Tests empire )
    ADD_DEPENDENCIES( All_Boost_Tests update_version )
