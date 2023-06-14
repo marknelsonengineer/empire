@@ -12,17 +12,3 @@ Empire is the pinnacle of strategy games in today's world. There is none better.
 The project's home page:  https://github.com/marknelsonengineer/empire  (hosted by GitHub)
 
 The source code is documented at:  https://www2.hawaii.edu/~marknels/empire  (hosted by The University of Hawaiʻi at Mānoa)
-
-#### Documentation
-There's quite a bit of documentation for this project...
-
-[Doxygen](./docs/DOXYGEN.md)
-[License](./LICENSE.md)
-
-
-| Package                | Debian / apt-get                |
-|------------------------|---------------------------------|
-| [Design]               |                                 |
-| FAQ                    | `# apt-get install graphviz`    |
-| Credits                | `# apt-get install python3-pip` |
-| Source Code Statistics | `# apt-get install doxygen`     |
