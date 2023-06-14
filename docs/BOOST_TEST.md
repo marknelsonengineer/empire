@@ -43,7 +43,7 @@ Running [Boost Test] from this command line:
 ````
 ...generates the following results:
 
-<img src="images/boost_test_results.png" style="width:40%; margin: 10px 10px 10px 10px;" alt="Boost Results"/>
+<img src="../images/boost_test_results.png" style="width:40%; margin: 10px 10px 10px 10px;" alt="Boost Results"/>
 
 [Boost Test]s are relatively easy to configure and run.  They are incredibly 
 powerful when you combine them with an IDE like [Eclipse] or [CLion].
