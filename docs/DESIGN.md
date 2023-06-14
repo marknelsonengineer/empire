@@ -1,7 +1,7 @@
 The Design of Empire
 ====================
 
-<img src="../images/design.png" style="width:300px; float: right; margin: 20px 10px 10px 10px;" alt="Design"/>
+<img src="images/design.png" style="width:300px; float: right; margin: 20px 10px 10px 10px;" alt="Design"/>
 
 @brief Document the development philosophy and major design decisions
 

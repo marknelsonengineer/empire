@@ -6,18 +6,25 @@
       <w>autotoc</w>
       <w>blockfree</w>
       <w>booststrap</w>
+      <w>buglist</w>
       <w>calles</w>
       <w>constinit</w>
       <w>cout</w>
       <w>creatordate</w>
+      <w>ctors</w>
       <w>dboost</w>
       <w>dentifier</w>
+      <w>deprecatedlist</w>
       <w>doxyfile</w>
       <w>doxywizard</w>
       <w>dtors</w>
+      <w>endcond</w>
       <w>enddd</w>
       <w>endl</w>
       <w>fpreprocessed</w>
+      <w>gamerunner</w>
+      <w>hawaiʻi</w>
+      <w>headerfile</w>
       <w>infod</w>
       <w>ingroup</w>
       <w>interdd</w>
@@ -33,18 +40,24 @@
       <w>memb</w>
       <w>mkpath</w>
       <w>myline</w>
+      <w>mānoa</w>
       <w>noenv</w>
       <w>nolintbegin</w>
+      <w>nosubgrouping</w>
       <w>nowide</w>
+      <w>nspaces</w>
       <w>ofast</w>
+      <w>priv</w>
       <w>propget</w>
       <w>propput</w>
       <w>punctations</w>
       <w>refname</w>
       <w>sideeffect</w>
       <w>startdd</w>
+      <w>subgrouping</w>
       <w>telent</w>
       <w>tful</w>
+      <w>typedef'ed</w>
       <w>uhunix</w>
       <w>undoc</w>
       <w>xrefitem</w>
