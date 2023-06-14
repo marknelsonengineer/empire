@@ -83,6 +83,9 @@ fabric.properties
 generated_docs/
 Doxyfile.bak
 
+# Ignore Doxygen's version file
+.doxygen/Doxy_version.in
+
 # Ignore compiled files & libraries
 *.o
 *.ko

@@ -19,6 +19,9 @@ from enum import Enum
 ## Path to version.cpp in C
 VERSION_SOURCE_FILE = "./src/version.cpp"
 
+## Path to the Doxygen version file
+DOXYGEN_VERSION_FILE = "./.doxygen/Doxy_version.in"
+
 ## Increments with major functional changes
 major_version = 0
 
@@ -97,6 +100,15 @@ def get_full_version() -> str:
     return full_version
 
 
+## Create a Doxygen version file
+##
+## @param full_version The full version number for the Doxygen version file
+def write_doxygen_version_file(full_version: str):
+
+    with open(DOXYGEN_VERSION_FILE, "wt") as doxygenVersionFile:  # open for writing text
+        doxygenVersionFile.write("PROJECT_NUMBER         = \"" + full_version + "\"")
+
+
 ## A switch to control what to replace in update_version()
 class ReplacementMode(Enum):
     ## Replace with just the build number: `2202`
@@ -147,4 +159,8 @@ def update_version(find_str: str, replacement_mode: ReplacementMode, filename: s
 update_version("VERSION_BUILD { ", ReplacementMode.REPLACE_BUILD_NUMBER, VERSION_SOURCE_FILE)
 update_version("FULL_VERSION { ", ReplacementMode.REPLACE_FULL_VERSION, VERSION_SOURCE_FILE)
 
-print(get_full_version())
+## Get the most-current full version string
+full_version_string = get_full_version()
+
+write_doxygen_version_file(full_version_string)
+print(full_version_string)
