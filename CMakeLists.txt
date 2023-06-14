@@ -1,7 +1,7 @@
 ###############################################################################
 ### Empire V - What you do is what you do
 ###
-### Tells cmake about the project's source files and targets
+### Use `cmake` to build targets from the project's source files
 ###
 ### @see https://cmake.org/cmake/help/latest/manual/cmake-language.7.html
 ###
@@ -12,13 +12,8 @@
 
 CMAKE_MINIMUM_REQUIRED( VERSION 3.26 )
 
-FILE( STRINGS ./src/version.cpp SEMANTIC_VERSION REGEX "FULL_VERSION" )
-STRING( REGEX REPLACE "^.* { \"(.*)\" };" "\\1" SEMANTIC_VERSION ${SEMANTIC_VERSION} )
-STRING( REGEX REPLACE "(^.*)\\+(.*)" "\\1.\\2" CMAKE_PROJECT_VERSION ${SEMANTIC_VERSION} )
-MESSAGE( STATUS "SEMANTIC_VERSION = [${SEMANTIC_VERSION}]" )
-
 PROJECT( "Empire V"
-         VERSION ${CMAKE_PROJECT_VERSION}
+         VERSION "5.0.0"
          DESCRIPTION "What you do is what you do"
          LANGUAGES CXX )
 
@@ -30,6 +25,14 @@ PROJECT( "Empire V"
 
 SET( CMAKE_CXX_STANDARD 20 )
 SET( CMAKE_CXX_STANDARD_REQUIRED TRUE )
+
+
+IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" OR ${CMAKE_BUILD_TYPE} STREQUAL "Clang-Tidy" )
+   SET( BUILDABLE False )
+ELSE()
+   SET( BUILDABLE True )
+ENDIF()
+
 
 ############################## Boost Library Configuration #####################
 # see https://cmake.org/cmake/help/latest/module/FindBoost.html
@@ -44,9 +47,12 @@ ENDIF()
 FIND_PACKAGE( Boost REQUIRED COMPONENTS unit_test_framework serialization )  # Needed for libraries (not Boost header-only components).
 
 INCLUDE_DIRECTORIES( BEFORE SYSTEM ${Boost_INCLUDE_DIRS} )
+MESSAGE( STATUS "Boost_INCLUDE_DIRS = [${Boost_INCLUDE_DIRS}]" )
 
 ADD_COMPILE_OPTIONS( -Wall -Wextra )
 
+
+############################### Clang Tidy Configuration ######################
 IF( ${CMAKE_BUILD_TYPE} STREQUAL "Clang-Tidy" )
    MESSAGE( STATUS "Lint with clang-tidy" )
    SET( CMAKE_CXX_CLANG_TIDY clang-tidy --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy )
@@ -62,18 +68,12 @@ ELSEIF( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
    MESSAGE( STATUS "Compile with clang++" )
 ENDIF()
 
-MESSAGE( STATUS "Boost_INCLUDE_DIRS = [${Boost_INCLUDE_DIRS}]" )
-
 SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -mtune=native -Ofast -funroll-loops -static -mfma" )
 SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=x86-64 -mtune=generic -O0 -DDEBUG -fno-inline" )
 SET( CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_DEBUG} -march=native -mtune=native -Oz -mfma" )
 
 IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
-
-   CONFIGURE_FILE(
-           .doxygen/Doxyfile.in
-           Doxyfile
-   )
+   CONFIGURE_FILE( .doxygen/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile )
 
    ADD_CUSTOM_TARGET( Doxygen
                       COMMENT "Generating documentation"
@@ -89,10 +89,10 @@ IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
                        )
 ENDIF()
 
-ADD_CUSTOM_TARGET( PublishXX
-                   COMMENT "Pushing files to UHUnix"
-                   COMMAND rsync --recursive --checksum --delete --compress --stats --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/ marknels@uhunix.hawaii.edu:~/public_html/${CMAKE_PROJECT_NAME}
-                   )
+# ADD_CUSTOM_TARGET( PublishXX
+#                    COMMENT "Pushing files to UHUnix"
+#                    COMMAND rsync --recursive --checksum --delete --compress --stats --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/ marknels@uhunix.hawaii.edu:~/public_html/${CMAKE_PROJECT_NAME}
+#                    )
 
 IF( ${CMAKE_BUILD_TYPE} STREQUAL "Release" )  # We build our own Boost libraries to get these static libraries
    SET( BUILD_SHARED_LIBS FALSE )
@@ -101,20 +101,22 @@ ELSE()
    ADD_COMPILE_DEFINITIONS( BOOST_TEST_DYN_LINK )
 ENDIF()
 
-ADD_LIBRARY( empire src/lib/Singleton.hpp src/lib/Singleton.cpp src/lib/Log.hpp src/lib/Log.cpp )
+IF( ${BUILDABLE} )
+   ADD_LIBRARY( empire src/lib/Singleton.hpp src/lib/Singleton.cpp src/lib/Log.hpp src/lib/Log.cpp )
 
-ADD_EXECUTABLE( empire_server src/main_empire_server.cpp src/version.hpp src/typedefs.h src/version.cpp )
-ADD_EXECUTABLE( empire_client src/main_empire_client.cpp src/version.hpp src/typedefs.h src/version.cpp )
-TARGET_LINK_LIBRARIES( empire_client ${Boost_LIBRARIES} )
+   ADD_EXECUTABLE( empire_server src/main_empire_server.cpp src/version.hpp src/typedefs.h src/version.cpp )
+   ADD_EXECUTABLE( empire_client src/main_empire_client.cpp src/version.hpp src/typedefs.h src/version.cpp )
+   TARGET_LINK_LIBRARIES( empire_client ${Boost_LIBRARIES} )
 
-ADD_CUSTOM_TARGET( update_version
-                   COMMENT "Update version"
-                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-                   COMMAND .doxygen/update_version.py )
-ADD_DEPENDENCIES( empire_server update_version )
-ADD_DEPENDENCIES( empire_client update_version )
+   ADD_CUSTOM_TARGET( update_version
+                      COMMENT "Update version"
+                      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                      COMMAND .doxygen/update_version.py )
+   ADD_DEPENDENCIES( empire_server update_version )
+   ADD_DEPENDENCIES( empire_client update_version )
 
-ADD_EXECUTABLE( All_Boost_Tests tests/test_Log.cpp tests/test_Singleton.cpp tests/test_version.cpp src/typedefs.h src/version.hpp src/version.cpp )
-TARGET_LINK_LIBRARIES( All_Boost_Tests ${Boost_LIBRARIES} )
-TARGET_LINK_LIBRARIES( All_Boost_Tests empire )
-ADD_DEPENDENCIES( All_Boost_Tests update_version )
+   ADD_EXECUTABLE( All_Boost_Tests tests/test_Log.cpp tests/test_Singleton.cpp tests/test_version.cpp src/typedefs.h src/version.hpp src/version.cpp )
+   TARGET_LINK_LIBRARIES( All_Boost_Tests ${Boost_LIBRARIES} )
+   TARGET_LINK_LIBRARIES( All_Boost_Tests empire )
+   ADD_DEPENDENCIES( All_Boost_Tests update_version )
+ENDIF()

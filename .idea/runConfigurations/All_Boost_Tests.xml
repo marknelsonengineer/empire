@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="All_Boost_Tests" type="CMakeBoostTestRunConfigurationType" factoryName="Boost Test" PROGRAM_PARAMS="--log_level=test_suite" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Empire V" TARGET_NAME="All_Boost_Tests" CONFIG_NAME="Doxygen" RUN_TARGET_PROJECT_NAME="Empire V" RUN_TARGET_NAME="All_Boost_Tests" TEST_MODE="SUITE_TEST">
+  <configuration default="false" name="All_Boost_Tests" type="CMakeBoostTestRunConfigurationType" factoryName="Boost Test" PROGRAM_PARAMS="--log_level=test_suite" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Empire V" TARGET_NAME="All_Boost_Tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Empire V" RUN_TARGET_NAME="All_Boost_Tests" TEST_MODE="SUITE_TEST">
     <method v="2">
       <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       <option name="BeforeTestRunTask" enabled="true" />
