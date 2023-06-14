@@ -75,7 +75,7 @@ SET( CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_DEBUG} -march=native -mtune=n
 IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
    CONFIGURE_FILE( .doxygen/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile )
 
-   ADD_CUSTOM_TARGET( Doxygen
+   ADD_CUSTOM_TARGET( doxygen_local_build
                       COMMENT "Generating documentation"
                       WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                       COMMAND .doxygen/stats.py
@@ -83,16 +83,17 @@ IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
                       COMMAND doxygen ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
                       )
 
-   SET_TARGET_PROPERTIES( Doxygen
+   SET_TARGET_PROPERTIES( doxygen_local_build
                        PROPERTIES
                        ADDITIONAL_CLEAN_FILES "${CMAKE_SOURCE_DIR}/.doxygen/generated_docs"
                        )
-ENDIF()
 
-# ADD_CUSTOM_TARGET( PublishXX
-#                    COMMENT "Pushing files to UHUnix"
-#                    COMMAND rsync --recursive --checksum --delete --compress --stats --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/ marknels@uhunix.hawaii.edu:~/public_html/${CMAKE_PROJECT_NAME}
-#                    )
+   ADD_CUSTOM_TARGET( doxygen_publish
+                      COMMENT "Pushing files to UHUnix"
+                      COMMAND rsync --recursive --checksum --delete --compress --stats --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/ marknels@uhunix.hawaii.edu:~/public_html/empire
+                      )
+
+ENDIF()
 
 IF( ${CMAKE_BUILD_TYPE} STREQUAL "Release" )  # We build our own Boost libraries to get these static libraries
    SET( BUILD_SHARED_LIBS FALSE )
