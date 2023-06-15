@@ -47,6 +47,7 @@
       <w>nowide</w>
       <w>nspaces</w>
       <w>ofast</w>
+      <w>poxix</w>
       <w>priv</w>
       <w>propget</w>
       <w>propput</w>
@@ -60,6 +61,7 @@
       <w>typedef'ed</w>
       <w>uhunix</w>
       <w>undoc</w>
+      <w>usermode</w>
       <w>xrefitem</w>
     </words>
   </dictionary>

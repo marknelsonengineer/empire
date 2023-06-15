@@ -3,90 +3,101 @@ Contribute to Empire
 
 @brief Document the development environment, code conventions, et al.
 
-Empire V is a CMake-based C Linux usermode console program
-
-
-For enums, the last element is called COUNT and has the number of elements in the enum.
-
-I intend to let CLion reflow the source code
-
-Use https://tinypng.com to shrink the size of our .PNG files
-
-# Constants
-
-For review:
-`const var` Means the variable won't change after it's initialized. Variables may be initialized at runtime, though.
-`method() const` Means the method won't change the state of the object
-`constexpr` Means "to be evaluated at compile time".  Applies to variables.
-`consteval` Declares a function or template to produce a compile time constant expression.  It forces calls to happen at compile-time.
-`constinit` Initializes a static variable at compile time.  It does not imply `const` nor `constexpr`.
+Empire V is a [CMake]-based C++, POSIX usermode console program.
 
 ## Directories
- - `./lib` There's a need for common functionality between all of the Empire programs.  For the sake of efficiency, let's make them static libraries.
+| Directory                                   | Description                                                                                          |
+|---------------------------------------------|------------------------------------------------------------------------------------------------------|
+| `./src`                                     | All Empire V source code.                                                                            |
+| `./src/lib`                                 | There's a need for common functionality between all of the Empire programs, so let's make a library. |
+| `./test`                                    | For our Boost Test code.                                                                             |
+| `./.doxygen`                                | The configuration files and scripts for auto generating documentation with [Doxygen].                |
+| `./.doxygen/generated_docs/html/index.html` | The root of the [Doxygen]-generated documentation.                                                   |
+| `./images`                                  | All images for the project.                                                                          |
 
 
 ## C++ Naming Conventions
 
 https://lefticus.gitbooks.io/cpp-best-practices/content/03-Style.html
 
-C++ files are suffixed with `.cpp` and header files with `.hpp`
-Types start with upper case: `MyClass`
-Functions and variables start with lower case: `myMethod`
-Constants are all upper case: const double `PI=3.14159265358979323;`
-Macro names use upper case with underscores: `INT_MAX`
-Template parameter names use camel case: `InputIterator`
-All other names use snake case: `unordered_map`
+- C++ files are suffixed with `.cpp` and header files with `.hpp`
+- Types start with upper case: `MyClass`
+- Functions and variables start with lower case: `myMethod`
+- Constants are all upper case: const double `PI=3.14159265358979323;`
+- Macro names use upper case with underscores: `INT_MAX`
+- Template parameter names use camel case: `InputIterator`
+- All other names use snake case: `unordered_map`
 
 Name private data with a `m_` prefix to distinguish it from public data. `m_` stands for "member" data.
 
 Prefixes:
-m for members
-c for constants/readonlys
-p for pointer (and pp for pointer to pointer)
-s for static
+`m_` for members
+`c_` for constants/readonlys
+`p_` for pointer (and pp for pointer to pointer)
+`s_` for static
 
 Variable names:
-i, j & k for indexes and iterators
+`i`, `j` & `k` for indexes and iterators
 
 
-# CMake {#DevelopmentMakeTargets}
-Empire uses the following `CMake` development targets:
-For production targets, see @todo
+## CMake
+Empire uses [CMake] for its build system.  It's thoroughly modern, 
+multi-platform, multi-compiler aware.  It also works well with [CLion], my IDE.
 
-## CMake Profiles
+[CMake] has a steep learning curve.  It's taken me years to get the hang of it.
+In fact, it's taken several years of on-and-off development to get it to do all
+the things I'd like it to do: Compile, generate Doxygen documentation, Lint 
+code, publish documentation, etc.  Our CMakeLists.txt file is definitely
+non-trivial.
 
-| Profile      | Description                                                           |
-|--------------|-----------------------------------------------------------------------|
-| `Debug`      | Build with debugging support                                          |
-| `Release`    | Build optimized, static executables                                   |
-| `MinSizeRel` | Build non-static, somewhat less optimized executables                 |
-| `Clang`      | Compile with the clang compiler (the others use the default compiler) |
+Our build environment is complex, so I'll try to document it here.  The first
+concept is the idea of a `CMAKE_BUILD_TYPE`.  Think of a Build Type as a specific
+set of tools.  For example:
+  - A default compiler with debug flags enabled
+  - A linting tool that uses `clang-tidy`
 
-Issues:
-[ ]: The Release profile is not building All_Boost_Tests because ArchLinux 
-     doesn't seem to have a static library package for [Boost Test].
-[ ]: Clang is not building All_Boost_Tests as there's an undefined reference
+The second concept is targets.  Targets are created by processing a set of source 
+files through a Build Type.
 
-## CMake Targets
-Empire uses the following `CMake` production targets:
-For development targets, see @todo
+Empire uses the following `CMake` Build Types:
 
-| Target            | Description                                               |
-|-------------------|-----------------------------------------------------------|
-| `All_Boost_Tests` | The [Boost Test] target                                   |
-| `Document`        | Make a Doxygen website                                    |
-| `empire_client`   | A command-line client for Empire V                        |
-| `empire_server`   | The Core services of the `Empire V` server                |
-| `Publish`         | Push the Doxygen website to UH Unix                       |
-| `Lint`            | Use `clang-tidy` to do static analysis on the source code |
-| `Valgrind`        | Run All_Boost_Tests using [valgrind] and report any leaks |
+| Build Type   | Description                                                                                           |
+|--------------|-------------------------------------------------------------------------------------------------------|
+| `Debug`      | A default compiler with debug enabled and optimization disabled.                                      |
+| `Release`    | A default compiler with no debugging.  The target is optimized for speed and uses static executables. |
+| `MinSizeRel` | A default compiler with non non-static libraries.  The target is optimized for size.                  |
+| `Clang`      | Compile with the `clang++` compiler.                                                                  |
+| `Doxygen`    | Configure the clang compiler.  Use [Doxygen] to build the documentation using the clang parser.       |
+| `Lint`       | Use `clang-tidy` to do static analysis on the source code.                                            |
 
-To statically compile All_Boost_Tests, you need to manually build and install Boost Test.
-ArchLinux does not normally ship static libraries.
+### Design Decisions
+ArchLinux doesn't ship static libraries with its packages.  Therefore, we have
+to build our Boost package from scratch.  It's in `/opt/boost`.  This allows
+us to compile Empire as a static executable.
+
+
+### CMake Targets
+Empire uses the following `CMake` targets:
+
+| Target                | Description                                      |
+|-----------------------|--------------------------------------------------|
+| `All_Boost_Tests`     | The [Boost Test] target                          |
+| `doxygen_local_build` | Make a local [Doxygen] website                   |
+| `doxygen_publish`     | Push the [Doxygen] website to a public webserver |
+| `empire`              | The common Empire V library                      |
+| `empire_client`       | A command-line client for Empire V               |
+| `empire_server`       | The Empire V server                              |
+
+
+#### Issues
+Not sure how to wire in `Valgrind`  Run All_Boost_Tests using [valgrind] and report any leaks 
+
+There's actually a 3rd type of target: A CLion configuration.  I've created 
+a configuration called `valgrind` that runs against All_Boost_Tests.
 
 
 ## Setup the development environment
-To setup your development environment on a fresh system, you'll likely need 
+To set up your development environment on a fresh system, you'll likely need 
 the following:
 - This section is incomplete, but...
   - ...but it worked on my ArchLinux rig!
@@ -191,10 +202,12 @@ but not _why_.
 
   
 ## Coding Conventions
+- I intend to let [CLion] reflow the source code
 - Put 2 blank lines between functions
 - Put a space before the `;`.  Ex. `return true ;`
 - Memscan uses `printf` but we may convert to something that can be tested 
   with the [Boost test] framework
+- For enums, the last element should be called COUNT and has the number of elements in the enum.
 
 
 ## Naming Conventions
@@ -283,6 +296,17 @@ It's cool to have this working.
 - Scrub GitHub issues
 - Scrub all `@todo`s
 - Create a tagged release in Git
+- Use https://tinypng.com to shrink the size of our .PNG files
+
+# Constants
+
+For review:
+`const var` Means the variable won't change after it's initialized. Variables may be initialized at runtime, though.
+`method() const` Means the method won't change the state of the object
+`constexpr` Means "to be evaluated at compile time".  Applies to variables.
+`consteval` Declares a function or template to produce a compile time constant expression.  It forces calls to happen at compile-time.
+`constinit` Initializes a static variable at compile time.  It does not imply `const` nor `constexpr`.
+
 
 
 ## Source Code Status
@@ -323,3 +347,5 @@ It's cool to have this working.
 [C++]:  https://gcc.gnu.org
 [gcc]:  https://gcc.gnu.org
 [valgrind]:  https://valgrind.org
+[CLion]:  https://www.jetbrains.com/clion
+[CMake]:  https://cmake.org

@@ -5,36 +5,20 @@
     <id>UMLClass</id>
     <coordinates>
       <x>0</x>
-      <y>77</y>
-      <w>231</w>
-      <h>143</h>
-    </coordinates>
-    <panel_attributes>halign=left
-LOG_TEST( fmt, ... )
-LOG_TRACE( fmt, ... )
-LOG_DEBUG( fmt, ... )
-LOG_INFO( fmt, ... )
-LOG_WARN( fmt, ... )
-LOG_ERROR( fmt, ... )
-LOG_FATAL( fmt, ... )</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>0</x>
       <y>0</y>
       <w>231</w>
       <h>44</h>
     </coordinates>
-    <panel_attributes>enum::severity_level</panel_attributes>
+    <panel_attributes>enum::severity_level
+
+need string &lt;&lt; severity_level</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>506</x>
-      <y>154</y>
+      <x>715</x>
+      <y>121</y>
       <w>132</w>
       <h>121</h>
     </coordinates>
@@ -49,15 +33,13 @@ LOG_FATAL( fmt, ... )</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>0</x>
-      <y>264</y>
+      <x>11</x>
+      <y>462</y>
       <w>363</w>
       <h>143</h>
     </coordinates>
     <panel_attributes>Log Configuration
 --
-Length of text
-Number of log entries in the queue
 Config for each of the log handlers
 Default module &amp; log level (maybe)</panel_attributes>
     <additional_attributes/>
@@ -65,8 +47,8 @@ Default module &amp; log level (maybe)</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>737</x>
-      <y>154</y>
+      <x>715</x>
+      <y>275</y>
       <w>165</w>
       <h>77</h>
     </coordinates>
@@ -77,31 +59,106 @@ Default module &amp; log level (maybe)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
-    <id>UMLNote</id>
-    <coordinates>
-      <x>0</x>
-      <y>462</y>
-      <w>154</w>
-      <h>77</h>
-    </coordinates>
-    <panel_attributes>Design Decisions
---
-Should we log parameters?  </panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>484</x>
+      <x>462</x>
       <y>11</y>
-      <w>187</w>
-      <h>99</h>
+      <w>231</w>
+      <h>121</h>
     </coordinates>
     <panel_attributes>template=0: Singleton
 Log
 --
 + writeLog
-# getQueue</panel_attributes>
+# getQueue
++ logRestart()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>715</x>
+      <y>22</y>
+      <w>286</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>lt=.
+Log_config.hpp
+--
+log_entry_text_length
+number_of_log_entries
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>11</x>
+      <y>77</y>
+      <w>286</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>lt=.
+Prelog.hpp
+--
+enum severity_level
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>11</x>
+      <y>187</y>
+      <w>352</w>
+      <h>242</h>
+    </coordinates>
+    <panel_attributes>lt=.
+Log.hpp
+--
+Warning if LOG_MODULE not set
+Warning if LOG_MIN_LEVEL not set
+#ifdef around LOG_MIN_LEVEL
+
+LOG_TEST( fmt, ... )
+LOG_TRACE( fmt, ... )
+LOG_DEBUG( fmt, ... )
+LOG_INFO( fmt, ... )
+LOG_WARN( fmt, ... )
+LOG_ERROR( fmt, ... )
+LOG_FATAL( fmt, ... )</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>539</x>
+      <y>396</y>
+      <w>176</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>/LogHandler/
+--
+restart()
+getStatus()
+process()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>759</x>
+      <y>396</y>
+      <w>187</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>/LogQuery/
+--
+?? queryLog( ?? )
+I've no idea what
+I'd pass in or 
+return</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>

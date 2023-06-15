@@ -125,5 +125,3 @@ IF( ${BUILDABLE} )
    TARGET_LINK_LIBRARIES( All_Boost_Tests empire )
    ADD_DEPENDENCIES( All_Boost_Tests update_version )
 ENDIF()
-
-# TODO: If Buildable && not Lint, then add a custom target + dependencies on All_Boost_Tests to run Valgrind
