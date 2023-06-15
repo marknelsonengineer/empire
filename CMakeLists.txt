@@ -107,7 +107,7 @@ IF( ${BUILDABLE} )
       ADD_COMPILE_DEFINITIONS( BOOST_TEST_DYN_LINK )
    ENDIF()
 
-   ADD_LIBRARY( empire src/lib/Singleton.hpp src/lib/Singleton.cpp src/lib/Log.hpp src/lib/Log.cpp )
+   ADD_LIBRARY( empire src/lib/Singleton.hpp src/lib/Singleton.cpp src/lib/Log.hpp src/lib/Log.cpp src/lib/LogSeverity.hpp src/lib/LogSeverity.cpp )
 
    ADD_EXECUTABLE( empire_server src/main_empire_server.cpp src/version.hpp src/typedefs.hpp src/version.cpp )
    ADD_EXECUTABLE( empire_client src/main_empire_client.cpp src/version.hpp src/typedefs.hpp src/version.cpp )

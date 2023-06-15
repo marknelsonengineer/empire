@@ -3,14 +3,7 @@
 //
 /// Test Boost global logging services for Empire V
 ///
-/// @see https://www.boost.org/doc/libs/1_82_0/libs/log/doc/html/index.html
-/// @see https://github.com/snikulov/boost-log-example/blob/master/src/main.cpp
-/// @see https://gist.github.com/silgon/9bbf3cff69aabe1027e8
-///
 //  The documentation for classes in this file are in the .hpp file.
-///
-/// @internal  Compile with
-///            g++ -std=c++11 test_log_default.cpp -DBOOST_LOG_DYN_LINK -lboost_log -lboost_thread -lpthread -lboost_system
 ///
 /// @file      tests/test_Log.cpp
 /// @author    Mark Nelson <mr_nelson@icloud.com>
@@ -25,22 +18,25 @@
 #include <boost/test/unit_test.hpp>
 
 #define LOG_CHANNEL "test_Log"  /// @NOLINT( cppcoreguidelines-macro-usage ): A #define is OK here
-#include "../src/lib/Log.hpp"
+#include "../src/lib/LogSeverity.hpp"
 
 using namespace empire;
-
 
 BOOST_AUTO_TEST_SUITE( Log )
 
 
+BOOST_AUTO_TEST_CASE( Log_LogSeverityToString ) {
+   BOOST_CHECK_EQUAL( LogSeverityToString( LogSeverity::test ), "test" );
+   BOOST_CHECK_EQUAL( LogSeverityToString( LogSeverity::trace ), "trace" );
+   BOOST_CHECK_EQUAL( LogSeverityToString( LogSeverity::debug ), "debug" );
+   BOOST_CHECK_EQUAL( LogSeverityToString( LogSeverity::info ), "info" );
+   BOOST_CHECK_EQUAL( LogSeverityToString( LogSeverity::warning ), "warning" );
+   BOOST_CHECK_EQUAL( LogSeverityToString( LogSeverity::error ), "error" );
+   BOOST_CHECK_EQUAL( LogSeverityToString( LogSeverity::fatal ), "fatal" );
+}
+
+
 BOOST_AUTO_TEST_CASE( Log_general ) {
-//   LOG_TEST  <<  "A test message";
-//   LOG_TRACE << "A trace message";
-//   LOG_DEBUG << "A debug message";
-//   LOG_INFO  << "An info message";
-//   LOG_WARN  << "A warning message";
-//   LOG_ERROR << "An error message";
-//   LOG_FATAL << "A fatal message";
 }
 
 
