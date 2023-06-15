@@ -2,10 +2,12 @@
 <project version="4">
   <component name="CMakeSharedSettings">
     <configurations>
+      <configuration PROFILE_NAME="Doxygen" ENABLED="true" CONFIG_NAME="Doxygen" GENERATION_OPTIONS="-DCMAKE_CXX_COMPILER=clang++" />
       <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
       <configuration PROFILE_NAME="Release" ENABLED="true" CONFIG_NAME="Release" />
       <configuration PROFILE_NAME="MinSizeRel" ENABLED="true" CONFIG_NAME="MinSizeRel" />
       <configuration PROFILE_NAME="Clang" ENABLED="true" CONFIG_NAME="Clang" GENERATION_OPTIONS="-DCMAKE_CXX_COMPILER=clang++" />
+      <configuration PROFILE_NAME="Lint" ENABLED="true" CONFIG_NAME="Lint" GENERATION_OPTIONS="-DCMAKE_CXX_COMPILER=clang++" />
     </configurations>
   </component>
 </project>

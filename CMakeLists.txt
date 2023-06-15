@@ -26,11 +26,21 @@ PROJECT( "Empire V"
 SET( CMAKE_CXX_STANDARD 20 )
 SET( CMAKE_CXX_STANDARD_REQUIRED TRUE )
 
+SET( BUILDABLE True )  # Set to true by default, but it may get disabled
 
-IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" OR ${CMAKE_BUILD_TYPE} STREQUAL "Clang-Tidy" )
+IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
    SET( BUILDABLE False )
+ELSEIF( ${CMAKE_BUILD_TYPE} STREQUAL "Debug" )
+ELSEIF( ${CMAKE_BUILD_TYPE} STREQUAL "Release" )
+ELSEIF( ${CMAKE_BUILD_TYPE} STREQUAL "MinSizeRel" )
+ELSEIF( ${CMAKE_BUILD_TYPE} STREQUAL "Clang" )
+ELSEIF( ${CMAKE_BUILD_TYPE} STREQUAL "Lint" )
+   MESSAGE( STATUS "Lint with clang-tidy" )
+   SET( CMAKE_CXX_CLANG_TIDY clang-tidy --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy )
+   # set( CMAKE_CXX_CPPCHECK cppcheck --quiet --enable=all -I ${Boost_INCLUDE_DIRS} -i ./tests/ )
 ELSE()
-   SET( BUILDABLE True )
+   MESSAGE( STATUS "Unknown build type" )
+   RETURN()
 ENDIF()
 
 
@@ -49,17 +59,10 @@ FIND_PACKAGE( Boost REQUIRED COMPONENTS unit_test_framework serialization )  # N
 INCLUDE_DIRECTORIES( BEFORE SYSTEM ${Boost_INCLUDE_DIRS} )
 MESSAGE( STATUS "Boost_INCLUDE_DIRS = [${Boost_INCLUDE_DIRS}]" )
 
+
+################################ Compiler Configuration #######################
+
 ADD_COMPILE_OPTIONS( -Wall -Wextra )
-
-
-############################### Clang Tidy Configuration ######################
-IF( ${CMAKE_BUILD_TYPE} STREQUAL "Clang-Tidy" )
-   MESSAGE( STATUS "Lint with clang-tidy" )
-   SET( CMAKE_CXX_CLANG_TIDY clang-tidy --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy )
-   # set( CMAKE_CXX_CPPCHECK cppcheck --quiet --enable=all -I ${Boost_INCLUDE_DIRS} -i ./tests/ )
-ELSEIF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
-   MESSAGE( STATUS "Generate documentation with Doxygen" )
-ENDIF()
 
 IF( ${CMAKE_COMPILER_IS_GNUCXX} )
    MESSAGE( STATUS "Compile with g++" )
@@ -95,14 +98,15 @@ IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
 
 ENDIF()
 
-IF( ${CMAKE_BUILD_TYPE} STREQUAL "Release" )  # We build our own Boost libraries to get these static libraries
-   SET( BUILD_SHARED_LIBS FALSE )
-ELSE()
-   SET( BUILD_SHARED_LIBS TRUE )
-   ADD_COMPILE_DEFINITIONS( BOOST_TEST_DYN_LINK )
-ENDIF()
 
 IF( ${BUILDABLE} )
+   IF( ${CMAKE_BUILD_TYPE} STREQUAL "Release" )  # We build our own Boost libraries to get these static libraries
+      SET( BUILD_SHARED_LIBS FALSE )
+   ELSE()
+      SET( BUILD_SHARED_LIBS TRUE )
+      ADD_COMPILE_DEFINITIONS( BOOST_TEST_DYN_LINK )
+   ENDIF()
+
    ADD_LIBRARY( empire src/lib/Singleton.hpp src/lib/Singleton.cpp src/lib/Log.hpp src/lib/Log.cpp )
 
    ADD_EXECUTABLE( empire_server src/main_empire_server.cpp src/version.hpp src/typedefs.hpp src/version.cpp )
@@ -121,3 +125,5 @@ IF( ${BUILDABLE} )
    TARGET_LINK_LIBRARIES( All_Boost_Tests empire )
    ADD_DEPENDENCIES( All_Boost_Tests update_version )
 ENDIF()
+
+# TODO: If Buildable && not Lint, then add a custom target + dependencies on All_Boost_Tests to run Valgrind
