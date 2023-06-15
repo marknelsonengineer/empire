@@ -1,9 +1,9 @@
 The Design of Empire
 ====================
 
-<img src="images/design.png" style="width:300px; float: right; margin: 20px 10px 10px 10px;" alt="Design"/>
-
 @brief Document the development philosophy and major design decisions
+
+<img src="images/design.png" style="width:300px; float: right; margin: 20px 10px 10px 10px;" alt="Design"/>
 
 ## Design Philosophy
 
@@ -36,7 +36,7 @@ Like any project, there's a lot of things you have to get right upfront:
   - Development environment:  [CLion]
   - Version control:  [GitHub]
   - Testing: [Boost test]
-  - Logging: [Boost log]
+  - Logging
   - Persistence: [Boost serialization]
   - Internationalization:  [UTF-8]
   - Static analysis / linting:  [clang-tidy]
@@ -541,7 +541,6 @@ The Dependency inversion principle: "Depend upon abstractions, [not] concretions
 [CLion]:  https://jetbrains.com/clion
 [GitHub]:  https://github.com
 [Boost test]: https://www.boost.org/doc/libs/1_82_0/libs/test/doc/html/index.html
-[Boost log]:  https://www.boost.org/doc/libs/1_82_0/libs/log/doc/html/index.html
 [clang-tidy]:  https://clang.llvm.org/extra/clang-tidy/
 [Doxygen]:  https://doxygen.nl
 [gcc]:  https://gcc.gnu.org

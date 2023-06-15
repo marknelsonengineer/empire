@@ -29,6 +29,7 @@ For review:
 
 https://lefticus.gitbooks.io/cpp-best-practices/content/03-Style.html
 
+C++ files are suffixed with `.cpp` and header files with `.hpp`
 Types start with upper case: `MyClass`
 Functions and variables start with lower case: `myMethod`
 Constants are all upper case: const double `PI=3.14159265358979323;`
@@ -132,7 +133,7 @@ They offer good reasons, and this kind of approach seems to be fairly standard, 
 
 
 ## Handling errors & warnings in a testing framework
-- Memscan does not have a dedicated logger.
+- Empire has a dedicated logger.
 - Messages and exceptions should be pre-pended with getProgramName and sent 
   to `stderr`.
 - Instrument programs to make them easily to test.  This is easier with C++ 
