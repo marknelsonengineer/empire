@@ -116,3 +116,11 @@ Use `doxygen -u Doxyfile` to update an old Doxyfile
 [DIA]: http://dia-installer.de
 [CLion]: https://www.jetbrains.com/clion
 [CMake]:  https://cmake.org
+
+## Doxygen Markdown Requirements
+- All Doxygen links must work in GitHub
+- All Doxygen links must work in public website
+- All images must work
+- Clang assisted parsing works
+  - Clang knows how to find Boost
+  - We are using the right version of Clang
