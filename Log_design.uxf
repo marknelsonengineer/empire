@@ -4,14 +4,15 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
+      <x>44</x>
       <y>0</y>
-      <w>231</w>
-      <h>44</h>
+      <w>220</w>
+      <h>77</h>
     </coordinates>
-    <panel_attributes>enum::severity_level
-
-need string &lt;&lt; severity_level</panel_attributes>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+LogSeverity
+--
+LogSeverityToString()</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -34,7 +35,7 @@ need string &lt;&lt; severity_level</panel_attributes>
     <id>UMLNote</id>
     <coordinates>
       <x>11</x>
-      <y>462</y>
+      <y>539</y>
       <w>363</w>
       <h>143</h>
     </coordinates>
@@ -94,8 +95,8 @@ number_of_log_entries
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>11</x>
-      <y>77</y>
+      <x>22</x>
+      <y>132</y>
       <w>286</w>
       <h>88</h>
     </coordinates>
@@ -110,7 +111,7 @@ enum severity_level
     <id>UMLClass</id>
     <coordinates>
       <x>11</x>
-      <y>187</y>
+      <y>253</y>
       <w>352</w>
       <h>242</h>
     </coordinates>
