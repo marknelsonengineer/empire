@@ -26,10 +26,6 @@ The good news is that Empire should be flexible to configure and fast to run.
 The bad news is that you'll have to compile it.
 
 #### Design Documentation
-  - <a href="BOOST.md">Boost Library</a>
-  - <a href="STATISTICS.md">Codebase Statistics</a>
-  - [Doxygen](DOXYGEN.md)
-
 
 #### Other Documentation
 
