@@ -20,7 +20,7 @@ The requirements for the logger are:
       - Going to be fixed at compile time
       - Not going to adhere to a strict Object-Oriented discipline
     - Logs should use UTF-8 and be Unicode-friendly
-      - However, logs will not be multi-lingual (no lookup tables)
+      - However, logs will not be multilingual (no lookup tables)
   - Must be thread-safe
     - Let's steal from the Linux Kernel's logger and...
       - Log to a fixed-length, circular queue using a lockfree design
@@ -58,7 +58,7 @@ it.  Not everything has to be object-oriented.
 #### Discussion
 Ideally, I'd love to "buy" a logger (find a library and wire it in).  I looked
 at a few C++ loggers out there, and prototyped [Boost log].  The problem with 
-[Boost log] is it couldn't be compiled out if it wasn't being used.  I also felt
+[Boost log] is it couldn't be compiled out if it was not being used.  I also felt
 it was too heavyweight of a tool.
 
 I've built a lot of loggers over the years.  I never like building them, but
@@ -86,7 +86,7 @@ Each user (source file) of the logger will set some default values (like
 `LOG_MODULE`) and then inline the logger.
 
 The Log object is a singleton that instantiates the LogQueue and starts the
-handler thread.  The handler thread gets called... _Sempahore?_ and it uses a 
+handler thread.  The handler thread gets called... _Semaphore?_ and it uses a 
 Chain of Responsibility (?) to give each handler the opportunity to process
 the log and update their relative position vis a vi the queue.
 
@@ -104,8 +104,6 @@ Compile-time configuration:
 Run-time configuration:
   - There should be a way to modify the log verbosity at runtime
     - I think the handlers will deal with this
-
-<img src="images/Log_design.svg" style="width:300px; margin: 20px 10px 10px 10px;" alt="Design"/>
 
 Outstanding design decisions:
   - How will the log query mechanism work?
