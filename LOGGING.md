@@ -25,6 +25,15 @@ The requirements for the logger are:
     - Let's steal from the Linux Kernel's logger and...
       - Log to a fixed-length, circular queue using a lockfree design
   - Must use easy and familiar idioms in the codebase
+  - The queue does not need to be persistent, the handlers will manage that
+
+Question:  Should each of the handlers run in its own thread?
+Pros: They can manage wakeups on their own (for example for log rotation)
+Cons: Just a bit more overhead
+
+I'm thinking they run in their own thread.  We also start a global table of
+handlers where we have clean/dirty flags.  At the end of each handler, we
+look to see if any other handlers are dirty and trigger them.
 
 ### Example Header Usage
     
