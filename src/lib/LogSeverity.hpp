@@ -25,7 +25,8 @@ enum class LogSeverity {
    info,     ///< Generally useful information
    warning,  ///< Anything that can potentially cause application oddities
    error,    ///< Any error which is fatal to an **operation**
-   fatal     ///< Any error which is fatal to the **process**
+   fatal,    ///< Any error which is fatal to the **process**
+   COUNT     ///< The number of log levels
 };
 
 
@@ -49,6 +50,8 @@ consteval std::string_view LogSeverityToString( enum LogSeverity logSeverity ) {
          return "error"sv;
       case LogSeverity::fatal:
          return "fatal"sv;
+      case LogSeverity::COUNT:
+         return "COUNT"sv;  // Consider raising an exception (but for this is `consteval`)
    }
 }
 
