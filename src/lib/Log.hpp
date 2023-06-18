@@ -21,6 +21,17 @@
 
 namespace empire {
 
+constinit const size_t MODULE_LENGTH { 32 };  ///< The length of the Module string
+constinit const size_t LOG_MSG_LENGTH { 128 };  ///< The maximum length of the log message (must be divisible by 8)
+
+/// A structure that holds each log entry
+struct LogEntry {
+   char module[ MODULE_LENGTH ];  ///< The module that generated this entry
+   LogSeverity logSeverity;       ///< The severity of this entry
+   char msg[ LOG_MSG_LENGTH ];    ///< The log message
+};
+
+
 /// Add a new log entry to the circular log queue
 ///
 /// @tparam Args The Variadic template for holding a list of types to be formatted
