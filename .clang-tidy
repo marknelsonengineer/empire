@@ -11,6 +11,7 @@
 ###############################################################################
 
 # -abseil-*            # We don't use the Abseil library
+# -bugprone-easily-swappable-parameters  # I've never liked this lint rule, so I'm removing it
 # -cert-err58-cpp      # It's OK to have a static object that may throw an exception during initialization.  If it crashes, at least it happens fast.
 # -cert-msc30-c,       # We can use the rand() function in C
 # -cert-msc50-cpp,     # We can use the rand() function in C++
@@ -24,6 +25,7 @@
 Checks: >
   *,
   -abseil-*,
+  -bugprone-easily-swappable-parameters,
   -cert-err58-cpp,
   -cert-msc30-c,
   -cert-msc50-cpp,
