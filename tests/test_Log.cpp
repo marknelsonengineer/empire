@@ -14,8 +14,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-#define LOG_CHANNEL "test_Log"  /// @NOLINT( cppcoreguidelines-macro-usage ): A #define is OK here
-#include "../src/lib/LogSeverity.hpp"
+#define LOG_MODULE "test_Log"  ///< The name of the module for logging purposes @NOLINT( cppcoreguidelines-macro-usage ): `#define` is OK here
+#include "../src/lib/Log.hpp"
 
 using namespace empire;
 
@@ -36,6 +36,11 @@ BOOST_AUTO_TEST_CASE( Log_LogSeverityToString ) {
 
 
 BOOST_AUTO_TEST_CASE( Log_general ) {
+   LOG_TEST( "Test log entry with no parameters" );
+   LOG_TEST( "Test log entry with {} parameter", 1 );
+   LOG_TEST( "Test log entry with {} parameter, same datatype, but different value", 2 );
+   LOG_TEST( "Test log entry with {} parameter, different datatype", 3.0 );
+   LOG_TEST( "Test log entry with {}, 2 parameters", 1, 2 );
 }
 
 

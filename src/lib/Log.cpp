@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Empire V - What you do is what you do
 //
-/// Boost global logging services for Empire V
+/// Global logging services for Empire V
 ///
 //  The documentation for classes in this file are in the .hpp file.
 ///
@@ -10,7 +10,11 @@
 /// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
 
+#define LOG_MODULE "Log"  ///< The name of the module for logging purposes @NOLINT( cppcoreguidelines-macro-usage ): `#define` is OK here
+
 #include "Log.hpp"
+
+using namespace std;
 
 namespace empire {
 
