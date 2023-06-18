@@ -1,13 +1,17 @@
 <component name="ProjectDictionaryState">
   <dictionary name="mark">
     <words>
+      <w>amsmath</w>
       <w>authorname</w>
       <w>autobrief</w>
       <w>autotoc</w>
+      <w>batchmode</w>
       <w>blockfree</w>
       <w>booststrap</w>
       <w>buglist</w>
       <w>calles</w>
+      <w>codefile</w>
+      <w>colorstyle</w>
       <w>constinit</w>
       <w>cout</w>
       <w>creatordate</w>
@@ -15,52 +19,93 @@
       <w>dboost</w>
       <w>dentifier</w>
       <w>deprecatedlist</w>
+      <w>dfae</w>
+      <w>docsets</w>
+      <w>dontinclude</w>
       <w>doxyfile</w>
+      <w>doxyindexer</w>
+      <w>doxyrules</w>
+      <w>doxysearch</w>
       <w>doxywizard</w>
       <w>dtors</w>
+      <w>eclipsehelp</w>
       <w>endcond</w>
       <w>enddd</w>
       <w>endl</w>
+      <w>errorstop</w>
+      <w>feedname</w>
+      <w>feedurl</w>
       <w>fpreprocessed</w>
       <w>gamerunner</w>
+      <w>gtags</w>
       <w>hawaiʻi</w>
       <w>headerfile</w>
+      <w>hideinitializer</w>
+      <w>htags</w>
+      <w>htmlhelp</w>
+      <w>ieeetr</w>
+      <w>ignals</w>
       <w>infod</w>
       <w>ingroup</w>
       <w>interdd</w>
+      <w>intlimits</w>
       <w>iostreams</w>
+      <w>jsdelivr</w>
       <w>keywordflow</w>
       <w>lboost</w>
       <w>libiconv</w>
       <w>llvmlibc</w>
       <w>lockfree</w>
       <w>lpthread</w>
+      <w>macrofile</w>
+      <w>mainpage</w>
+      <w>makeindex</w>
+      <w>makevar</w>
       <w>marknels</w>
       <w>marknelsonengineer</w>
+      <w>mdfile</w>
       <w>memb</w>
       <w>mkpath</w>
+      <w>mycompany</w>
+      <w>myfile</w>
       <w>myline</w>
       <w>mānoa</w>
+      <w>nath</w>
+      <w>newcommand</w>
       <w>noenv</w>
       <w>nolintbegin</w>
       <w>nosubgrouping</w>
       <w>nowide</w>
       <w>nspaces</w>
       <w>ofast</w>
+      <w>paramdoc</w>
+      <w>perlmod</w>
+      <w>plainnat</w>
       <w>poxix</w>
+      <w>predef</w>
       <w>priv</w>
+      <w>programlisting</w>
       <w>propget</w>
       <w>propput</w>
       <w>punctations</w>
+      <w>qhelpgenerator</w>
+      <w>qt's</w>
       <w>refname</w>
+      <w>renewcommand</w>
+      <w>showinitializer</w>
       <w>sideeffect</w>
+      <w>smath</w>
+      <w>ssymbols</w>
       <w>startdd</w>
       <w>subgrouping</w>
+      <w>tagname</w>
       <w>telent</w>
       <w>tful</w>
       <w>typedef'ed</w>
       <w>uhunix</w>
       <w>undoc</w>
+      <w>unindexed</w>
+      <w>usepackage</w>
       <w>usermode</w>
       <w>wakeups</w>
       <w>xrefitem</w>

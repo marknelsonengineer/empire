@@ -1,5 +1,6 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
+    <option name="ENABLE_SECOND_REFORMAT" value="true" />
     <CMakeCodeStyleSettings>
       <option name="FORCE_COMMANDS_CASE" value="0" />
     </CMakeCodeStyleSettings>
@@ -139,6 +140,7 @@
       <option name="SOFT_MARGINS" value="80" />
       <indentOptions>
         <option name="INDENT_SIZE" value="3" />
+        <option name="CONTINUATION_INDENT_SIZE" value="6" />
         <option name="TAB_SIZE" value="3" />
         <option name="SMART_TABS" value="true" />
       </indentOptions>

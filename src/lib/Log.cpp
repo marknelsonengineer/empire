@@ -16,6 +16,31 @@
 
 using namespace std;
 
+namespace { // Anonymous namespace
+
+/// A ring buffer that holds an array of LogEntry records
+///
+/// Normally, this would be a member of a Singleton object.  However, for
+/// performance and portability reasons, I'm choosing to make it a static
+/// variable in Log.cpp.
+std::array< empire::LogEntry, empire::SIZE_OF_QUEUE > LogQueue;  /// @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): We are deliberately making this static act like a member variable.
+
+} // namespace
+
+
 namespace empire {
+
+
+
+LogEntry& getNextLogEntry() {
+   LogEntry& thisEntry = LogQueue[0];
+   /// Increment the queue
+
+   /// Zero out the LogEntry
+   thisEntry.ready = false;
+
+   /// Return a reference to the LogEntry
+   return LogQueue[0];
+}
 
 } // namespace empire
