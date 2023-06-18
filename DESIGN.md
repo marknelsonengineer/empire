@@ -513,6 +513,14 @@ The Liskov substitution principle: "Functions that use pointers or references to
 The Interface segregation principle: "Clients should not be forced to depend upon interfaces that they do not use."[9][4]
 The Dependency inversion principle: "Depend upon abstractions, [not] concretions."[10][4]
 
+## Latency Study
+I put some effort into benchmarking how to efficiently copy strings on x86 systems.
+Some ways to do it are:
+MOV m64, r64  & MOV r54, m64:  1, 2, p237 p4, 2, 1 + 1, 1, p23, 2, 0.5
+MOVS
+
+
+
 ## Things to do
 - [ ] Do a UMLet drawing of the current Empire codebase
 - [ ] Expand on the UMLet drawing to include the design of the Business Domain / 

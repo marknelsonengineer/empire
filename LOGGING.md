@@ -29,7 +29,7 @@ The requirements for the logger are:
 
 Question:  Should each of the handlers run in its own thread?
 Pros: They can manage wakeups on their own (for example for log rotation)
-Cons: Just a bit more overhead
+Cons: Just a bit more m_overhead
 
 I'm thinking they run in their own thread.  We also start a global table of
 handlers where we have clean/dirty flags.  At the end of each handler, we
