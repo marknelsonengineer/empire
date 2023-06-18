@@ -6,10 +6,47 @@
     <coordinates>
       <x>190</x>
       <y>50</y>
-      <w>100</w>
-      <h>30</h>
+      <w>190</w>
+      <h>170</h>
     </coordinates>
     <panel_attributes>/BaseRunner/
+--
+# m_start_time
+# m_end_time
+- m_overhead
+--
++ doRun()
+# setOverhead()
+# getOverhead()
+# getDuration()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>190</x>
+      <y>270</y>
+      <w>200</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>/BufferRunner/
+--
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>190</x>
+      <y>450</y>
+      <w>200</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>/LogBufferRunner/
+--
+
 </panel_attributes>
     <additional_attributes/>
   </element>
