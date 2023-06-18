@@ -11,6 +11,8 @@
 
 #include <string_view>
 
+#include <boost/assert.hpp>
+
 using namespace std::string_view_literals;  /// @NOLINT( google-global-names-in-headers ): We need to use it here for `sv`
 
 namespace empire {
@@ -32,9 +34,11 @@ enum class LogSeverity {
 
 /// Convert LogSeverity to a string_view
 ///
+/// Is `constexpr` so it can be used at both compile-time *and* runtime.
+///
 /// @param logSeverity The LogSeverity to convert
 /// @return A `string_view` representation of the enum
-consteval std::string_view LogSeverityToString( enum LogSeverity logSeverity ) {
+constexpr std::string_view LogSeverityToString( enum LogSeverity logSeverity ) {
    switch( logSeverity ) {
       case LogSeverity::test:
          return "test"sv;
@@ -51,8 +55,10 @@ consteval std::string_view LogSeverityToString( enum LogSeverity logSeverity ) {
       case LogSeverity::fatal:
          return "fatal"sv;
       case LogSeverity::COUNT:
-         return "COUNT"sv;  // Consider raising an exception (but for this is `consteval`)
+         BOOST_ASSERT_MSG( false, "Invalid use of LogSeverityToString()" );
    }
+
+   BOOST_ASSERT_MSG( false, "No valid case in LogSeverityToString() switch statement" );
 }
 
 } // namespace empire
