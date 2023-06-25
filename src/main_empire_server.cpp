@@ -8,7 +8,7 @@
 /// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <iostream>
+#include <iostream>  // For cout & endl
 
 #include "version.hpp"
 
@@ -21,5 +21,6 @@ int main() {
    std::cout << PROGRAM_TITLE << " version " << FULL_VERSION << std::endl;
    std::cout << std::endl;
    std::cout << LEGAL_NOTICE;
+
    return 0;
 }
