@@ -280,6 +280,6 @@ int main() {
 //      cout << "test2_memset( " << size << " ) = " << result_times[i][2] << "  ";
 //   }
 
-   std::cout << "Empire version " << FULL_VERSION << std::endl;
+   std::cout << PROGRAM_TITLE << " version " << FULL_VERSION << std::endl;
    return 0;
 }
