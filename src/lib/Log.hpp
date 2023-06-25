@@ -21,19 +21,26 @@
 
 namespace empire {
 
-constinit const unsigned char LOG_ALIGNMENT { 8 };  ///< The alignment of each LogEntry
-constinit const size_t MODULE_NAME_LENGTH { 32 };        ///< The length of the Module string
-constinit const size_t LOG_MSG_LENGTH { 128 };      ///< The maximum length of the log message (must be divisible by 8)
+[[maybe_unused]] constinit const u_int16_t LOG_ALIGNMENT { 256 };  ///< The alignment of each LogEntry
+constinit const size_t MODULE_NAME_LENGTH { 32 };     ///< The length of the Module string
+constinit const size_t LOG_MSG_LENGTH { 128 };        ///< The maximum length of the log message (should be a power of 2)
 
 /// A structure that holds each log entry
+///
+/// Every instance will be aligned to 128-byte boundary.
+///
+/// @NOLINTBEGIN( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays ): We use character arrays here
+/// @NOLINTBEGIN( altera-struct-pack-align ): We are not packing data as it's not standardized yet.
 struct alignas( LOG_ALIGNMENT ) LogEntry {
-   char msg[LOG_MSG_LENGTH];              ///< The log message (it's important that this is aligned on an 8-bit boundary)
-   u_int8_t msg_end;
-   char module_name[MODULE_NAME_LENGTH];  ///< The module that generated this entry
-   u_int8_t module_end;
-   LogSeverity logSeverity;               ///< The severity of this entry
-   bool ready;                            ///< `true` if the log is ready to process.  `false` if it's being composed
+   alignas( LOG_ALIGNMENT >> 1U ) char msg[LOG_MSG_LENGTH];  ///< The log message (aligned to the first half of each LogEntry)
+   [[maybe_unused]] u_int64_t msg_end;         ///< A null byte to terminate LogEntry::msg
+   alignas( size_t ) char module_name[MODULE_NAME_LENGTH];   ///< The module that generated this entry
+   [[maybe_unused]] u_int64_t module_end;      ///< A null byte to terminate LogEntry::module_name
+   alignas( size_t ) LogSeverity logSeverity;  ///< The severity of this LogEntry
+   bool ready;                                 ///< `true` if the LogEntry is ready to process.  `false` if it's being composed.
 };
+// NOLINTEND( altera-struct-pack-align )
+// NOLINTEND( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays )
 
 
 /// The Log queue is a ring buffer modeled after the Linux kernel's DMESG buffer.
@@ -45,6 +52,7 @@ constinit const unsigned char BASE_2_SIZE_OF_QUEUE { 7 };
 /// The size of the Log's ring buffer
 constinit const size_t SIZE_OF_QUEUE { 1U << BASE_2_SIZE_OF_QUEUE };
 
+
 /// Retrieve the next available LogEntry from the queue
 ///
 /// @return A reference to a LogEntry record that's ready to be written to
@@ -54,9 +62,9 @@ extern LogEntry& getNextLogEntry();
 /// Add a new log entry to the circular log queue
 ///
 /// @tparam Args The Variadic template for holding a list of types to be formatted
-/// @param severity The severity of the log entry
-/// @param module_name The module for the log entry
-/// @param fmt The format string that may use `{}` substitute for `args`
+/// @param severity The severity of the LogEntry
+/// @param module_name The name of the module responsible for this LogEntry
+/// @param fmt The `printf`-style format string
 /// @param args The optional set of arguments to be substituted in `fmt`
 template< typename...Args >
 inline void

@@ -8,6 +8,7 @@
 /// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
 /// @cond Suppress Doxygen warnings
+/// @NOLINTBEGIN( cppcoreguidelines-avoid-magic-numbers ): Tests will have magic numbers
 
 #define BOOST_TEST_MODULE Empire
 #define BOOST_TEST_MAIN  // Include this to get Boost Test's main()
@@ -45,4 +46,5 @@ BOOST_AUTO_TEST_CASE( Log_general ) {
 
 
 BOOST_AUTO_TEST_SUITE_END()
+// NOLINTEND( cppcoreguidelines-avoid-magic-numbers )
 /// @endcond

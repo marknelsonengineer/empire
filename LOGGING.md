@@ -8,18 +8,18 @@ The requirements for the logger are:
   - Must support log levels (`TRACE` through `FATAL`)
   - Must be able to identify what module generated the log
   - Should be extensible (log to file, console, deity session, et. al.)
-  - Must be fast & efficient:
+  - Should be fast & efficient:
     - If the log is used/available, it should be inlined
     - If the log is not used/available, it should be excluded from the compilation
   - Must be modern
-    - Use [C++20's new formatting library]
+    - Should use [C++20's new formatting library]
     - It should adopt the new [C++23 print functionality] when it's available
     - It should be in its own namespace
     - It should use `const` wherever possible
     - That said, for performance reasons, some things are:
       - Going to be fixed at compile time
       - Not going to adhere to a strict Object-Oriented discipline
-    - Logs should use UTF-8 and be Unicode-friendly
+    - Logs should be Unicode-friendly and use UTF-8 
       - However, logs will not be multilingual (no lookup tables)
   - Must be thread-safe
     - Let's steal from the Linux Kernel's logger and...
@@ -30,8 +30,8 @@ The requirements for the logger are:
 Question:  Should each of the handlers run in its own thread?
 Pros: They can manage wakeups on their own (for example for log rotation)
 Cons: Just a bit more m_overhead
-
-I'm thinking they run in their own thread.  We also start a global table of
+Discussion:
+I'm thinking they run in their own threads.  We also start a global table of
 handlers where we have clean/dirty flags.  At the end of each handler, we
 look to see if any other handlers are dirty and trigger them.
 
@@ -64,7 +64,7 @@ it was too heavyweight of a tool.
 I've built a lot of loggers over the years.  I never like building them, but
 they are fundamental to a project and I try to learn from each iteration.  
 
-Mostly for the sake of performance, I think Empire needs a custom logger.
+For the sake of performance, I think Empire needs a custom logger.
 
 ### Extensibility:  Should the logger hold parameterized fields?
 #### Discussion
@@ -78,7 +78,7 @@ think we could do a bit of subclass magic if we had to, but that's about it.
 ### Extensibility:  What fields should we log?
 #### Discussion
 The usual:  Timestamp, module, level and text.  I'm not inclined to log an ID
-unless we really need it.
+(a monotonic counter) unless we find a need for it.
 
 
 ## Overall Design Concept
@@ -111,7 +111,31 @@ Outstanding design decisions:
     - However, if it's querying a handler's output, then maybe the handler has 
       its own API.
 
+## Implementation Notes
+We need to downshift from [C++20's new formatting library] to [snprintf].
+This is driven mainly due to performance.  I did some benchmarking and compared
+the runtimes of the following:
+
+      std::string xString = std::format( "{} am {}\n", 1, "Sam" );
+      snprintf( aString, 128, "%d am %s\n", 1, "Sam" );
+
+| Function   | CPU Ticks | Relative speed |
+|------------|-----------|----------------|
+| `format`   | 208       | 45% increase   |
+| `snprintf` | 143       | Baseline       |
+
+The second note is the size of the log.  It's fixed at 128 bytes.  This is 
+a compromise.  First, most packets of information should fit in 128 bytes.  If
+you have more to say, then break up the log.  The other thing is related to 
+performance (of course).  On modern systems, copying one byte takes about the
+same amount of time as 512 bytes.  We will make sure our strings are on aligned
+boundaries.
+
+Lastly, the benchmarking really opened my eyes to the speed of `memcpy()`.  It's
+very efficient.
+
 [Boost log]:  https://www.boost.org/doc/libs/1_82_0/libs/log/doc/html/index.html
 [C++20's new formatting library]: https://en.cppreference.com/w/cpp/utility/format
 [C++23 print functionality]: https://en.cppreference.com/w/cpp/header/print
 [RAII]: https://en.cppreference.com/w/cpp/language/raii
+[snprintf]: https://en.cppreference.com/w/cpp/io/c/fprintf
