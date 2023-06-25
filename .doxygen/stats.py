@@ -19,14 +19,14 @@
 ## @copyright (c) 2021 Mark Nelson.  All rights reserved.
 #  #############################################################################
 
-import sys
 import datetime
-import subprocess
 import git
-import pathlib
-import os
 import locale
+import os
+import pathlib
 import re
+import subprocess
+import sys
 
 ## All output is redirected to this file
 OUTPUT_FILE = "STATISTICS.md"
@@ -242,7 +242,7 @@ def process_gcc_files(row_name, file_list):
 
         all_output = ""
         # lineStr = str(result, 'UTF-8')
-        for char in result.stdout.decode('ascii'):
+        for char in result.stdout.decode('utf8'):
             all_output += char
 
         for line in all_output.splitlines():
