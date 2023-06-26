@@ -78,7 +78,14 @@ queueLogEntry( const LogSeverity severity
 
    // Do efficient string copies to populate the module_name & log entry
 
-   std::strncpy( static_cast<char*>(thisEntry.module_name), module_name, MODULE_NAME_LENGTH );
+//   #ifdef NDEBUG
+      _mm256_store_si256 ((__m256i*)&thisEntry.module_name[0], _mm256_load_si256((__m256i const*) &module_name[0]));
+//   #else
+//      memcpy( thisEntry.module_name, module_name, MODULE_NAME_LENGTH );
+//   #endif
+/*
+   va_list args;
+   va_start(args, fmt);
 
    const std::string aString { std::format( fmt, std::forward< Args >( args )... ) };
 
