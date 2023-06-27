@@ -6,21 +6,30 @@
 /// There's usually a tradeoff between performance and abstraction.  In the case
 /// of a logging utility embedded in complex code, we are prioritizing
 /// performance.  To that end, we are breaking a few modern C++ rules:
-/// 1. Log uses `#define` statements.  This is so we can use `#ifdef` statements
-///    and the precompiler to cleanly remove code.
-/// 2. Log uses `printf()`.  I did a performance analysis of `format()` vs.
-///    `printf()` and `format()` incurred a 60% penalty in CPU cycles.  This
-///    one design decision has ramifications in the use of varargs.
-/// 3. Log uses old-school, C-style `char[]` arrays.  Again, this is to maximize
-///    performance.  Log pre-allocates an array of #empire::LogEntry structures,
-///    managed in a circular queue.  Each #empire::LogEntry is aligned on a
-///    large boundary and its largest element #empire::LogEntry::msg is aligned
-///    on the same half-boundary. We also map several char-arrays to `(void*)`,
-///    which is generally considered bad practice in modern C++.
+///   1. Log uses macros like `#define LOG_INFO()`.  This allows us to embed
+///      `LOG_INFO( "something" )` into code and then use the precompiler to
+///       either keep it or cleanly remove it, depending on the value of
+///       `MIN_LOG_SEVERITY`.
+///   2. Log uses `printf()` style substitution.  I did a performance analysis
+///      of `format()` vs. `printf()` and `format()` incurred a 60% penalty in
+///      CPU cycles.  `printf()` uses varargs, so we need to disable a few
+///      modern C++ warnings about that.
+///   3. Log uses old-school, C-style `char[]` arrays.  Again, this is to maximize
+///      performance.  Log pre-allocates an array of #empire::LogEntry structures,
+///      managed in a circular queue.  Each #empire::LogEntry is aligned on a
+///      large boundary and its largest element #empire::LogEntry::msg is aligned
+///      on the same half-boundary. We also map several char-arrays to `(void*)`,
+///      which is generally considered bad practice in modern C++.
 ///
-/// Be sure to define `LOG_MODULE` before including Log.hpp:
+/// Be sure to define `LOG_MODULE` and `MIN_LOG_SEVERITY` before including Log.hpp:
 ///
-///     [[maybe_unused]] static constinit const char LOG_MODULE[32] { "Nations" };  ///< The name of the module for logging purposes @@NOLINT( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays ): Character array is fine here
+///     /// The name of the module for logging purposes
+///     /// NOLINTNEXTLINE( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays ): A `char[]` array is acceptable here
+///     [[maybe_unused]] static constinit const char LOG_MODULE[32] { "test_Log" };
+///
+///     /// Logs at and above this will be available.  Logs below this will not be compiled into this source file.
+///     [[maybe_unused]] static constinit const empire::LogSeverity MIN_LOG_SEVERITY { empire::LogSeverity::trace };
+///     #include "../src/lib/Log.hpp"
 ///
 /// @file      lib/Log.hpp
 /// @author    Mark Nelson <mr_nelson@icloud.com>
@@ -113,11 +122,10 @@ extern LogEntry& getNextLogEntry();
 /// @NOLINTBEGIN( cert-dcl50-cpp, cppcoreguidelines-pro-type-vararg, hicpp-vararg ): We will allow a C-style variadic function
 /// @NOLINTBEGIN( cppcoreguidelines-pro-bounds-array-to-pointer-decay, hicpp-no-array-decay ): For performance reasons, we cast arrays to pointers
 /// @NOLINTBEGIN( cert-err33-c ): No need to check the return value from `vsnprintf()`
-inline void
-queueLogEntry( const LogSeverity severity
-               , const char* module_name
-               , const char* fmt
-               , ... ) {
+inline void queueLogEntry( const LogSeverity severity
+                         , const char* module_name
+                         , const char* fmt
+                         , ... ) {
 
    BOOST_ASSERT_MSG( module_name != nullptr , "Module name can't be NULL" );
    BOOST_ASSERT_MSG( strlen( module_name ) < MODULE_NAME_LENGTH, "Module name must be < MODULE_NAME_LENGTH" );
