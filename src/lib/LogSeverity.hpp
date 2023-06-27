@@ -9,6 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#include <iostream>
 #include <string_view>
 
 #include <boost/assert.hpp>
@@ -60,6 +61,15 @@ constexpr std::string_view LogSeverityToString( enum LogSeverity logSeverity ) {
 
    BOOST_ASSERT_MSG( false, "No valid case in LogSeverityToString() switch statement" );
 }
+
+
+/// Put to operator override for LogSeverity
+///
+/// @param stream The stream to write to
+/// @param severity The severity to output
+/// @return A stream that's been written to
+extern std::ostream& operator<<( std::ostream& stream, LogSeverity severity );
+
 
 /// Const LogSeverity used for Boost Unit Tests
 [[maybe_unused]] constinit static const LogSeverity constLogSeverityTest { LogSeverity::test };

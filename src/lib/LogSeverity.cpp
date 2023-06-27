@@ -12,4 +12,9 @@
 
 namespace empire {
 
+std::ostream& operator<<( std::ostream& stream, LogSeverity severity ) {
+   return stream << LogSeverityToString( severity ) ;
+}
+
+
 } // namespace empire
