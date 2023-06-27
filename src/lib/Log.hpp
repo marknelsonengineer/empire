@@ -65,13 +65,13 @@ constinit const size_t MODULE_NAME_LENGTH { 32 };
 /// @NOLINTBEGIN( altera-struct-pack-align ): We are not packing data as it's not standardized yet
 struct alignas( LOG_ALIGNMENT ) LogEntry {
    /// The log message (aligned to the first half of each LogEntry)
-   alignas( LOG_ALIGNMENT >> 1U ) char msg[LOG_MSG_LENGTH];
+   alignas( LOG_ALIGNMENT >> 1U ) char msg[ LOG_MSG_LENGTH ];
 
    /// A null byte to terminate LogEntry::msg
    [[maybe_unused]] uint64_t msg_end;
 
    /// The module that generated this LogEntry
-   alignas( size_t ) char module_name[MODULE_NAME_LENGTH];
+   alignas( size_t ) char module_name[ MODULE_NAME_LENGTH ];
 
    /// A null byte to terminate LogEntry::module_name
    [[maybe_unused]] uint64_t module_end;
