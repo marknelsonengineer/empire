@@ -20,6 +20,7 @@
       <w>dentifier</w>
       <w>deprecatedlist</w>
       <w>dfae</w>
+      <w>dmesg</w>
       <w>docsets</w>
       <w>dontinclude</w>
       <w>doxyfile</w>
@@ -65,6 +66,7 @@
       <w>marknelsonengineer</w>
       <w>mdfile</w>
       <w>memb</w>
+      <w>memcpy</w>
       <w>mkpath</w>
       <w>mycompany</w>
       <w>myfile</w>
@@ -74,6 +76,7 @@
       <w>newcommand</w>
       <w>noenv</w>
       <w>nolintbegin</w>
+      <w>nolintend</w>
       <w>nosubgrouping</w>
       <w>nowide</w>
       <w>nspaces</w>
@@ -107,6 +110,8 @@
       <w>unindexed</w>
       <w>usepackage</w>
       <w>usermode</w>
+      <w>valist</w>
+      <w>vsnprintf</w>
       <w>wakeups</w>
       <w>xrefitem</w>
     </words>
