@@ -121,8 +121,8 @@ the runtimes of the following:
 
 | Function   | CPU Ticks | Relative speed |
 |------------|-----------|----------------|
-| `format`   | 208       | 45% increase   |
-| `snprintf` | 143       | Baseline       |
+| `format`   | 150       | 61% slower     |
+| `snprintf` | 93        | Baseline       |
 
 The second note is the size of the log.  It's fixed at 128 bytes.  This is 
 a compromise.  First, most packets of information should fit in 128 bytes.  If

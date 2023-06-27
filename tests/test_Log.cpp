@@ -8,14 +8,21 @@
 /// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
 /// @cond Suppress Doxygen warnings
-/// @NOLINTBEGIN( cppcoreguidelines-avoid-magic-numbers ): Tests will have magic numbers
+/// @NOLINTBEGIN( cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers ): Tests will have magic numbers
 
 #define BOOST_TEST_MODULE Empire
 #define BOOST_TEST_MAIN  // Include this to get Boost Test's main()
 
 #include <boost/test/unit_test.hpp>
 
-#define LOG_MODULE "test_Log"  ///< The name of the module for logging purposes @NOLINT( cppcoreguidelines-macro-usage ): `#define` is OK here
+#include "../src/lib/LogSeverity.hpp"
+
+/// The name of the module for logging purposes
+/// @NOLINTNEXTLINE( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays ): A `char[]` array is acceptable here
+[[maybe_unused]] static constinit const char LOG_MODULE[32] { "test_Log" };
+
+/// Logs at and above this will be available.  Logs below this will not be compiled into this source file.
+[[maybe_unused]] static constinit const empire::LogSeverity MIN_LOG_SEVERITY { empire::LogSeverity::trace };
 #include "../src/lib/Log.hpp"
 
 using namespace empire;
@@ -38,13 +45,13 @@ BOOST_AUTO_TEST_CASE( Log_LogSeverityToString ) {
 
 BOOST_AUTO_TEST_CASE( Log_general ) {
    LOG_TEST( "Test log entry with no parameters" );
-   LOG_TEST( "Test log entry with {} parameter", 1 );
-   LOG_TEST( "Test log entry with {} parameter, same datatype, but different value", 2 );
-   LOG_TEST( "Test log entry with {} parameter, different datatype", 3.0 );
-   LOG_TEST( "Test log entry with {}, 2 parameters", 1, 2 );
+   LOG_TEST( "Test log entry with %d parameter", 1 );
+   LOG_TEST( "Test log entry with %d parameter, same datatype, but different value", 2 );
+   LOG_TEST( "Test log entry with %f parameter, different datatype", 3.0 );
+   LOG_TEST( "Test log entry with [%d, %d], 2 parameters", 1, 2 );
 }
 
 
 BOOST_AUTO_TEST_SUITE_END()
-// NOLINTEND( cppcoreguidelines-avoid-magic-numbers )
+// NOLINTEND( cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers )
 /// @endcond

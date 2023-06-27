@@ -3,41 +3,75 @@
 //
 /// Global logging services for Empire V
 ///
-/// Be sure to define `LOG_MODULE` before including Log.hpp
+/// There's usually a tradeoff between performance and abstraction.  In the case
+/// of a logging utility embedded in complex code, we are prioritizing
+/// performance.  To that end, we are breaking a few modern C++ rules:
+/// 1. Log uses `#define` statements.  This is so we can use `#ifdef` statements
+///    and the precompiler to cleanly remove code.
+/// 2. Log uses `printf()`.  I did a performance analysis of `format()` vs.
+///    `printf()` and `format()` incurred a 60% penalty in CPU cycles.  This
+///    one design decision has ramifications in the use of varargs.
+/// 3. Log uses old-school, C-style `char[]` arrays.  Again, this is to maximize
+///    performance.  Log pre-allocates an array of #empire::LogEntry structures,
+///    managed in a circular queue.  Each #empire::LogEntry is aligned on a
+///    large boundary and its largest element #empire::LogEntry::msg is aligned
+///    on the same half-boundary. We also map several char-arrays to `(void*)`,
+///    which is generally considered bad practice in modern C++.
 ///
-///     #define LOG_MODULE "My_Module"  ///< The name of the module for logging purposes @NOLINT( cppcoreguidelines-macro-usage ): `#define` is OK here
+/// Be sure to define `LOG_MODULE` before including Log.hpp:
+///
+///     [[maybe_unused]] static constinit const char LOG_MODULE[32] { "Nations" };  ///< The name of the module for logging purposes @@NOLINT( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays ): Character array is fine here
 ///
 /// @file      lib/Log.hpp
 /// @author    Mark Nelson <mr_nelson@icloud.com>
-/// @copyright (c) 2021 Mark Nelson.  All rights reserved.
+/// @copyright (c) 2023 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <cstring>
-#include <format>
-#include <iostream>
-#include <string_view>
+#include <cstdarg>  // For va_list, va_start() va_end()
+#include <cstdint>  // For uint16_t, uint64_t
+#include <cstdio>   // For vsnprintf()
+#include <cstring>  // For memcpy()
+
+#include <boost/assert.hpp>  // For BOOST_ASSERT_MSG()
 
 #include "LogSeverity.hpp"
 
 namespace empire {
 
-[[maybe_unused]] constinit const u_int16_t LOG_ALIGNMENT { 256 };  ///< The alignment of each LogEntry
-constinit const size_t MODULE_NAME_LENGTH { 32 };     ///< The length of the Module string
-constinit const size_t LOG_MSG_LENGTH { 128 };        ///< The maximum length of the log message (should be a power of 2)
+/// The alignment of each LogEntry
+constinit const uint16_t LOG_ALIGNMENT { 256 };
 
-/// A structure that holds each log entry
+/// The maximum size of LogEntry::msg is exactly 1/2 of the size of a LogEntry
+constinit const size_t LOG_MSG_LENGTH { LOG_ALIGNMENT >> 1U };
+
+/// The maximum size of LogEntry::module_name
+constinit const size_t MODULE_NAME_LENGTH { 32 };
+
+
+/// A structure that holds each entry in the log
 ///
-/// Every instance will be aligned to 128-byte boundary.
+/// Every instance will be aligned to empire::LOG_ALIGNMENT.
 ///
-/// @NOLINTBEGIN( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays ): We use character arrays here
-/// @NOLINTBEGIN( altera-struct-pack-align ): We are not packing data as it's not standardized yet.
+/// @NOLINTBEGIN( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays ): We use `char[]` arrays here
+/// @NOLINTBEGIN( altera-struct-pack-align ): We are not packing data as it's not standardized yet
 struct alignas( LOG_ALIGNMENT ) LogEntry {
-   alignas( LOG_ALIGNMENT >> 1U ) char msg[LOG_MSG_LENGTH];  ///< The log message (aligned to the first half of each LogEntry)
-   [[maybe_unused]] u_int64_t msg_end;         ///< A null byte to terminate LogEntry::msg
-   alignas( size_t ) char module_name[MODULE_NAME_LENGTH];   ///< The module that generated this entry
-   [[maybe_unused]] u_int64_t module_end;      ///< A null byte to terminate LogEntry::module_name
-   alignas( size_t ) LogSeverity logSeverity;  ///< The severity of this LogEntry
-   bool ready;                                 ///< `true` if the LogEntry is ready to process.  `false` if it's being composed.
+   /// The log message (aligned to the first half of each LogEntry)
+   alignas( LOG_ALIGNMENT >> 1U ) char msg[LOG_MSG_LENGTH];
+
+   /// A null byte to terminate LogEntry::msg
+   [[maybe_unused]] uint64_t msg_end;
+
+   /// The module that generated this LogEntry
+   alignas( size_t ) char module_name[MODULE_NAME_LENGTH];
+
+   /// A null byte to terminate LogEntry::module_name
+   [[maybe_unused]] uint64_t module_end;
+
+   /// The severity of this LogEntry
+   [[maybe_unused]] alignas( size_t ) LogSeverity logSeverity;
+
+   /// `true` if the LogEntry is ready to process.  `false` if it's being composed.
+   bool ready;
 };
 // NOLINTEND( altera-struct-pack-align )
 // NOLINTEND( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays )
@@ -45,7 +79,19 @@ struct alignas( LOG_ALIGNMENT ) LogEntry {
 
 /// The Log queue is a ring buffer modeled after the Linux kernel's DMESG buffer.
 /// The size of the queue must be a power of 2 (8, 16, 32, ...) entries.
-/// This variable enforces that rule
+/// This variable enforces that rule.
+///
+/// | empire::BASE_2_SIZE_OF_QUEUE | empire::SIZE_OF_QUEUE |
+/// |:----------------------------:|----------------------:|
+/// |               1              |                     1 |
+/// |               2              |                     2 |
+/// |               3              |                     4 |
+/// |               4              |                     8 |
+/// |               5              |                    16 |
+/// |               6              |                    32 |
+/// |               7              |                    64 |
+/// |               8              |                   128 |
+///
 constinit const unsigned char BASE_2_SIZE_OF_QUEUE { 7 };
 
 
@@ -61,60 +107,110 @@ extern LogEntry& getNextLogEntry();
 
 /// Add a new log entry to the circular log queue
 ///
-/// @tparam Args The Variadic template for holding a list of types to be formatted
 /// @param severity The severity of the LogEntry
 /// @param module_name The name of the module responsible for this LogEntry
 /// @param fmt The `printf`-style format string
-/// @param args The optional set of arguments to be substituted in `fmt`
-template< typename...Args >
+/// @NOLINTBEGIN( cert-dcl50-cpp, cppcoreguidelines-pro-type-vararg, hicpp-vararg ): We will allow a C-style variadic function
+/// @NOLINTBEGIN( cppcoreguidelines-pro-bounds-array-to-pointer-decay, hicpp-no-array-decay ): For performance reasons, we cast arrays to pointers
+/// @NOLINTBEGIN( cert-err33-c ): No need to check the return value from `vsnprintf()`
 inline void
 queueLogEntry( const LogSeverity severity
                , const char* module_name
-               , const std::format_string< Args... > fmt
-               , Args&& ... args ) {
+               , const char* fmt
+               , ... ) {
+
+   BOOST_ASSERT_MSG( module_name != nullptr , "Module name can't be NULL" );
+   BOOST_ASSERT_MSG( strlen( module_name ) < MODULE_NAME_LENGTH, "Module name must be < MODULE_NAME_LENGTH" );
+   BOOST_ASSERT_MSG( fmt != nullptr, "Log format parameter can't be NULL" );
+   BOOST_ASSERT_MSG( severity >= LogSeverity::test && severity <= LogSeverity::fatal, "Log severity not in range" );
 
    LogEntry& thisEntry = getNextLogEntry();
+   BOOST_ASSERT_MSG( thisEntry.msg_end == 0, "LogEntry::msg_end marker is not 0" );
+   BOOST_ASSERT_MSG( thisEntry.module_end == 0, "LogEntry::module_end marker is not 0" );
+   BOOST_ASSERT_MSG( thisEntry.ready == false, "LogEntry::ready is not false" );
+
    thisEntry.logSeverity = severity;
 
-   // Do efficient string copies to populate the module_name & log entry
+   /// Use an efficient copy command to populate the module_name
+   /// @API{ memcpy, https://en.cppreference.com/w/cpp/string/byte/memcpy }
+   memcpy( thisEntry.module_name, module_name, MODULE_NAME_LENGTH );
 
-//   #ifdef NDEBUG
-      _mm256_store_si256 ((__m256i*)&thisEntry.module_name[0], _mm256_load_si256((__m256i const*) &module_name[0]));
-//   #else
-//      memcpy( thisEntry.module_name, module_name, MODULE_NAME_LENGTH );
-//   #endif
-/*
+   /// @API{ va_list, https://en.cppreference.com/w/cpp/utility/variadic/va_list }
    va_list args;
-   va_start(args, fmt);
+   va_start( args, fmt );
+   /// @API{ vsnprintf, https://en.cppreference.com/w/cpp/io/c/vfprintf }
+   vsnprintf( thisEntry.msg, LOG_MSG_LENGTH, fmt, args );  /// @NOLINT( clang-analyzer-valist.Uninitialized ): `va_start()` initializes `args`.
+   va_end( args );
 
-   const std::string aString { std::format( fmt, std::forward< Args >( args )... ) };
-
-   std::strncpy( static_cast<char*>(thisEntry.msg), aString.c_str(), LOG_MSG_LENGTH );
-
-// std::cout << aCharArray << std::endl;
    thisEntry.ready = true;  // Tell the LogHandler routines that this LogEntry is ready
 }
 
+
 /// Use for Boost Unit Tests
-#define LOG_TEST( fmt, ... ) queueLogEntry( LogSeverity::test, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
+#if MIN_LOG_SEVERITY <= constLogSeverityTest
+    /// @NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_TEST( fmt, ... ) queueLogEntry( LogSeverity::test, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
+#else
+   /// @NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_TEST( fmt, ... )
+#endif
 
 /// Use when trying follow the thread of execution through code
-#define LOG_TRACE ( fmt, ... )
+#if MIN_LOG_SEVERITY <= constLogSeverityTrace
+    /// @NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_TRACE( fmt, ... ) queueLogEntry( LogSeverity::trace, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
+#else
+   /// @NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_TRACE( fmt, ... )
+#endif
 
 /// Information that is diagnostically helpful
-#define LOG_DEBUG ( fmt, ... )
+#if MIN_LOG_SEVERITY <= constLogSeverityDebug
+    /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_DEBUG( fmt, ... ) queueLogEntry( LogSeverity::debug, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
+#else
+   /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_DEBUG( fmt, ... )
+#endif
 
 /// Generally useful information
-#define LOG_INFO ( fmt, ... )
+#if MIN_LOG_SEVERITY <= constLogSeverityInfo
+    /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_INFO( fmt, ... ) queueLogEntry( LogSeverity::info, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
+#else
+   /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_INFO( fmt, ... )
+#endif
 
 /// Anything that can potentially cause application oddities
-#define LOG_WARN ( fmt, ... )
+#if MIN_LOG_SEVERITY <= constLogSeverityWarn
+    /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_WARN( fmt, ... ) queueLogEntry( LogSeverity::warn, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
+#else
+   /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_WARN( fmt, ... )
+#endif
 
 /// Any error which is fatal to an **operation**
-#define LOG_ERROR ( fmt, ... )
+#if MIN_LOG_SEVERITY <= constLogSeverityError
+    /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_ERROR( fmt, ... ) queueLogEntry( LogSeverity::error, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
+#else
+   /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_ERROR( fmt, ... )
+#endif
 
 /// Any error which is fatal to the **process**
-#define LOG_FATAL ( fmt, ... )
+#if MIN_LOG_SEVERITY <= constLogSeverityFatal
+    /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_FATAL( fmt, ... ) queueLogEntry( LogSeverity::fatal, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
+#else
+   /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
+   #define LOG_FATAL( fmt, ... )
+#endif
 
+// NOLINTEND( cert-err33-c )
+// NOLINTEND( cppcoreguidelines-pro-bounds-array-to-pointer-decay, hicpp-no-array-decay )
+// NOLINTEND( cert-dcl50-cpp, cppcoreguidelines-pro-type-vararg, hicpp-vararg )
 
 } // namespace empire

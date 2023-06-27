@@ -61,4 +61,26 @@ constexpr std::string_view LogSeverityToString( enum LogSeverity logSeverity ) {
    BOOST_ASSERT_MSG( false, "No valid case in LogSeverityToString() switch statement" );
 }
 
+/// Const LogSeverity used for Boost Unit Tests
+[[maybe_unused]] constinit static const LogSeverity constLogSeverityTest { LogSeverity::test };
+
+/// Const LogSeverity used when trying follow the thread of execution through code
+[[maybe_unused]] constinit static const LogSeverity constLogSeverityTrace { LogSeverity::trace };
+
+/// Const LogSeverity used for information that is diagnostically helpful
+[[maybe_unused]] constinit static const LogSeverity constLogSeverityDebug { LogSeverity::debug };
+
+/// Const LogSeverity used for generally useful information
+[[maybe_unused]] constinit static const LogSeverity constLogSeverityInfo { LogSeverity::info };
+
+/// Const LogSeverity used for anything that can potentially cause application oddities
+[[maybe_unused]] constinit static const LogSeverity constLogSeverityWarning { LogSeverity::warning };
+
+/// Const LogSeverity used for any error which is fatal to an **operation**
+[[maybe_unused]] constinit static const LogSeverity constLogSeverityError { LogSeverity::error };
+
+/// Const LogSeverity used for any error which is fatal to the **process**
+[[maybe_unused]] constinit static const LogSeverity constLogSeverityFatal { LogSeverity::fatal };
+
+
 } // namespace empire

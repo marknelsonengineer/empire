@@ -10,6 +10,8 @@
 /// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <array>
+
 #define LOG_MODULE "Log"  ///< The name of the module for logging purposes @NOLINT( cppcoreguidelines-macro-usage ): `#define` is OK here
 
 #include "Log.hpp"
