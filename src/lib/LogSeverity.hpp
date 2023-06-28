@@ -18,18 +18,32 @@ using namespace std::string_view_literals;  /// @NOLINT( google-global-names-in-
 
 namespace empire {
 
+/// @NOLINTBEGIN( modernize-macro-to-enum ): We need to use macros
+
+#define LOG_SEVERITY_TEST    ( 0 )  ///< Use for Boost Unit Tests
+#define LOG_SEVERITY_TRACE   ( 1 )  ///< Use when trying follow the thread of execution through code
+#define LOG_SEVERITY_DEBUG   ( 2 )  ///< Information that is diagnostically helpful
+#define LOG_SEVERITY_INFO    ( 3 )  ///< Generally useful information
+#define LOG_SEVERITY_WARNING ( 4 )  ///< Anything that can potentially cause application oddities
+#define LOG_SEVERITY_ERROR   ( 5 )  ///< Any error which is fatal to an **operation**
+#define LOG_SEVERITY_FATAL   ( 6 )  ///< Any error which is fatal to the **process**
+
+// NOLINTEND( modernize-macro-to-enum )
+
+
+
 /// Severity levels
 ///
 /// This list is in order of severity (from lowest to highest).
 enum class LogSeverity {
-   test,     ///< Use for Boost Unit Tests
-   trace,    ///< Use when trying follow the thread of execution through code
-   debug,    ///< Information that is diagnostically helpful
-   info,     ///< Generally useful information
-   warning,  ///< Anything that can potentially cause application oddities
-   error,    ///< Any error which is fatal to an **operation**
-   fatal,    ///< Any error which is fatal to the **process**
-   COUNT     ///< The number of log levels
+   test    = LOG_SEVERITY_TEST,     ///< Use for Boost Unit Tests
+   trace   = LOG_SEVERITY_TRACE,    ///< Use when trying follow the thread of execution through code
+   debug   = LOG_SEVERITY_DEBUG,    ///< Information that is diagnostically helpful
+   info    = LOG_SEVERITY_INFO,     ///< Generally useful information
+   warning = LOG_SEVERITY_WARNING,  ///< Anything that can potentially cause application oddities
+   error   = LOG_SEVERITY_ERROR,    ///< Any error which is fatal to an **operation**
+   fatal   = LOG_SEVERITY_FATAL,    ///< Any error which is fatal to the **process**
+   COUNT                            ///< The number of log severity levels
 };
 
 

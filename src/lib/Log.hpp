@@ -27,8 +27,10 @@
 ///     /// NOLINTNEXTLINE( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays ): A `char[]` array is acceptable here
 ///     [[maybe_unused]] static constinit const char LOG_MODULE[32] { "test_Log" };
 ///
-///     /// Logs at and above this will be available.  Logs below this will not be compiled into this source file.
-///     [[maybe_unused]] static constinit const empire::LogSeverity MIN_LOG_SEVERITY { empire::LogSeverity::trace };
+///     /// Logs at and above `MIN_LOG_SEVERITY` will be available.  Logs below
+///     /// `MIN_LOG_SEVERITY` will not be compiled into the source file.
+///     #define MIN_LOG_SEVERITY LOG_SEVERITY_INFO
+///
 ///     #include "../src/lib/Log.hpp"
 ///
 /// @file      lib/Log.hpp
@@ -155,7 +157,7 @@ inline void queueLogEntry( const LogSeverity severity
 
 
 /// Use for Boost Unit Tests
-#if MIN_LOG_SEVERITY <= constLogSeverityTest
+#if MIN_LOG_SEVERITY <= LOG_SEVERITY_TEST
     /// @NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
    #define LOG_TEST( fmt, ... ) queueLogEntry( LogSeverity::test, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
 #else
@@ -164,7 +166,7 @@ inline void queueLogEntry( const LogSeverity severity
 #endif
 
 /// Use when trying follow the thread of execution through code
-#if MIN_LOG_SEVERITY <= constLogSeverityTrace
+#if MIN_LOG_SEVERITY <= LOG_SEVERITY_TRACE
     /// @NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
    #define LOG_TRACE( fmt, ... ) queueLogEntry( LogSeverity::trace, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
 #else
@@ -173,7 +175,7 @@ inline void queueLogEntry( const LogSeverity severity
 #endif
 
 /// Information that is diagnostically helpful
-#if MIN_LOG_SEVERITY <= constLogSeverityDebug
+#if MIN_LOG_SEVERITY <= LOG_SEVERITY_DEBUG
     /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
    #define LOG_DEBUG( fmt, ... ) queueLogEntry( LogSeverity::debug, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
 #else
@@ -182,7 +184,7 @@ inline void queueLogEntry( const LogSeverity severity
 #endif
 
 /// Generally useful information
-#if MIN_LOG_SEVERITY <= constLogSeverityInfo
+#if MIN_LOG_SEVERITY <= LOG_SEVERITY_INFO
     /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
    #define LOG_INFO( fmt, ... ) queueLogEntry( LogSeverity::info, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
 #else
@@ -191,7 +193,7 @@ inline void queueLogEntry( const LogSeverity severity
 #endif
 
 /// Anything that can potentially cause application oddities
-#if MIN_LOG_SEVERITY <= constLogSeverityWarn
+#if MIN_LOG_SEVERITY <= LOG_SEVERITY_WARNING
     /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
    #define LOG_WARN( fmt, ... ) queueLogEntry( LogSeverity::warn, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
 #else
@@ -200,7 +202,7 @@ inline void queueLogEntry( const LogSeverity severity
 #endif
 
 /// Any error which is fatal to an **operation**
-#if MIN_LOG_SEVERITY <= constLogSeverityError
+#if MIN_LOG_SEVERITY <= LOG_SEVERITY_ERROR
     /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
    #define LOG_ERROR( fmt, ... ) queueLogEntry( LogSeverity::error, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
 #else
@@ -209,7 +211,7 @@ inline void queueLogEntry( const LogSeverity severity
 #endif
 
 /// Any error which is fatal to the **process**
-#if MIN_LOG_SEVERITY <= constLogSeverityFatal
+#if MIN_LOG_SEVERITY <= LOG_SEVERITY_FATAL
     /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
    #define LOG_FATAL( fmt, ... ) queueLogEntry( LogSeverity::fatal, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
 #else

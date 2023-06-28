@@ -23,8 +23,9 @@
 /// @NOLINTNEXTLINE( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays ): A `char[]` array is acceptable here
 [[maybe_unused]] static constinit const char LOG_MODULE[32] { "test_Log" };
 
-/// Logs at and above this will be available.  Logs below this will not be compiled into this source file.
-[[maybe_unused]] static constinit const empire::LogSeverity MIN_LOG_SEVERITY { empire::LogSeverity::trace };
+/// Logs at and above `MIN_LOG_SEVERITY` will be available.  Logs below
+/// `MIN_LOG_SEVERITY` will not be compiled into the source file.
+#define MIN_LOG_SEVERITY LOG_SEVERITY_TEST
 #include "../src/lib/Log.hpp"
 
 
