@@ -74,6 +74,7 @@ constexpr std::string_view LogSeverityToString( enum LogSeverity logSeverity ) {
    }
 
    BOOST_ASSERT_MSG( false, "No valid case in LogSeverityToString() switch statement" );
+   return ""sv;
 }
 
 
