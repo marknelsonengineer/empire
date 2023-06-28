@@ -32,6 +32,7 @@ std::array< empire::LogEntry, empire::SIZE_OF_QUEUE > LogQueue;  /// @NOLINT( cp
 /// Essentially, this is a pointer to the next available entry in LogQueue.
 /// In fact, it holds both the generation counter (the number of times LogQueue
 /// has wrapped around) and the current index into LogQueue.
+/// @NOLINTNEXTLINE( cppcoreguidelines-avoid-non-const-global-variables ): LogIndex is static, so it's not really a global
 size_t LogIndex { 0 };
 
 } // namespace

@@ -17,7 +17,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "../src/lib/LogSeverity.hpp"
+#include "../src/lib/LogSeverity.hpp"  // For LOG_SEVERITY #defines
 
 /// The name of the module for logging purposes
 /// @NOLINTNEXTLINE( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays ): A `char[]` array is acceptable here

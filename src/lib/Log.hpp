@@ -195,7 +195,7 @@ inline void queueLogEntry( const LogSeverity severity
 /// Anything that can potentially cause application oddities
 #if MIN_LOG_SEVERITY <= LOG_SEVERITY_WARNING
     /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
-   #define LOG_WARN( fmt, ... ) queueLogEntry( LogSeverity::warn, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
+   #define LOG_WARN( fmt, ... ) queueLogEntry( LogSeverity::warning, LOG_MODULE, fmt __VA_OPT__(,) __VA_ARGS__ )
 #else
    /// NOLINTNEXTLINE( cppcoreguidelines-macro-usage ): We intend to use a macro here
    #define LOG_WARN( fmt, ... )
