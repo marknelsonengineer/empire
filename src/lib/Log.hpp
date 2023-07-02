@@ -88,8 +88,8 @@ struct alignas( LOG_ALIGNMENT ) LogEntry {
 // NOLINTEND( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays )
 
 
-/// The Log queue is a ring buffer modeled after the Linux kernel's DMESG buffer.
-/// The size of the queue must be a power of 2 (8, 16, 32, ...) entries.
+/// empire::LogQueue is a ring buffer modeled after the Linux kernel's DMESG buffer.
+/// The size of empire::LogQueue must be a power of 2 (8, 16, 32, ...) entries.
 /// This variable enforces that rule.
 ///
 /// | empire::BASE_2_SIZE_OF_QUEUE | empire::SIZE_OF_QUEUE |
@@ -110,13 +110,13 @@ constinit const unsigned char BASE_2_SIZE_OF_QUEUE { 7 };
 constinit const size_t SIZE_OF_QUEUE { 1U << BASE_2_SIZE_OF_QUEUE };
 
 
-/// Retrieve the next available LogEntry from the queue
+/// Retrieve the next available LogEntry from empire::LogQueue
 ///
 /// @return A reference to a LogEntry record that's ready to be written to
 extern LogEntry& getNextLogEntry();
 
 
-/// Add a new log entry to the circular log queue
+/// Add a new log entry to empire::LogQueue
 ///
 /// @param severity The severity of the LogEntry
 /// @param module_name The name of the module responsible for this LogEntry

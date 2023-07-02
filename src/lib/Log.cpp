@@ -19,7 +19,7 @@
 
 using namespace std;
 
-namespace { // Anonymous namespace
+namespace empire {
 
 /// A ring buffer that holds an array of LogEntry records
 ///
@@ -37,10 +37,6 @@ std::array< empire::LogEntry, empire::SIZE_OF_QUEUE > LogQueue;  /// @NOLINT( cp
 /// @NOLINTNEXTLINE( cppcoreguidelines-avoid-non-const-global-variables ): LogIndex is static, so it's not really a global
 alignas( empire::CACHE_LINE_BYTES ) atomic_size_t LogIndex { 0 };
 
-} // namespace
-
-
-namespace empire {
 
 /// Mask the actual index into LogQueue from LogIndex
 constinit const size_t LOG_QUEUE_INDEX_MASK { SIZE_OF_QUEUE - 1 };
