@@ -8,11 +8,13 @@
 /// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <array>  // For array<>
+#include <array>    // For array<>
+#include <atomic>   // For atomic_size_t
 #include <cstring>  // For memset()
 
 #define LOG_MODULE "Log"  ///< The name of the module for logging purposes @NOLINT( cppcoreguidelines-macro-usage ): `#define` is OK here
 
+#include "../version.hpp"  // For CACHE_LINE_BYTES
 #include "Log.hpp"
 
 using namespace std;
@@ -33,7 +35,7 @@ std::array< empire::LogEntry, empire::SIZE_OF_QUEUE > LogQueue;  /// @NOLINT( cp
 /// In fact, it holds both the generation counter (the number of times LogQueue
 /// has wrapped around) and the current index into LogQueue.
 /// @NOLINTNEXTLINE( cppcoreguidelines-avoid-non-const-global-variables ): LogIndex is static, so it's not really a global
-size_t LogIndex { 0 };
+alignas( empire::CACHE_LINE_BYTES ) atomic_size_t LogIndex { 0 };
 
 } // namespace
 
@@ -55,7 +57,7 @@ void logReset() {
    }
 
    /// - Reset the LogIndex
-   LogIndex = 0;
+   LogIndex.store( 0 );
 
    /// - Start the handler threads
 
@@ -65,12 +67,10 @@ void logReset() {
 
 
 LogEntry& getNextLogEntry() {
-   /// Get the LogEntry
+   /// Get the LogEntry and increment the queue (thread safe because LogIndex is
+   /// an atomic)
    /// @NOLINTNEXTLINE( cppcoreguidelines-pro-bounds-constant-array-index ): Temporarily disable static bounds checking
-   LogEntry& thisEntry = LogQueue[ LogIndex & LOG_QUEUE_INDEX_MASK ];
-
-   /// Increment the queue (thread safe because LogIndex is an atomic)
-   LogIndex++;
+   LogEntry& thisEntry = LogQueue[ LogIndex++ & LOG_QUEUE_INDEX_MASK ];
 
    /// Disable the LogEntry
    thisEntry.ready = false;
