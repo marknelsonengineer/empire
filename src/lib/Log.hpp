@@ -73,7 +73,7 @@ struct alignas( LOG_ALIGNMENT ) LogEntry {
    [[maybe_unused]] uint64_t msg_end;
 
    /// The module that generated this LogEntry
-   alignas( size_t ) char module_name[ MODULE_NAME_LENGTH ];
+   alignas( MODULE_NAME_LENGTH ) char module_name[ MODULE_NAME_LENGTH ];
 
    /// A null byte to terminate LogEntry::module_name
    [[maybe_unused]] uint64_t module_end;
@@ -142,15 +142,15 @@ inline void queueLogEntry( const LogSeverity severity
    thisEntry.logSeverity = severity;
 
    /// Use an efficient copy command to populate the module_name
-   /// @API{ memcpy, https://en.cppreference.com/w/cpp/string/byte/memcpy }
+   // @API{ memcpy, https://en.cppreference.com/w/cpp/string/byte/memcpy }
    // memcpy( thisEntry.module_name, module_name, MODULE_NAME_LENGTH );
 
-   asm( "movl (%0), %%eax ;"  // Copy module_name into EAX
-        "movl %%eax, (%1) ;"  // Copy EAX into thisEntry.module_name
+   asm( "vmovdqa (%0), %%ymm8 ;"  // Copy module_name into YMM8
+        "vmovdqa %%ymm8, (%1) ;"  // Copy YMM8 into thisEntry.module_name
          :
-         : [m_src]  "r" (module_name) // Input
-         , [m_dest] "r" (thisEntry.module_name)
-         :  "%eax", "memory"                            // Clobbered
+         : "a" (module_name)            // Input %0
+         , "b" (thisEntry.module_name)  //       %1
+         :  "%ymm8", "memory"           // Clobbered
    );
 
    /// @API{ va_list, https://en.cppreference.com/w/cpp/utility/variadic/va_list }
