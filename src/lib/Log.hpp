@@ -118,6 +118,11 @@ extern LogEntry& getNextLogEntry();
 
 /// Add a new log entry to empire::LogQueue
 ///
+/// The function is marked `inline`, however:
+/// 1. If disassembled, it won't ever inline because it uses varargs
+/// 2. That's OK, because the function is customised for each module with
+///    the `LOG_MODULE` and `MIN_LOG_SEVERITY` definitions.
+///
 /// @param severity The severity of the LogEntry
 /// @param module_name The name of the module responsible for this LogEntry
 /// @param fmt The `printf`-style format string
