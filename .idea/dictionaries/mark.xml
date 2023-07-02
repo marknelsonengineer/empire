@@ -1,7 +1,10 @@
 <component name="ProjectDictionaryState">
   <dictionary name="mark">
     <words>
+      <w>allexternals</w>
       <w>amsmath</w>
+      <w>arrowsize</w>
+      <w>arrowtail</w>
       <w>authorname</w>
       <w>autobrief</w>
       <w>autotoc</w>
@@ -9,6 +12,7 @@
       <w>blockfree</w>
       <w>booststrap</w>
       <w>buglist</w>
+      <w>callergraph</w>
       <w>calles</w>
       <w>codefile</w>
       <w>colorstyle</w>
@@ -20,9 +24,11 @@
       <w>dentifier</w>
       <w>deprecatedlist</w>
       <w>dfae</w>
+      <w>diafile</w>
       <w>dmesg</w>
       <w>docsets</w>
       <w>dontinclude</w>
+      <w>dotfontpath</w>
       <w>doxyfile</w>
       <w>doxyindexer</w>
       <w>doxyrules</w>
@@ -36,11 +42,15 @@
       <w>errorstop</w>
       <w>feedname</w>
       <w>feedurl</w>
+      <w>fontpath</w>
       <w>fpreprocessed</w>
       <w>gamerunner</w>
+      <w>gdiplus</w>
       <w>gtags</w>
       <w>hawaiʻi</w>
       <w>headerfile</w>
+      <w>hidecallergraph</w>
+      <w>hidecallgraph</w>
       <w>hideinitializer</w>
       <w>htags</w>
       <w>htmlhelp</w>
@@ -48,11 +58,15 @@
       <w>ignals</w>
       <w>infod</w>
       <w>ingroup</w>
+      <w>inputfile</w>
       <w>interdd</w>
       <w>intlimits</w>
       <w>iostreams</w>
+      <w>ismap</w>
       <w>jsdelivr</w>
       <w>keywordflow</w>
+      <w>labelfontname</w>
+      <w>labelfontsize</w>
       <w>lboost</w>
       <w>libiconv</w>
       <w>llvmlibc</w>
@@ -68,6 +82,8 @@
       <w>memb</w>
       <w>memcpy</w>
       <w>mkpath</w>
+      <w>mscfile</w>
+      <w>mscgen</w>
       <w>mycompany</w>
       <w>myfile</w>
       <w>myline</w>
@@ -81,6 +97,7 @@
       <w>nowide</w>
       <w>nspaces</w>
       <w>ofast</w>
+      <w>omg's</w>
       <w>paramdoc</w>
       <w>perlmod</w>
       <w>plainnat</w>
@@ -100,6 +117,8 @@
       <w>smath</w>
       <w>ssymbols</w>
       <w>startdd</w>
+      <w>startuml</w>
+      <w>subgraphs</w>
       <w>subgrouping</w>
       <w>tagname</w>
       <w>telent</w>
