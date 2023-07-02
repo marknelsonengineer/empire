@@ -143,7 +143,15 @@ inline void queueLogEntry( const LogSeverity severity
 
    /// Use an efficient copy command to populate the module_name
    /// @API{ memcpy, https://en.cppreference.com/w/cpp/string/byte/memcpy }
-   memcpy( thisEntry.module_name, module_name, MODULE_NAME_LENGTH );
+   // memcpy( thisEntry.module_name, module_name, MODULE_NAME_LENGTH );
+
+   asm( "movl (%0), %%eax ;"  // Copy module_name into EAX
+        "movl %%eax, (%1) ;"  // Copy EAX into thisEntry.module_name
+         :
+         : [m_src]  "r" (module_name) // Input
+         , [m_dest] "r" (thisEntry.module_name)
+         :  "%eax", "memory"                            // Clobbered
+   );
 
    /// @API{ va_list, https://en.cppreference.com/w/cpp/utility/variadic/va_list }
    va_list args;
