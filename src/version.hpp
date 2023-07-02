@@ -42,4 +42,7 @@ namespace empire {
 /// A bit for the lawyers
 [[maybe_unused]] extern const std::string LEGAL_NOTICE;
 
+/// The size of the cache line in bytes
+[[maybe_unused]] constinit const unsigned char CACHE_LINE_BYTES { 64 };
+
 } // namespace empire
