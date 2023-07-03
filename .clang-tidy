@@ -31,7 +31,7 @@ Checks: >
   -cert-msc30-c,
   -cert-msc50-cpp,
   -fuchsia-*,
-  -hicpp-no-assembler,*
+  -hicpp-no-assembler,
   -google-build-using-namespace,
   -llvm-header-guard,
   -llvmlibc-*,
