@@ -107,6 +107,7 @@ BOOST_AUTO_TEST_CASE( Log_no_parameters ) {
    BOOST_CHECK_EQUAL( anEntry.module_name, "test_Log");
    BOOST_CHECK_EQUAL( anEntry.module_end, 0 );
    BOOST_CHECK_EQUAL( anEntry.logSeverity, LogSeverity::test );
+   BOOST_CHECK_CLOSE( (double) anEntry.logTimestamp, (double) std::time( nullptr ), 0.01 );
 }
 
 BOOST_AUTO_TEST_CASE( Log_one_int_parameter ) {
@@ -120,6 +121,7 @@ BOOST_AUTO_TEST_CASE( Log_one_int_parameter ) {
    BOOST_CHECK_EQUAL( anEntry.module_name, "test_Log");
    BOOST_CHECK_EQUAL( anEntry.module_end, 0 );
    BOOST_CHECK_EQUAL( anEntry.logSeverity, LogSeverity::test );
+   BOOST_CHECK_CLOSE( (double) anEntry.logTimestamp, (double) std::time( nullptr ), 0.01 );
 }
 
 BOOST_AUTO_TEST_CASE( Log_one_string_parameter ) {
@@ -133,9 +135,8 @@ BOOST_AUTO_TEST_CASE( Log_one_string_parameter ) {
    BOOST_CHECK_EQUAL( anEntry.module_name, "test_Log");
    BOOST_CHECK_EQUAL( anEntry.module_end, 0 );
    BOOST_CHECK_EQUAL( anEntry.logSeverity, LogSeverity::test );
+   BOOST_CHECK_CLOSE( (double) anEntry.logTimestamp, (double) std::time( nullptr ), 0.01 );
 }
-
-
 
 BOOST_AUTO_TEST_SUITE_END()
 // NOLINTEND( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays )

@@ -38,6 +38,7 @@
 /// @copyright (c) 2023 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <chrono>   // For system_clock
 #include <cstdarg>  // For va_list, va_start() va_end()
 #include <cstdint>  // For uint16_t, uint64_t
 #include <cstdio>   // For vsnprintf()
@@ -80,6 +81,9 @@ struct alignas( LOG_ALIGNMENT ) LogEntry {
 
    /// The severity of this LogEntry
    [[maybe_unused]] alignas( size_t ) LogSeverity logSeverity;
+
+   /// The timestamp of this LogEntry
+   [[maybe_unused]] alignas( size_t ) std::time_t logTimestamp;
 
    /// `true` if the LogEntry is ready to process.  `false` if it's being composed.
    bool ready;
@@ -166,6 +170,8 @@ inline void queueLogEntry( const LogSeverity severity
    /// @API{ vsnprintf, https://en.cppreference.com/w/cpp/io/c/vfprintf }
    vsnprintf( thisEntry.msg, LOG_MSG_LENGTH, fmt, args );  /// @NOLINT( clang-analyzer-valist.Uninitialized ): `va_start()` initializes `args`.
    va_end( args );
+
+   thisEntry.logTimestamp = std::time( nullptr );
 
    thisEntry.ready = true;  // Tell the LogHandler routines that this LogEntry is ready
 }

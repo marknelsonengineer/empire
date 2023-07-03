@@ -66,7 +66,6 @@ BOOST_AUTO_TEST_CASE( Log_level_debug ) {
    BOOST_CHECK_EQUAL( logPeek().msg, "Журнал испытаний Фатальная запись в Русский" );
 }
 
-
 BOOST_AUTO_TEST_SUITE_END()
 // NOLINTEND( cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers )
 /// @endcond
