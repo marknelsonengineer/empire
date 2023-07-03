@@ -150,13 +150,15 @@ inline void queueLogEntry( const LogSeverity severity
    // @API{ memcpy, https://en.cppreference.com/w/cpp/string/byte/memcpy }
    // memcpy( thisEntry.module_name, module_name, MODULE_NAME_LENGTH );
 
-   asm( "vmovdqa (%0), %%ymm8 ;"  // Copy module_name into YMM8
-        "vmovdqa %%ymm8, (%1) ;"  // Copy YMM8 into thisEntry.module_name
+   /// @NOLINTBEGIN( google-readability-castingXX ): Need to cast for inline assembly
+   asm( "vmovdqa %0, %%ymm8 ;"  // Copy module_name into YMM8
+        "vmovdqa %%ymm8, %1 ;"  // Copy YMM8 into thisEntry.module_name
          :
-         : "a" (module_name)            // Input %0
-         , "b" (thisEntry.module_name)  //       %1
-         :  "%ymm8", "memory"           // Clobbered
+         :  "m" (*(const char (*)[32]) module_name)            // Input %0
+         ,  "m" (*(const char (*)[32]) thisEntry.module_name)  // Input %1
+         :  "%ymm8"           // Clobbered
    );
+   // @NOLINTEND( google-readability-castingXX )
 
    /// @API{ va_list, https://en.cppreference.com/w/cpp/utility/variadic/va_list }
    va_list args;
