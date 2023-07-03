@@ -62,11 +62,11 @@ MESSAGE( STATUS "Boost_INCLUDE_DIRS = [${Boost_INCLUDE_DIRS}]" )
 
 ################################ Compiler Configuration #######################
 
-ADD_COMPILE_OPTIONS( -Wall -Wextra )
+ADD_COMPILE_OPTIONS( -Wall -Wextra -mxsavec -mxsaveopt -minline-all-stringops )
 
 IF( ${CMAKE_COMPILER_IS_GNUCXX} )
    MESSAGE( STATUS "Compile with g++" )
-   ADD_COMPILE_OPTIONS( -lstdc++ -fuse-ld=gold )
+   ADD_COMPILE_OPTIONS( -lstdc++ -fuse-ld=gold -malign-data=cacheline -mstringop-strategy=vector_loop -maccumulate-outgoing-args -minline-stringops-dynamically )
 ELSEIF( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
    MESSAGE( STATUS "Compile with clang++" )
 ENDIF()
