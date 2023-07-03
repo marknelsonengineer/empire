@@ -122,6 +122,9 @@ extern LogEntry& getNextLogEntry();
 
 /// Add a new log entry to empire::LogQueue
 ///
+/// @pattern Consumer-Producer
+/// This function is the producer for this pattern.
+///
 /// The function is marked `inline`, however:
 /// 1. If disassembled, it won't ever inline because it uses varargs
 /// 2. That's OK, because the function is customised for each module with

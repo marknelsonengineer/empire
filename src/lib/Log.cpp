@@ -12,8 +12,6 @@
 #include <atomic>   // For atomic_size_t
 #include <cstring>  // For memset()
 
-#define LOG_MODULE "Log"  ///< The name of the module for logging purposes @NOLINT( cppcoreguidelines-macro-usage ): `#define` is OK here
-
 #include "../version.hpp"  // For CACHE_LINE_BYTES
 #include "Log.hpp"
 
@@ -22,6 +20,8 @@ using namespace std;
 namespace empire {
 
 /// A ring buffer that holds an array of LogEntry records
+///
+/// @pattern Consumer-Producer
 ///
 /// Normally, this would be a member of a Singleton object.  However, for
 /// performance and portability reasons, I'm choosing to make it a static
