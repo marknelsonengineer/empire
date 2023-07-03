@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Empire V - What you do is what you do
 //
-/// Comprehensive tests for Singleton
+/// Comprehensive tests for #empire::Singleton
 ///
 /// @file      tests/test_Singleton.cpp
 /// @author    Mark Nelson <mr_nelson@icloud.com>

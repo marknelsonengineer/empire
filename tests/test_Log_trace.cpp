@@ -1,9 +1,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Empire V - What you do is what you do
 //
-/// Test setting MIN_LOG_SEVERITY to LOG_SEVERITY_TRACE
+/// Test setting `MIN_LOG_SEVERITY` to #LOG_SEVERITY_TRACE
 ///
-/// @file      tests/test_Log.cpp
+/// @file      tests/test_Log_trace.cpp
 /// @author    Mark Nelson <mr_nelson@icloud.com>
 /// @copyright (c) 2021 Mark Nelson.  All rights reserved.
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,7 +16,7 @@
 
 /// The name of the module for logging purposes
 /// @NOLINTNEXTLINE( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays ): A `char[]` array is acceptable here
-[[maybe_unused]] static constinit const char LOG_MODULE[32] { "test_Log_trace" };
+[[maybe_unused]] alignas(32) static constinit const char LOG_MODULE[32] { "test_Log_trace" };
 
 /// Logs at and above `MIN_LOG_SEVERITY` will be available.  Logs below
 /// `MIN_LOG_SEVERITY` will not be compiled into the source file.

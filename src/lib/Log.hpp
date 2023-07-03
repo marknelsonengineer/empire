@@ -25,7 +25,7 @@
 ///
 ///     /// The name of the module for logging purposes
 ///     /// NOLINTNEXTLINE( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays ): A `char[]` array is acceptable here
-///     [[maybe_unused]] static constinit const char LOG_MODULE[32] { "test_Log" };
+///     [[maybe_unused]] alignas(32) static constinit const char LOG_MODULE[32] { "test_Log" };
 ///
 ///     /// Logs at and above `MIN_LOG_SEVERITY` will be available.  Logs below
 ///     /// `MIN_LOG_SEVERITY` will not be compiled into the source file.

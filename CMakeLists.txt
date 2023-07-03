@@ -120,7 +120,7 @@ IF( ${BUILDABLE} )
    ADD_DEPENDENCIES( empire_server update_version )
    ADD_DEPENDENCIES( empire_client update_version )
 
-   ADD_EXECUTABLE( All_Boost_Tests tests/test_Log.cpp tests/test_Singleton.cpp tests/test_version.cpp src/typedefs.hpp src/version.hpp src/version.cpp tests/test_Log_trace.cpp )
+   ADD_EXECUTABLE( All_Boost_Tests tests/test_Log.cpp tests/test_Singleton.cpp tests/test_version.cpp src/typedefs.hpp src/version.hpp src/version.cpp tests/test_Log_trace.cpp tests/test_Log_debug.cpp )
    TARGET_LINK_LIBRARIES( All_Boost_Tests ${Boost_LIBRARIES} )
    TARGET_LINK_LIBRARIES( All_Boost_Tests empire )
    ADD_DEPENDENCIES( All_Boost_Tests update_version )
