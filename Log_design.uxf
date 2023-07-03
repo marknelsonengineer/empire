@@ -4,38 +4,44 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>44</x>
-      <y>0</y>
+      <x>88</x>
+      <y>11</y>
       <w>220</w>
-      <h>77</h>
+      <h>99</h>
     </coordinates>
     <panel_attributes>&lt;&lt;enum&gt;&gt;
 LogSeverity
 --
-LogSeverityToString()</panel_attributes>
+LogSeverityToString()
+operator&lt;&lt;
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>715</x>
-      <y>121</y>
+      <x>132</x>
+      <y>132</y>
       <w>132</w>
-      <h>121</h>
+      <h>198</h>
     </coordinates>
-    <panel_attributes>LogEntry
+    <panel_attributes>&lt;&lt;struct&gt;&gt;
+LogEntry
 --
-# timestamp
-# module
-# level
-# text</panel_attributes>
+msg
+msg_end
+module_name
+module_end
+logSeverity
+logTimestamp
+ready</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>11</x>
-      <y>539</y>
+      <x>770</x>
+      <y>671</y>
       <w>363</w>
       <h>143</h>
     </coordinates>
@@ -48,79 +54,61 @@ Default module &amp; log level (maybe)</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>715</x>
-      <y>275</y>
+      <x>495</x>
+      <y>231</y>
       <w>165</w>
-      <h>77</h>
+      <h>99</h>
     </coordinates>
-    <panel_attributes>LogQueue
+    <panel_attributes>template=&lt;array&gt;
+LogQueue
 --
-# queueSize
-# logQueue[n]</panel_attributes>
+# logEntry</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>462</x>
+      <x>429</x>
       <y>11</y>
-      <w>231</w>
-      <h>121</h>
+      <w>275</w>
+      <h>220</h>
     </coordinates>
-    <panel_attributes>template=0: Singleton
-Log
+    <panel_attributes>&lt;&lt;static&gt;&gt;
+Log.cpp
 --
-+ writeLog
-# getQueue
-+ logRestart()</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>715</x>
-      <y>22</y>
-      <w>286</w>
-      <h>88</h>
-    </coordinates>
-    <panel_attributes>lt=.
-Log_config.hpp
---
-log_entry_text_length
-number_of_log_entries
+- LogQueue
+- LogIndex
++ LOG_QUEUE_INDEX_MASK
 
-</panel_attributes>
+--
++ logReset()
+# getNextLogEntry()
+# logPeek()</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>22</x>
-      <y>132</y>
-      <w>286</w>
-      <h>88</h>
-    </coordinates>
-    <panel_attributes>lt=.
-Prelog.hpp
---
-enum severity_level
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>11</x>
-      <y>253</y>
+      <y>374</y>
       <w>352</w>
-      <h>242</h>
+      <h>407</h>
     </coordinates>
     <panel_attributes>lt=.
 Log.hpp
 --
++ LOG_ALIGNMENT
++ LOG_MSG_LENGTH
++ MODULE_NAME_LENGTH
+
++ BASE_2_SIZE_OF_QUEUE
++ SIZE_OF_QUEUE
+
++ queueLogEntry()
+
 Warning if LOG_MODULE not set
 Warning if LOG_MIN_LEVEL not set
-#ifdef around LOG_MIN_LEVEL
+#if around LOG_MIN_LEVEL
 
 LOG_TEST( fmt, ... )
 LOG_TRACE( fmt, ... )

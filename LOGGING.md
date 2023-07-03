@@ -5,16 +5,22 @@ Empire will have a dedicated logger.
 
 ## Requirements
 The requirements for the logger are:
-  - Must support log levels (`TRACE` through `FATAL`)
+  - Must support log levels (#LOG_SEVERITY_TEST through #LOG_SEVERITY_FATAL)
   - Must be able to identify what module generated the log
   - Should be extensible (log to file, console, deity session, et. al.)
   - Should be fast & efficient:
     - If the log is used/available, it should be inlined
+      - Note:  Because loggers use varargs, they can't be inlined, but we still
+               use inline semantics to compile unique (fast) versions for each
+               compilation unit (see the next bullet).
     - If the log is not used/available, it should be excluded from the compilation
   - Must be modern
     - Should use [C++20's new formatting library]
+      - We did a performance analysis and determined that this would incur a
+        40% performance hit, so we will end up using `printf()` instead.
     - It should adopt the new [C++23 print functionality] when it's available
     - It should be in its own namespace
+      - It's in the `empire` namespace
     - It should use `const` wherever possible
     - That said, for performance reasons, some things are:
       - Going to be fixed at compile time
