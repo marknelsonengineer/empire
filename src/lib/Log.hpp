@@ -116,7 +116,7 @@ inline void queueLogEntry( const LogSeverity severity
 
    thisEntry.logTimestamp = std::time( nullptr );
 
-   thisEntry.ready = true;  // Tell the LogHandler routines that this LogEntry is ready
+   thisEntry.ready = true;  // Tell the LogConsumer routines that this LogEntry is ready
 }
 
 

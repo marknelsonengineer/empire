@@ -29,18 +29,24 @@ namespace empire {
 ///
 /// The logger is not stateful between application restarts.  In other words,
 /// the LogQueue does not try to save/restore anything to/from disk.
-std::array< empire::LogEntry, empire::SIZE_OF_QUEUE > LogQueue;  /// @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): We are deliberately making this static to act like a member variable.
+static std::array< empire::LogEntry, empire::SIZE_OF_QUEUE > LogQueue;  /// @NOLINT( cppcoreguidelines-avoid-non-const-global-variables ): We are deliberately making this static to act like a member variable.
 
 /// Essentially, this is a pointer to the next available entry in LogQueue.
 /// In fact, it holds both the generation counter (the number of times LogQueue
 /// has wrapped around) and the current index into LogQueue.
 /// @NOLINTNEXTLINE( cppcoreguidelines-avoid-non-const-global-variables ): LogIndex is static, so it's not really a global
-alignas( empire::CACHE_LINE_BYTES ) atomic_size_t LogIndex { 0 };
+alignas( empire::CACHE_LINE_BYTES ) static atomic_size_t LogIndex { 0 };
 
 
-/// Mask the actual index into LogQueue from LogIndex
-constinit const size_t LOG_QUEUE_INDEX_MASK { SIZE_OF_QUEUE - 1 };
+/// This is roughly equivalent to Windows' WaitForSingleObject() signalling
+/// mechanism.  When we have a new event, we set this `atomic_flag`.  The
+/// LogConsumer objects wait on this flag and start when it's set.
+alignas( empire::CACHE_LINE_BYTES ) static std::atomic_flag hasNewLogs = ATOMIC_FLAG_INIT;
 
+
+void postNewLog() {
+   hasNewLogs.
+}
 
 /// Reset the logger
 void logReset() {
@@ -87,5 +93,6 @@ LogEntry& logPeek() {
    /// @NOLINTNEXTLINE( cppcoreguidelines-pro-bounds-constant-array-index ): Temporarily disable static bounds checking
    return LogQueue[ (LogIndex - 1) & LOG_QUEUE_INDEX_MASK ];
 }
+
 
 } // namespace empire
