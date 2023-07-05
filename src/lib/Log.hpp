@@ -46,72 +46,12 @@
 
 #include <boost/assert.hpp>  // For BOOST_ASSERT_MSG()
 
+#include "LogConfig.hpp"
+#include "LogEntry.hpp"
 #include "LogSeverity.hpp"
 
 namespace empire {
 
-/// The alignment of each LogEntry
-constinit const uint16_t LOG_ALIGNMENT { 256 };
-
-/// The maximum size of LogEntry::msg is exactly 1/2 of the size of a LogEntry
-constinit const size_t LOG_MSG_LENGTH { LOG_ALIGNMENT >> 1U };
-
-/// The maximum size of LogEntry::module_name
-constinit const size_t MODULE_NAME_LENGTH { 32 };
-
-
-/// A structure that holds each entry in the log
-///
-/// Every instance will be aligned to empire::LOG_ALIGNMENT.
-///
-/// @NOLINTBEGIN( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays ): We use `char[]` arrays here
-/// @NOLINTBEGIN( altera-struct-pack-align ): We are not packing data as it's not standardized yet
-struct alignas( LOG_ALIGNMENT ) LogEntry {
-   /// The log message (aligned to the first half of each LogEntry)
-   alignas( LOG_ALIGNMENT >> 1U ) char msg[ LOG_MSG_LENGTH ];
-
-   /// A null byte to terminate LogEntry::msg
-   [[maybe_unused]] uint64_t msg_end;
-
-   /// The module that generated this LogEntry
-   alignas( MODULE_NAME_LENGTH ) char module_name[ MODULE_NAME_LENGTH ];
-
-   /// A null byte to terminate LogEntry::module_name
-   [[maybe_unused]] uint64_t module_end;
-
-   /// The severity of this LogEntry
-   [[maybe_unused]] alignas( size_t ) LogSeverity logSeverity;
-
-   /// The timestamp of this LogEntry
-   [[maybe_unused]] alignas( size_t ) std::time_t logTimestamp;
-
-   /// `true` if the LogEntry is ready to process.  `false` if it's being composed.
-   bool ready;
-};
-// NOLINTEND( altera-struct-pack-align )
-// NOLINTEND( cppcoreguidelines-avoid-c-arrays, hicpp-avoid-c-arrays, modernize-avoid-c-arrays )
-
-
-/// empire::LogQueue is a ring buffer modeled after the Linux kernel's DMESG buffer.
-/// The size of empire::LogQueue must be a power of 2 (8, 16, 32, ...) entries.
-/// This variable enforces that rule.
-///
-/// | empire::BASE_2_SIZE_OF_QUEUE | empire::SIZE_OF_QUEUE |
-/// |:----------------------------:|----------------------:|
-/// |               1              |                     1 |
-/// |               2              |                     2 |
-/// |               3              |                     4 |
-/// |               4              |                     8 |
-/// |               5              |                    16 |
-/// |               6              |                    32 |
-/// |               7              |                    64 |
-/// |               8              |                   128 |
-///
-constinit const unsigned char BASE_2_SIZE_OF_QUEUE { 7 };
-
-
-/// The size of the Log's ring buffer
-constinit const size_t SIZE_OF_QUEUE { 1U << BASE_2_SIZE_OF_QUEUE };
 
 
 /// Retrieve the next available LogEntry from empire::LogQueue

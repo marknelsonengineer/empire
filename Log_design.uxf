@@ -55,7 +55,7 @@ Default module &amp; log level (maybe)</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>495</x>
-      <y>231</y>
+      <y>242</y>
       <w>165</w>
       <h>99</h>
     </coordinates>
@@ -71,15 +71,14 @@ LogQueue
       <x>429</x>
       <y>11</y>
       <w>275</w>
-      <h>220</h>
+      <h>187</h>
     </coordinates>
     <panel_attributes>&lt;&lt;static&gt;&gt;
 Log.cpp
 --
 - LogQueue
 - LogIndex
-+ LOG_QUEUE_INDEX_MASK
-
+- hasNewLogs
 --
 + logReset()
 # getNextLogEntry()
@@ -97,12 +96,7 @@ Log.cpp
     <panel_attributes>lt=.
 Log.hpp
 --
-+ LOG_ALIGNMENT
-+ LOG_MSG_LENGTH
-+ MODULE_NAME_LENGTH
-
-+ BASE_2_SIZE_OF_QUEUE
-+ SIZE_OF_QUEUE
+--
 
 + queueLogEntry()
 
@@ -125,13 +119,16 @@ LOG_FATAL( fmt, ... )</panel_attributes>
       <x>539</x>
       <y>396</y>
       <w>176</w>
-      <h>110</h>
+      <h>165</h>
     </coordinates>
-    <panel_attributes>/LogHandler/
+    <panel_attributes>/LogConsumer/
 --
-restart()
-getStatus()
-process()</panel_attributes>
+- thread_id
+# continueRunning
+--
++ restart()
++ getStatus()
++ process()</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -148,6 +145,24 @@ process()</panel_attributes>
 I've no idea what
 I'd pass in or 
 return</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>803</x>
+      <y>11</y>
+      <w>253</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes>LogConfig
+--
++ LOG_ALIGNMENT
++ LOG_MSG_LENGTH
++ MODULE_NAME_LENGTH
++ SIZE_OF_QUEUE_BASE_2
++ SIZE_OF_QUEUE
++ LOG_QUEUE_INDEX_MASK</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>
