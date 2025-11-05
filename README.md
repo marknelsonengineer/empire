@@ -11,3 +11,10 @@ This design is based on the classic game from the 1970s here:  http://www.wolfpa
 The project's Git repository is at:  https://github.com/marknelsonengineer/empire
 
 The source code is documented at:  https://mark.nelson.engineer/srcdoc/empire/
+
+Empire V is an exercise in modern software engineering and design.  It's based
+on the well documented behavior of [Empire 4].  I don't intend to change the
+gameplay in any significant way.  I am rewriting it from the ground up so it
+can be designed and implemented with modern programming practices.
+
+[Empire 4]:  http://www.wolfpackempire.com

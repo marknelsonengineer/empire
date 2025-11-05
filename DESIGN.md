@@ -1,9 +1,191 @@
-Design:  Work In Progress
-=========================
+Design:  To be Organized
+========================
 
 @brief Document the development philosophy and major design decisions
 
 <img src="images/design.png" style="width:300px; float: right; margin: 20px 10px 10px 10px;" alt="Design"/>
+
+
+Empire
+
+
+Lists / Collections
+- All entities
+- All entities by nation
+- All Entities by sector
+- Entities by nation plus fleet
+
+
+
+The world map will be in array, as well, the nation map.  Map entries will have pointers to the sectors that are to the left right above and below.
+
+Sectors are created in Genesis. And never ever re-created after that.  All sectors are held in the base map, array, as well as each nations national map array.
+
+We need to put an extra class between the base class and the three unit classes.  This is because sectors can’t be held by other sectors and we wanted to distinguish things that can be help from things that are inviolate once they’re created.
+
+Every unit gets a nation, serialized ID, and a random good that will not change.
+
+Have a way of destroying and re-creating a Singleton.  This is for testing purposes only.
+
+I think our namespace strategy is lacking
+
+Hang class UID_Generator off of Core.   It can generate one or contiguous blocks of ids.
+
+
+
+We definitely need something like a model view controller architecture model is the colonels internal database. The view is each users capital centric view of the world. And everything the user interacts with needs to interact based on that map. In other words, users should never be exposed directly to the model itself.
+
+Put most of the commodity counters in the base class, or at least a large fraction of them, so they’re always there and in a predictable cashed place
+
+
+
+Consider creating a serialized number class, a Singleton actually. And then assigning a unique ID number to every single object ever created. And that would be the primary key for the serialization or marshaling mechanism.
+
+Consider maintaining a world map, and then each nation having their own map. The nations map objects will have pointers to the global map. When a nation needs to generate their own map, they follow those pointers to the master map. If the nation owns the sector, they get all the data. If the nation is an ally, and has agreed to share data, they’ll get an appropriate amount of data from that. Otherwise, the nation will get information that was stored the last time they flew an aircraft over or learned something from a ship or a satellite or a radar station.
+
+Each sector probably needs an observed method that generates data for a non-friendly nation that they would be able to see. That generates with a non-friendly nation would be able to see.
+
+In addition to a really good logger, we should also build in a metrics and instrumentation capability to monitor the performance of the system. It should have periodic performance counters that measure the number of operations as well as timers that measure the duration of operations. That information should be made visibleand should could provide benchmarks and indications for health management.
+
+
+
+
+Do some UTF-8 tests
+
+Do parallel builds
+
+Watch cppcon text talk
+
+Look at ccmake TUI
+
+Seriously consider removing Boost Log and replacing it with a macro-fronted, printf-based logger.  This can be removed in production code.
+
+- Not in released code
+- Vardac style format
+- Use std::format
+- Dynamically switch level and category
+- Log to console and/or files
+- Log file rotation
+
+Bring stringify over
+
+Commandline options and global configuration and knowledge of the platform
+
+Import modules
+Avoid include
+
+Add -S option
+
+
+Get visual studio going
+
+
+Then system level tests
+
+String resources constinit map
+
+
+
+
+I’ll use one Markdiwn style for code and another for command line content
+
+Add 2 more CLion targets:  Releade (static) and Rekease Min Size (not static)
+
+Rpc
+Supported
+Efficient
+Multi platform
+Secure
+Authentication
+
+
+Remember to build to independent coordinate systems.
+
+
+Original empire had a telnet like in her face to the program. Empire to will have a proper API, and provide a ton that like in her face by default, moved it exactly what I chose not to do.
+
+Create a convert that converts one commodity to another.  This can be used to convert civs to mil or gold bars to gold dust.
+
+?? UTF8 or UTF16?
+I experimented with u8string and it was a disaster
+
+Consider using a publish-subscribe pattern to keep various lists up to date.
+
+
+I think we need one too many.  Not many to many or publish subscribe.
+
+
+Things you have to get right upfront. Testing, logging, persistence, Character width , linting, documentation, compiler’s,
+
+Fixup validations
+Singleton:  plus up its documentation & tests
+Clean all documentation warnings
+
+Get into class serialization / marshaling
+
+Convert all char and strings to wide. Everything everything everything
+
+Singleton
+Add one more test get
+
+Get rid of the iterator class (fixup documentation)
+
+
+—GC-sections
+
+-z noexecstack
+Mark output as not requiring executable stack
+-z now
+Mark object for immediate function binding
+
+
+Every empire object has (from empobj.h):
+Type (Sector, land, ship, plane, nuke)
+Sequence number
+Generation ???
+UID
+Timestamp
+Nation owner
+Coord x
+Coord y
+Efficiency
+Mobility
+Tech
+Group
+Linked list // Implement my own container
+
+
+“gcc -fsanitize=address,undefined”
+
+Whole program -fwhole-program
+
+Get into cppcheck
+
+C++ Singletons & Statics
+
+Write a C program for preparing commands from a single source.
+
+Figure out how to get environment into each Makefile.  I’m thinking a make.env or make include.
+
+LATER
+Build to another compiler
+Can i install icc, the Intel compiler?
+— Think about correctly scoping my enums (in a Class) — can’t do CommodityType, though
+
+
+Profile the code… find hotspots and make ‘em inline
+
+Make my getters inline
+
+
+ON HOLD
+- Make a custom set of asserts. We don’t want to fail every time.  [No longer necessary with BOOST_ASSERT??]
+
+- [ ] Install a logger utility
+- [ ] Need a way to manage persistence... Marshalling or a database?
+- [ ] Wide character support
+- [ ] For now, I'm going to write Empire V as a narrow-character program.  However, I think there will come a time when there should be a compiler switch for it to support wide characters.
+
 
 
 
