@@ -6,10 +6,10 @@
 ## Generate project statistics for `STATISTICS.md`
 ##
 ## This code depends on the Git Python module.  To install it, login as `root`:
-## ````
+## ```
 ##      # apt-get install python3-pip
 ##      # pip install GitPython
-## ````
+## ```
 ##
 ## @see https://github.com/gitpython-developers/GitPython
 ## @see https://gitpython.readthedocs.io/en/stable/
