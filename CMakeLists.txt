@@ -93,8 +93,8 @@ IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
 
    ADD_CUSTOM_TARGET( doxygen_publish
                       COMMENT "Pushing files to UHUnix"
-                      COMMAND rsync --recursive --checksum --delete --compress --stats --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/ marknels@uhunix.hawaii.edu:~/public_html/empire
-                      )
+                      COMMAND /usr/bin/rsync --verbose -e 'ssh -p 14590 -i ~/.ssh/id_www' --checksum --recursive --chmod=g-w,o-rwx --delete --force --mkpath --stats --progress ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/ www-data@192.168.1.121:/var/www/html/srcdoc/empire/
+   )
 
 ENDIF()
 
