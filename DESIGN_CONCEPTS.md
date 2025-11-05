@@ -1,0 +1,119 @@
+Conceptual Design
+=================
+
+## The Singletons of Empire
+
+@startuml
+!theme crt-amber
+skinparam classAttributeIconSize 0
+top to bottom direction
+
+' Template-based, abstract Singleton
+abstract class "Singleton< T >" as Singleton {
+}
+
+' Concrete singletons
+class Core
+class Configuration
+class Commands
+class Nations
+class WorldMap
+class Messages
+class Loans
+class Logger
+class Metrics
+' List of entities
+
+
+' Relationships
+Core          -up-|> Singleton
+Configuration -up-|> Singleton
+Commands      -up-|> Singleton
+Nations       -up-|> Singleton
+WorldMap      -up-|> Singleton
+Messages      -up-|> Singleton
+Loans         -up-|> Singleton
+Logger        -up-|> Singleton
+Metrics       -up-|> Singleton
+
+note right of Singleton: I am undecided on the need for a MobileUnits singleton
+
+@enduml
+
+<br><br>
+
+## The Core services of the Empire V server
+As the `main()` for the Empire V server:
+     - Initialize the system-level singletons
+     - Either:
+       - Create the Nations and then build the world's sectors
+       - Unmartial saved game state
+     - Test the system / assure it's healthy
+     - Initiate timed activities such as updates
+     - Start the network server
+     - Shutdown and save the game state
+
+<br><br>
+
+## Configuring the Empire
+The configuration has two broad types:
+
+- **Static Config:**  Unchanging parameters
+  - The number of nations
+  - The size of the world
+- **Dynamic Data:**  Uhich can be marshaled with the entire state
+  - Empire Time Units
+  - Time of next update
+
+### Deign Goals
+  - Ensure each type of configuration is consolidated in one place
+  - There should be a single class that contains all config getters (regardless
+    of type) and setters (as appropriate)
+  - There should be a method to validate the configuration and ensure it follows
+    the business rules
+
+### Implementation Goals
+  - For performance reasons, try to use compile-time expressions for the static 
+    configuration in the source.  Use C++ features like `constexpr` and `consteval`.
+  - Doxygen has a good configuration mechanism... emulate it.
+
+By design, and for optimization purposes, we are configuring the configuration at pre-compilation time.  Also, the nations and sectors data structures will be arrays who sizes are fixed at compilation time.
+
+
+<br><br>
+
+## Commands in Empire V
+
+I think the network layer API maps very closely to the commands. This way, all clients are created equal.
+
+The command handlers on the server side become controllers for orchestrating what the command does. That makes it very easy to add new commands.
+
+@startuml
+!theme crt-amber
+skinparam classAttributeIconSize 0
+
+class BaseCommand
+class Singleton
+class Commands
+class Accept
+class Add
+class Xdump
+class Zdone
+
+' Relationships (inheritance)
+'Singleton -[hidden]left-> BaseCommand
+Commands          --|> Singleton
+Accept            -up-|> BaseCommand
+Add            -up-|> BaseCommand
+Xdump            -up-|> BaseCommand
+Zdone            -up-|> BaseCommand
+'BaseCommand -[hidden]down-> Accept
+Accept "1"              --* Commands
+'Accept -[hidden]down-> Add
+Add "2"              --* Commands
+'Add -[hidden]down-> Xdump
+Xdump "199"              --* Commands
+'Xdump -[hidden]down-> Zdone
+Zdone "200"              --* Commands
+
+@enduml

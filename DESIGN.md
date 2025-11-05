@@ -1,35 +1,11 @@
-The Design of Empire
-====================
+Design:  Work In Progress
+=========================
 
 @brief Document the development philosophy and major design decisions
 
 <img src="images/design.png" style="width:300px; float: right; margin: 20px 10px 10px 10px;" alt="Design"/>
 
-## Design Philosophy
 
-Design First.  Then code.
-
-1. Embrace thoughtful, modern Software Engineering design practices
-2. Is correct & efficient
-3. Is fun
-
-I'm writing Empire V because I want to learn more about Object-Oriented 
-Programming.  Specifically, I want to become a practitioner of design patterns 
-and [modern C++].  [Empire] is well understood and documented inasmuch as it's 
-an existing program that I intend to replicate.  The requirements for Empire
-are reasonably well understood, which a large body of work that I don't need to
-worry about.  My focus is to implement the requirements using a solid design 
-philosophy.  To that end, my intent is to consider and document alternatives, 
-then select the best fit for the requirements.
-
-I intend to use an [Agile] development methodology similar to [XP].  The good 
-news is that I have an excellent "customer" -- the original design of [Empire].
-My customer is clear, always available and takes criticism very well.
-
-I don't intend to change the gameplay in any significant way.  I am rewriting it 
-from the ground up.  It will be designed with modern programming
-principles such that it'll be fully documented, tested, loosely coupled and 
-extensible.
 
 Like any project, there's a lot of things you have to get right upfront:
   - Programming language:  [C++]
@@ -161,24 +137,6 @@ incorporating some of the design patterns I'll be prototyping for them and
 improving on others.
 
 
-## High Level Design Requirements
-
-In no particular order, here are the things I'd like Empire V to do:
-
-  - International UNICODE support
-    - I'm on the fence about number & date formatting
-    - I don't think I'll be supporting right-to-left languages
-    - Make it easy to translate from one language to another
-  - Uses a modern logger for debugging, telemetry, etc.
-  - Uses a modern exception-handling mechanism
-  - Is persistent
-  - Uses modern Software Engineering practices like:
-    - Continuous integration with [GitHub Actions]
-    - Source-level documentation with [Doxygen]
-    - Unit testing with [Boost Test]
-    - Static analysis / linting with [clang-tidy]
-    - Build orchestration with [CMake]
-  - Is secure
 
 ### Low Level Design Requirements
   - All major data structures should be aligned
@@ -325,13 +283,6 @@ A configuration has:
 - Is settable/resettable from a test
 - ?? Source
 
-Doxygen version x.x.x shipped a few days ago.  They made an enhancement I 
-requested and I was impressed with how they migrate configuration files.  It 
-occurred to me (while doing the dishes) that I really liked Doxygen's 
-configuration system.  I should emulate, strike that, copy it.
-
-Doxygen's "master" configuration is a large XML file.  Their configuration 
-source is a mix of C and C++.  
 
 This is how a controller would use the config;
 
@@ -358,7 +309,6 @@ This is how a controller would use the config;
   - Iterate over all config and validate the values
 
 - There should be one single class that contains all config getters.
-- Improvement over classic Empire:  Consolidate all config in one place
 
 ## Object Model
 
@@ -383,15 +333,6 @@ I need to get smarter on delegates and composites
 
 
 ## Singletons
-
-What are we talking about?  The objects I'd like to make globally available
-via Singleton are:
-- Core:  The core services object
-- Config: The server configuration state
-- Nations:  The collection of nations
-- Units:  The collection of all units
-- World:  The collection of all sectors
-- Logger:  The global logger
 
 I've read [Singletons are Pathological Liars], [Where Have All the Singletons Gone?] 
 and [Performant Singletons].
@@ -527,7 +468,6 @@ MOVS
 - [ ] Do a UMLet drawing of the current Empire codebase
 - [ ] Expand on the UMLet drawing to include the design of the Business Domain / 
     data model.
-- [ ] Set the project icon in CLion
 
 - Here's a good question:  Can I create every sector at compile time?  Should I --
   How does that reconcile with marshalling?

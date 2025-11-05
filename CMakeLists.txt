@@ -66,7 +66,7 @@ ADD_COMPILE_OPTIONS( -Wall -Wextra -minline-all-stringops )
 
 IF (CMAKE_SYSTEM_PROCESSOR MATCHES "i386|i686|x86_64")
    # Add x86-specific CXX flags
-   ADD_COMPILE_OPTIONS( -mxsavec -mxsaveopt )
+   ADD_COMPILE_OPTIONS( -mxsavec -mxsaveopt -mfma )
    MESSAGE( STATUS "Applying x86-specific CXX_FLAGS." )
 ELSE()
    MESSAGE( STATUS "Not an x86 system, skipping x86-specific CXX_FLAGS." )
@@ -79,9 +79,9 @@ ELSEIF( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
    MESSAGE( STATUS "Compile with clang++" )
 ENDIF()
 
-SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -mtune=native -Ofast -funroll-loops -static -mfma" )
+SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -mtune=native -Ofast -funroll-loops -static" )
 SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=native -mtune=generic -O0 -DDEBUG -fno-inline" )
-SET( CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_DEBUG} -march=native -mtune=native -Oz -mfma" )
+SET( CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_DEBUG} -march=native -mtune=native -Oz" )
 
 IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
    CONFIGURE_FILE( .doxygen/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile )
