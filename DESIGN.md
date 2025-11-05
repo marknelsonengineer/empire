@@ -1,95 +1,13 @@
-Design:  To be Organized
-========================
+Design Notes (Unsorted)
+=======================
 
 @brief Document the development philosophy and major design decisions
 
 <img src="images/design.png" style="width:300px; float: right; margin: 20px 10px 10px 10px;" alt="Design"/>
 
 
-Empire
 
 
-Lists / Collections
-- All entities
-- All entities by nation
-- All Entities by sector
-- Entities by nation plus fleet
-
-
-
-The world map will be in array, as well, the nation map.  Map entries will have pointers to the sectors that are to the left right above and below.
-
-Sectors are created in Genesis. And never ever re-created after that.  All sectors are held in the base map, array, as well as each nations national map array.
-
-We need to put an extra class between the base class and the three unit classes.  This is because sectors can’t be held by other sectors and we wanted to distinguish things that can be help from things that are inviolate once they’re created.
-
-Every unit gets a nation, serialized ID, and a random good that will not change.
-
-Have a way of destroying and re-creating a Singleton.  This is for testing purposes only.
-
-I think our namespace strategy is lacking
-
-Hang class UID_Generator off of Core.   It can generate one or contiguous blocks of ids.
-
-
-
-We definitely need something like a model view controller architecture model is the colonels internal database. The view is each users capital centric view of the world. And everything the user interacts with needs to interact based on that map. In other words, users should never be exposed directly to the model itself.
-
-Put most of the commodity counters in the base class, or at least a large fraction of them, so they’re always there and in a predictable cashed place
-
-
-
-Consider creating a serialized number class, a Singleton actually. And then assigning a unique ID number to every single object ever created. And that would be the primary key for the serialization or marshaling mechanism.
-
-Consider maintaining a world map, and then each nation having their own map. The nations map objects will have pointers to the global map. When a nation needs to generate their own map, they follow those pointers to the master map. If the nation owns the sector, they get all the data. If the nation is an ally, and has agreed to share data, they’ll get an appropriate amount of data from that. Otherwise, the nation will get information that was stored the last time they flew an aircraft over or learned something from a ship or a satellite or a radar station.
-
-Each sector probably needs an observed method that generates data for a non-friendly nation that they would be able to see. That generates with a non-friendly nation would be able to see.
-
-In addition to a really good logger, we should also build in a metrics and instrumentation capability to monitor the performance of the system. It should have periodic performance counters that measure the number of operations as well as timers that measure the duration of operations. That information should be made visibleand should could provide benchmarks and indications for health management.
-
-
-
-
-Do some UTF-8 tests
-
-Do parallel builds
-
-Watch cppcon text talk
-
-Look at ccmake TUI
-
-Seriously consider removing Boost Log and replacing it with a macro-fronted, printf-based logger.  This can be removed in production code.
-
-- Not in released code
-- Vardac style format
-- Use std::format
-- Dynamically switch level and category
-- Log to console and/or files
-- Log file rotation
-
-Bring stringify over
-
-Commandline options and global configuration and knowledge of the platform
-
-Import modules
-Avoid include
-
-Add -S option
-
-
-Get visual studio going
-
-
-Then system level tests
-
-String resources constinit map
-
-
-
-
-I’ll use one Markdiwn style for code and another for command line content
-
-Add 2 more CLion targets:  Releade (static) and Rekease Min Size (not static)
 
 Rpc
 Supported
@@ -99,23 +17,15 @@ Secure
 Authentication
 
 
-Remember to build to independent coordinate systems.
 
 
-Original empire had a telnet like in her face to the program. Empire to will have a proper API, and provide a ton that like in her face by default, moved it exactly what I chose not to do.
+Original empire had a telnet like in her face to the program. Empire to will have a proper API, and provide a ton that like interface by default, moved it exactly what I chose not to do.
 
 Create a convert that converts one commodity to another.  This can be used to convert civs to mil or gold bars to gold dust.
 
-?? UTF8 or UTF16?
-I experimented with u8string and it was a disaster
-
-Consider using a publish-subscribe pattern to keep various lists up to date.
 
 
-I think we need one too many.  Not many to many or publish subscribe.
 
-
-Things you have to get right upfront. Testing, logging, persistence, Character width , linting, documentation, compiler’s,
 
 Fixup validations
 Singleton:  plus up its documentation & tests
@@ -207,123 +117,6 @@ Here's an interesting question:  What would a Microkernel-based Empire look like
 
 
 
-## The Choice of Language
-Empire was originally written in [C].  [An examination of the source] will both
-awe and terrify most programmers.  They really did an excellent job with the tools
-they had.  The codebase implements primitive _objects_ and makes use of some 
-design patterns.  The only criticism I'd level against the original is that 
-some variable names were _very_ cryptic:  `int m_m_p_d = 1440;  /* max mins of play per day (per country) */`
-
-Before choosing [C++], I considered a number of programming languages.  Also, 
-please refer to [High Level Design Requirements](DESIGN.md#high-level-design-requirements) 
-for the criteria:
-
-### Java (and C#)
-#### Pros
-  - In the last decade, [Java] has published some excellent, large, multi-platform, 
-    internationalized, programs: [Ghidra], [IntelliJ], [Eclipse], et. al.
-  - It has a huge library to draw from.
-  - It has a good ecosystem of tools: [Javadoc], code signing, etc.
-
-#### Cons
-  - Performance.  Although I think it's very good, it's simply not optimal.
-  - Fun factor.  I've written a lot of Java.  I want to dig into something new.
-
-I envision the client being written in one of these languages someday
-
-### Python (and Pearl and PHP)
-#### Pros
-  - [Python], [Pearl] and [PHP] have many of the same Pros as [Java], but... 
-
-#### Cons
-  - I continue to be concerned about the stability of [Python]
-  - Performance
-  - Lack of static analysis tools
-  - They are a scripting languages
-  - [Python] programs seem (to me, at least) to be fragile.  They break all the
-    time and I have to sort out what to fix.
-
-### Go
-#### Pros
-  - I'll be honest, [Go] has a lot going for it.  It was authored Bob Pike & Ken
-    Thompson.  Giants in our community.
-  - It's compiled to machine executables
-  - Strong typing
-  - Concurrent / native thread support
-
-#### Cons
-  - Lack of generics:  No templates.  No compile-time guarantees.
-  - I'd miss assertions
-
-### Rust
-#### Pros
-  - This is another tough call.  [Rust] is used in the Linux Kernel, which says a
-    lot about its suitability as a systems language.
-  - It's compiled to machine executables.  
-  - Strong typing.  
-  - Concurrent.
-  - Functional.  
-  - A decent standard library (not amazing).  
-  - Generics.  
-  - Ranges.
-  - It's fast.  In the same league as [C].
-
-#### Cons
-  - Stability.  Partly, the language and partly the standards body.
-
-Really, in hindsight, not going with [Rust] may be a mistake.  I'll leave this
-for Empire VI.
-
-### Swift (and Objective-C)
-#### Pros
-  - Messaging.  For Empire's core, this could be a game-changer.  Think about
-    how the internals of Empire would benefit from this.
-
-#### Cons
-  - [Swift]: The paint's still wet... it's so new
-  - Lack of libraries on non-Apple platforms
-  - Objective-C: It's based on [C], not [C++]
-  - Objective-C: I find the language to be ungainly
-
-It may also be a mistake not going with [Swift]
-
-### C++
-#### Pros
-  - It's fast.  
-  - Strong typing (although it's getting weaker.  If I want to use `auto`, I'll
-    write in JavaScript)
-  - Generics/templates.  
-  - Functional.  
-  - Has mature libraries, toolset and a variety of compilers
-
-#### Cons
-  - I really feel like the current standards committee is distorting the language.
-    - There's no fewer than 4 ways to make a `const` and one of them is still
-      mutable (I'm looking at you, [constinit]).
-  - It's not expressive.  I know they've added "expressive" features, but if
-    you look at a declaration for a range-based iterator that uses concepts, 
-    you'd be mystified (at least I am).  Also, the error messages can be byzantine.
-
-#### Bottom Line
-
-So, why did I go with [C++]?  Because I know it (well enough, that is) and I 
-want to get into it a bit more.  I don't like the idea of learning a new 
-language from scratch unless I'm getting paid for it.  It also takes a few 
-_years_ to gain competency in a language.
-
-I realize that this isn't a good basis for such a fundamental design decision, 
-but it boils down to this:  **Get it done**.  If we want to get it done, then 
-[C++] is the best choice because I can start now.  Otherwise, I'll need to wait 
-a few years.  Maybe someone will come along and rewrite Empire in [Rust] or [Swift], 
-incorporating some of the design patterns I'll be prototyping for them and 
-improving on others.
-
-
-
-### Low Level Design Requirements
-  - All major data structures should be aligned
-  - Works on several compilers:  [Visual Studio], [clang], [gcc], [icc]
-  - Work on several 64-bit platforms:  Linux & Windows
 
 ### Persistence
 
@@ -514,121 +307,7 @@ Then, explore their Behavioral Patterns to implement the business rules.
 I need to get smarter on delegates and composites
 
 
-## Singletons
 
-I've read [Singletons are Pathological Liars], [Where Have All the Singletons Gone?] 
-and [Performant Singletons].
-
-> The Singleton is probably one of the most controversial design patterns, 
-> sparking perennial debate on forums and discussion boards, and prompting 
-> analysis and dissection in many articles and papers.
-
-> -- <cite>Performant Singletons</cite>
-
-The Singleton pattern should be applied only when:
-1. Singularity must exist
-2. Global accessibility must exist
-
-I think this applies to the objects listed above.
-
-The arguments against Singletons...
-  - Well-designed systems isolate responsibility.  Singletons encourage tight
-    coupling by making it easy for components to depend on them.
-    - Agreed:  I'd have to think on this, but my initial reaction is that, for 
-      the things I intend to make Singletons, those dependencies are inherent.
-  - Whether there needs to be a single instance of an object depends on the
-    context that object is being used.
-    - I will not be running multiple instances of Empire in the same process space.
-    - I won't be testing multiple Empire programs concurrently.  One Empire at a time.
-    - We should have the ability to shutdown and restart the core in the same process.
-  - Have the self-control and awareness to create as many instances as you 
-    need — one, if that’s all it takes.
-    - I'd rather have the object guarantee this.  Isn't that the argument for 
-      Encapsulation; The object hides its data to protect itself.
-  - When you encounter a scenario where you need to depend on another object or 
-    subsystem, stop and ask yourself why you need that dependency.
-    - Yea, sometimes we really do.  Even if I have Coreable, Loggable, and Nationable 
-      interfaces, sooner or later, I'll need an actual object to reference.
-    - It's global state.  It is what it is.  The trick is to make is usable, 
-      extendable **and** safe.
-  - How do you create mock worlds for testing?
-    - How will we test multiple world sizes?  How will we test creating and 
-      destroying a world?
-      - To achieve optimal performance, we'd hardcode configuration (for 
-        example). But this sacrifices a lot of unit testing capabilities.  
-        Therefore, we will make a testability-over-performance tradeoff and make
-        configuration dynamic.
-      - empire::Singleton will have an `erase()` method which will destroy it 
-        and allow it to be recreated.
-  - You loose control of initializations
-    - Not true.  The Core will initialize all the Singletons.  That's what
-      the core does.  Also, I will be using instances of Singletons (or the 
-      contents therein) as parameters when I create other objects.
-    - The test harness will manage the test Singletons.
-  - Explicit reference passing makes garbage collection work.
-    - All of these objects will begin with Empire and end with Empire.
-    - The `erase()` method on Singleton will destroy.  There's nothing wrong 
-      with that.  The Singleton guarantees only one object will
-      exist after you ask for it (which is still true).  It also makes it 
-      globally available, which will also continue to be true.
-  - Singletons are nothing more than global state. Global state makes it so your
-    objects can secretly get hold of things which are not declared in their APIs, 
-    and, as a result, Singletons make your APIs into pathological liars.
-    - It's true... I'm collaborating with more objects than the API claims.  I'll
-      give this some thought.
-  - As the original author of the code, I know the true dependencies.  Anyone 
-    who comes after is baffled, since not all of the dependencies are 
-    declared and information flows in some secret paths which are not clear from
-    the API.  You live in a society full of liars.
-    - That's a little dramatic.  Especially, if you tell everyone up-front what
-      our Singletons are and they are logical.  Still, I think it's good point.
-      When do we pass a parameter and when do I grab from a Singleton?
-  - Globals provide invisible lines of influence across all the code
-    - Let's distinguish between reading & writing globals.  Unexpected writing 
-      to a global is bad.  We can all agree on that.  Reading from read-only 
-      globals are not too different from constants, which is fine.
-    - So, let's not make native datatypes a Singleton.
-    - Agreed, in the context of raw variables...  but these globals are objects
-      that have all of the protections an encapsulated class should have.
-  - Globals lead to spaghetti code.
-    - Agreed, when they are abused.  All global state will be maintained in the 
-      object model.
-    - I'm not creating `static int i, j, k` as global iterators.
-  - When you go to include 3rd party libraries in your code, sometimes they use 
-   the same names as yours.
-    - All of our globals will be in the Empire namespace.
-
-Detractors say that Singletons actively work against separation of duties by 
-introducing implicit, hidden dependencies on external systems and allowing 
-instant access from any location, even if that location is illogical.  True, but
-I can't see why having access to any of the above would be illogical.
-
-I also do _**not**_ want to pass these into every function, constructor, et. al. 
-under the sun.  That's not happening.
-
-I agree that Globals should be used with utmost care, and functions should 
-clearly scope out the variables they use via an API, locals, what have you.
-
-Another way to manage this is to carefully control the creation of Singletons.  We aren't
-letting just any variable, say `auto i`, to be used as a global iterator.
-
-The important thing is to remember the overall goal: clarity
-
-The "no global variables" rule is there because most of the time, global 
-variables make the meaning of code less clear.  However, like many rules, people 
-remember the rule, and not what the rule was intended to do.
-
-I've seen programs that seem to double the size of the code by passing an 
-enormous number of parameters around simply to avoid the evil of global variables. 
-In the end, using globals would have made the program clearer to those reading it. 
-By mindlessly adhering to the word of the rule, the original programmer had 
-failed the intent of the rule.
-
-So, yes, globals are often bad. But if you feel that in the end, the intent of 
-the programmer is made clearer by the use of global variables, then go ahead. 
-However, remember the drop in clarity that automatically ensues when you force 
-someone to access a second piece of code (the globals) to understand how the 
-first piece works.
 
 ## SOLID
 The SOLID ideas are
@@ -647,9 +326,6 @@ MOVS
 
 
 ## Things to do
-- [ ] Do a UMLet drawing of the current Empire codebase
-- [ ] Expand on the UMLet drawing to include the design of the Business Domain / 
-    data model.
 
 - Here's a good question:  Can I create every sector at compile time?  Should I --
   How does that reconcile with marshalling?

@@ -117,3 +117,75 @@ Xdump "199"              --* Commands
 Zdone "200"              --* Commands
 
 @enduml
+
+
+# Composition of Entities
+
+We need to put `BaseUnit` between `BaseEntity` and the three unit classes.  This is because sectors can’t be held by other sectors and we wanted to distinguish things that can be help from things that are inviolate once they’re created.
+
+@startuml
+!theme crt-amber
+skinparam classAttributeIconSize 0
+
+class BaseEntity
+class Sector
+class BaseUnit
+class LandUnit
+class SeaUnit
+class AirUnit
+class NukeUnit
+
+' Relationships (inheritance)
+Sector          -up-|> BaseEntity
+BaseUnit        -up-|> BaseEntity
+LandUnit        -up-|> BaseUnit
+SeaUnit         -up-|> BaseUnit
+AirUnit         -up-|> BaseUnit
+NukeUnit        -up-|> BaseUnit
+
+@enduml
+
+<br><br>
+
+
+# Composition of Maps
+
+Sectors are created in Genesis. And never ever re-created after that.  All sectors are held in the base map, array, as well as each nations national map array.
+
+Consider maintaining a world map, and then each nation having their own map. The nations map objects will have pointers to the global map. When a nation needs to generate their own map, they follow those pointers to the master map. If the nation owns the sector, they get all the data. If the nation is an ally, and has agreed to share data, they’ll get an appropriate amount of data from that. Otherwise, the nation will get information that was stored the last time they flew an aircraft over or learned something from a ship or a satellite or a radar station.
+
+@startuml
+!theme crt-amber
+skinparam classAttributeIconSize 0
+
+class BaseMap
+class WorldMap
+class NationMap
+class Nations
+class Nation
+
+' Relationships (inheritance)
+WorldMap        -up-|> BaseMap
+NationMap       -up-|> BaseMap
+'NationMap       -right-> Nation
+'Nations "1" -- "1..*" Nation : contains
+
+@enduml
+
+<br><br>
+
+# Other Important Classes
+
+@startuml
+!theme crt-amber
+skinparam classAttributeIconSize 0
+
+class Core
+class EmpireException
+
+' Relationships (inheritance)
+
+@enduml
+
+
+

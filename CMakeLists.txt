@@ -89,8 +89,10 @@ IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
    ADD_CUSTOM_TARGET( doxygen_local_build
                       COMMENT "Generating documentation"
                       WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-                      COMMAND .doxygen/stats.py
-                      COMMAND rsync --recursive --checksum --delete --mkpath --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/images ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/
+#                     COMMAND .doxygen/stats.py
+# Linux               COMMAND rsync --recursive --checksum --delete --mkpath --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/images ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/
+# MacOS
+                      COMMAND rsync --recursive --checksum --delete          --chmod=o+r,Do+x ${CMAKE_SOURCE_DIR}/images ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/
                       COMMAND doxygen ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
                       )
 
@@ -100,8 +102,10 @@ IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
                        )
 
    ADD_CUSTOM_TARGET( doxygen_publish
-                      COMMENT "Pushing files to UHUnix"
-                      COMMAND /usr/bin/rsync --verbose -e 'ssh -p 14590 -i ~/.ssh/id_www' --checksum --recursive --chmod=g-w,o-rwx --delete --force --mkpath --stats --progress ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/ www-data@192.168.1.121:/var/www/html/srcdoc/empire/
+                      COMMENT "Pushing files to a publically facing webserver"
+# Linux               COMMAND /usr/bin/rsync --verbose -e 'ssh -p 14590 -i ~/.ssh/id_www' --checksum --recursive --chmod=g-w,o-rwx --delete --force --mkpath --stats --progress ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/ www-data@192.168.1.121:/var/www/html/srcdoc/empire/
+# MacOS
+                      COMMAND /usr/bin/rsync --verbose -e 'ssh -p 14590 -i ~/.ssh/id_www' --checksum --recursive --chmod=g-w,o-rwx --delete --force          --stats --progress ${CMAKE_SOURCE_DIR}/.doxygen/generated_docs/html/ www-data@192.168.1.121:/var/www/html/srcdoc/empire/
    )
 
 ENDIF()

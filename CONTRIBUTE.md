@@ -40,6 +40,7 @@ Variable names:
 `i`, `j` & `k` for indexes and iterators
 
 
+
 ## CMake
 Empire uses [CMake] for its build system.  It's thoroughly modern, 
 multi-platform, multi-compiler aware.  It also works well with [CLion], my IDE.
