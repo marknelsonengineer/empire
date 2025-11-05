@@ -62,7 +62,15 @@ MESSAGE( STATUS "Boost_INCLUDE_DIRS = [${Boost_INCLUDE_DIRS}]" )
 
 ################################ Compiler Configuration #######################
 
-ADD_COMPILE_OPTIONS( -Wall -Wextra -mxsavec -mxsaveopt -minline-all-stringops )
+ADD_COMPILE_OPTIONS( -Wall -Wextra -minline-all-stringops )
+
+IF (CMAKE_SYSTEM_PROCESSOR MATCHES "i386|i686|x86_64")
+   # Add x86-specific CXX flags
+   ADD_COMPILE_OPTIONS( -mxsavec -mxsaveopt )
+   MESSAGE( STATUS "Applying x86-specific CXX_FLAGS." )
+ELSE()
+   MESSAGE( STATUS "Not an x86 system, skipping x86-specific CXX_FLAGS." )
+ENDIF()
 
 IF( ${CMAKE_COMPILER_IS_GNUCXX} )
    MESSAGE( STATUS "Compile with g++" )
@@ -72,7 +80,7 @@ ELSEIF( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
 ENDIF()
 
 SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -mtune=native -Ofast -funroll-loops -static -mfma" )
-SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=x86-64 -mtune=generic -O0 -DDEBUG -fno-inline" )
+SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=native -mtune=generic -O0 -DDEBUG -fno-inline" )
 SET( CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_DEBUG} -march=native -mtune=native -Oz -mfma" )
 
 IF( ${CMAKE_BUILD_TYPE} STREQUAL "Doxygen" )
