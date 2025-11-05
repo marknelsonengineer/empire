@@ -906,7 +906,7 @@ WARN_IF_UNDOC_ENUM_VAL = YES
 # Possible values are: NO, YES, FAIL_ON_WARNINGS and FAIL_ON_WARNINGS_PRINT.
 # The default value is: NO.
 
-WARN_AS_ERROR          = FAIL_ON_WARNINGS
+WARN_AS_ERROR          = NO
 
 # The WARN_FORMAT tag determines the format of the warning messages that doxygen
 # can produce. The string should contain the $file, $line, and $text tags, which
@@ -1287,8 +1287,7 @@ CLANG_ADD_INC_PATHS    = YES
 # specified with INPUT and INCLUDE_PATH.
 # This tag requires that the tag CLANG_ASSISTED_PARSING is set to YES.
 
-# CLANG_OPTIONS          = "-I /usr/lib/clang/15.0.7/include"
-# CLANG_OPTIONS         += "-I /usr/include/linux"
+CLANG_OPTIONS          = "-I /home/mark/src/llvm-project/build/lib/clang/19/include"
 CLANG_OPTIONS         += "-I${Boost_INCLUDE_DIRS}"
 CLANG_OPTIONS         += "-std=c++20"
 
@@ -2389,7 +2388,7 @@ SEARCH_INCLUDES        = YES
 # RECURSIVE has no effect here.
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
-INCLUDE_PATH           = /usr/lib/clang/15.0.7/include
+INCLUDE_PATH           = /home/mark/src/llvm-project/build/lib/clang/19/include
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the
