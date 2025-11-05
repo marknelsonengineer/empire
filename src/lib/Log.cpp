@@ -44,8 +44,9 @@ alignas( empire::CACHE_LINE_BYTES ) static atomic_size_t LogIndex { 0 };
 alignas( empire::CACHE_LINE_BYTES ) static std::atomic_flag hasNewLogs = ATOMIC_FLAG_INIT;
 
 
+/// Need to document this someday
 void postNewLog() {
-   hasNewLogs.
+//   hasNewLogs.
 }
 
 /// Reset the logger
