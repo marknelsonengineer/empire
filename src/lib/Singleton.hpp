@@ -70,7 +70,7 @@ public:  // /////////////////// Constructors & Destructors /////////////////////
    /// The mechanism to ensure objects inherit from Singleton.
    ///
    /// Inherited, concrete Singleton classes should pass `token` to their
-   /// constructors.  If you can't access #Singleton.token, then you are not
+   /// constructors.  If you can't access #token, then you are not
    /// overriding Singleton.
    using token = struct token {};
 
