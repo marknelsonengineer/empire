@@ -47,6 +47,11 @@ This document will discuss the thinking behind several of these decisions.
 
 Here's an interesting question:  What would a Microkernel-based Empire look like?
 
+## Design Assumptions
+  - Lots of memory
+  - Multicore CPU
+  - Fast, reliable network
+
 ## The Choice of Language
 Empire was originally written in [C].  [An examination of the source] will both
 awe and terrify most programmers.  They really did an excellent job with the tools
