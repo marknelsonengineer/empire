@@ -12,30 +12,32 @@ Doxygen
 C++ sources.  Doxygen's website is:  https://www.doxygen.nl
 
 ## Notes
-- On Linux, I prefer compile my own version of Doxygen.
-- On Windows, I install it from a Setup file.
+- On Linux, I prefer compile my own version of Doxygen
+- On Windows, I install it from a Setup file
 - I've done a lot of experimentation with Doxygen, and I've developed a
-  baseline configuration that I really like.
-    - I have it as both a Doxyfile and a CMake configuration.
-- I need to use [DOT].  We are not using [DIA] which is very old and no longer 
+  baseline configuration that I really like
+    - I have it as both a Doxyfile and a CMake configuration
+- We use [DOT]... we are not using [DIA] which is very old and no longer 
   maintained.
 - Here's a great link on [Doxygen]'s graphics capabilities:  Dig 
   into it:  https://alesnosek.com/blog/2015/06/28/diagrams-and-images-in-doxygen
 
 
 ### Installing Graphviz from source
-[DOT] is a tool from [Graphviz] that [Doxygen] uses for its drawings.
+Ensure that `freetype2` is installed:
+
+`# pacman -S freetype2`
+
+
+[DOT] is a tool in [Graphviz] that [Doxygen] uses for its drawings.
 
 As a mortal user:
 ````
-    wget https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/8.0.1/graphviz-8.0.1.tar.gz
-    gunzip graphviz-8.0.1.tar.gz
-    tar -xvf graphviz-8.0.1.tar
-    cd graphviz-8.0.1
-    ./configure
-    make
-    sudo make install
+    # pacman -S graphviz
 ````
+
+Make seems to generate a lot of warnings
+
 
 ### Installing Clang
 As root, run one of the following:
@@ -50,6 +52,13 @@ As root, run one of the following:
 ````
 
 
+Clang Tooling provides infrastructure to write tools that need syntactic and 
+semantic information about a program.  Doxygen uses this to parse files.
+
+http://clang.llvm.org/docs/HowToSetupToolingForLLVM.html
+
+
+
 ### Compile Doxygen from source on Linux
 You may need some of these tools...  As root:
 ````
@@ -61,16 +70,17 @@ You may need some of these tools...  As root:
 
 As a mortal user:
 ````
-     git clone -b Release_1_9_7 https://github.com/doxygen/doxygen
-     cd doxygen
+     wget https://www.doxygen.nl/files/doxygen-1.10.0.src.tar.gz
+     tar -xzvf doxygen-1.10.0.src.tar.gz
+     cd doxygen-1.10.0
      
      mkdir build
      cd build
 
-     cmake -L "Unix Makefiles" -Dbuild_search=ON -Duse_libclang=ON -Dbuild_parse=ON ..
+     cmake --fresh -L "Unix Makefiles" -Dbuild_search=ON -Duse_libclang=ON -Dbuild_parse=ON ..
      # ... and look over the build.  If you're OK with it, build it with -G
      
-     cmake -G "Unix Makefiles" -Dbuild_search=ON -Duse_libclang=ON -Dbuild_parse=ON ..
+     cmake --fresh -G "Unix Makefiles" -Dbuild_search=ON -Duse_libclang=ON -Dbuild_parse=ON ..
 
      time make -j 3   # Watch your memory and CPU utilization... This needs at least 4G of memory
      time make -j 2   # Worked and took 10 minutes to build with 2G of memory
@@ -79,6 +89,11 @@ As a mortal user:
 
      sudo make install
 ````
+
+-j4 will not work on a 2G Linux box (it runs out of memory)
+
+-j3 worked on a 2G Linux box
+
 As root:
 ````
      sudo pacman -R xapian-core
