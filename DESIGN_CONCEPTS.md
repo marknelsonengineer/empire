@@ -41,7 +41,6 @@ note right of Singleton: I am undecided on the need for a MobileUnits singleton
 
 @enduml
 
-<br><br>
 
 ## Core Services of the Empire V Server
 As the `main()` for the Empire V server:
@@ -78,8 +77,35 @@ SessionThread "1" -left- "1" Session
 
 @todo:  Create a Sessions Singleton or hold Sessions in Core
 
+The compute, application, and storage architecture of Empire is:
 
-<br><br>
+@startuml
+!theme crt-amber
+top to bottom direction
+
+package Server {
+  rectangle "=Empire Server" as EmpireServer
+  rectangle "Security Oracle" as LSASS
+
+  file State
+  file Credentials
+
+  State <-up-> EmpireServer : Marshalling
+  Credentials <-up-> LSASS 
+  EmpireServer <--> LSASS : Authorizations
+}
+
+cloud "Internet" {
+collections Clients
+}
+
+Clients --> EmpireServer : API modeled after commands
+
+@enduml
+
+**Note:**  Empire does not use a database.  For efficiency, the model is in the
+  Empire Server and periodically marshalled to/from files to maintain state.
+
 
 ## Configuring the Empire
 Configuration data falls into two broad families:
@@ -107,8 +133,6 @@ By design and for optimization purposes, we set the static configuration at
 pre-compilation time.  
   - Implication:  Several key collections like Nations, WorldMap and Sessions 
     will be arrays that are fixed at compilation time
-
-<br><br>
 
 
 ## Commands in Empire
@@ -201,8 +225,6 @@ Commodity     --> CommodityType
 
 @enduml
 
-<br><br>
-
 
 ## Composition of Maps
 
@@ -228,7 +250,6 @@ NationMap       -up-|> BaseMap
 
 @enduml
 
-<br><br>
 
 ## Messages
 
@@ -262,17 +283,4 @@ Make a table of design patterns and where they’re being used:
 
 Make a list of major container classes:
 
-
-## Architectural Layers
-– facilities infrastructure
-– connectivity infrastructure
-– networks
-– compute and storage platforms
-– enabling services for applications and content.
-– application, frameworks, content, content structure.
-– applications.
-– enterprise activities and operations.
-– enterprise mission, and business architecture
-– strategy and policies
-
-<!-- @brief Entities and their relationships -->
+- frameworks, content, content structure.
