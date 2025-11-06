@@ -30,6 +30,10 @@ span.comment {
     color: green;
 }
 
+span.tt {
+    color: #ffb100;   /* Amber */
+}
+
 span.preprocessor {
     color: dimgray;
 }

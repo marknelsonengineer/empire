@@ -161,7 +161,7 @@ be held by other sectors and we want to distinguish things that can be held
 
 class Sector
 class BaseEntity {
-  CommodityArray commodities
+  CommodityArray commodities[ COMMODITY_COUNT ]
 }
 
 class MobileUnit
@@ -180,7 +180,7 @@ NukeUnit        -up-|> MobileUnit
 
 @enduml
 
-Each `BaseEntity` holds an array of `Commodities`...
+Each `BaseEntity` holds an array of `commodities`...
 
 @startuml
 !theme crt-amber
