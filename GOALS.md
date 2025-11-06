@@ -14,6 +14,20 @@ who is always clear, available and takes criticism _very well_.
 
 Design.  Then code.
 
+@startuml
+!theme crt-amber
+left to right direction
+
+(Start) #line.bold
+artifact Design
+component Code
+
+Start --> Design
+Design --> Code
+
+@enduml
+
+
 1. Embrace thoughtful, best-of-breed, modern Software Engineering design practices
      - Fully documented, tested, loosely coupled and extensible
    
@@ -25,7 +39,9 @@ Design.  Then code.
       - Mitigations
       - Triggers for reevaluation
 
-4. Is fun
+4. Has an open, application-friendly API
+
+5. Is fun
 
 I'm writing Empire V because I want to learn more about Object-Oriented
 Programming.  Specifically, I want to become a practitioner of [design patterns]
@@ -38,13 +54,13 @@ documented and stable.  This allows us to focus on the design.
 
 ## Layers of Design
 Separate the design into manageable layers:
-      - **Goals & Assumptions**
-      - **Conceptual:**  Entities and their relationships
-      - **Specification:**  Expose the ADTs and their APIs
-      - **Implementation:**  Detailed design
+  - [Goals & Assumptions:](GOALS.md)      The highest level of design
+  - [Conceptual:](DESIGN_CONCEPTS.md)     Entities and their relationships
+  - [Specification:](API_DESIGN.md)       Expose the ADTs and their APIs
+  - [Implementation:](IMPLEMENTATION.md)  Detailed design & implementation decisions
 
-We are looking at using the Zachman Framework for identifying the layers of 
-design.
+We are looking at possibly using the Zachman Framework for identifying the 
+layers of design.
 
 
 ## High Level Design Requirements
@@ -52,20 +68,21 @@ design.
 In no particular order, here are the things I'd like Empire V to do:
 
 - International UNICODE support
-      - I'm on the fence about number & date formatting
-      - I don't think I'll be supporting right-to-left languages
-      - Make it easy to translate from one language to another
-- Uses modern tools for logging, debugging, telemetry, performance monitoring, etc.
-- Uses modern exception-handling
+  - Make it easy to translate from one language to another
+  - Including number & date formatting
+  - Consider support fo right-to-left languages
+- Use modern tools for logging, debugging, telemetry, performance monitoring, etc.
+- Use modern exception-handling
 - Is persistent
-- Uses modern Software Engineering practices like:
-      - Continuous integration with [GitHub Actions]
-      - Source-level documentation with [Doxygen]
-      - Unit testing with [Boost Test]
-      - Static analysis / linting with [clang-tidy]
-      - Build orchestration with [CMake]
-- Is secure
-- Continual validation / built-in health checks
+- Use modern Software Engineering practices like:
+  - Continuous integration
+  - Source-level documentation
+  - Unit testing
+  - Integration testing
+  - Static analysis / linting
+  - Build orchestration
+- Is secure by design
+- Use continual validation w/ built-in health checks
 
 
 ## Assumptions
@@ -73,6 +90,8 @@ In no particular order, here are the things I'd like Empire V to do:
   - Multicore CPU
   - Fast, reliable network
 
+
+@brief The highest level of design:  Goals & assumptions
 
 [Empire 4]:  http://www.wolfpackempire.com
 [modern c++]: https://www.modernescpp.com

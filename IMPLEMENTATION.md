@@ -16,6 +16,32 @@ Look into opportunities for static assertions
 
 Things you have to get right upfront. Testing, logging, persistence, Character width, linting, documentation, compiler’s,
 
+- Rpc
+- Supported
+- Efficient
+- Multi platform
+- Secure
+- Authentication
+
+
+# Tool Choices
+
+Like any project, there's a lot of things you have to get right upfront:
+- Programming language:  [C++]
+- Development environment:  [CLion]
+- Version control:  [GitHub]
+- Testing: [Boost test]
+- Logging
+- Persistence: [Boost serialization]
+- Internationalization:  [UTF-8]
+- Static analysis / linting:  [clang-tidy]
+- Documentation: [Doxygen]
+- Compilers:  [gcc], [clang] and I'd love to get into [Visual Studio] ASAP
+
+This document will discuss the thinking behind several of these decisions.
+
+Here's an interesting question:  What would a Microkernel-based Empire look like?
+
 
 ## To Do
 
@@ -42,6 +68,16 @@ Things you have to get right upfront. Testing, logging, persistence, Character w
 I experimented with u8string and it was a disaster
 
 Consider using a publish-subscribe pattern to keep various lists up to date.
+
+
+# On Hold
+[ ] Make a custom set of asserts. We don’t want to fail every time.  [No longer necessary with BOOST_ASSERT??]
+
+[ ] Install a logger utility
+[ ] Need a way to manage persistence... Marshalling or a database?
+[ ] Wide character support
+[ ] For now, I'm going to write Empire V as a narrow-character program.  However, I think there will come a time when there should be a compiler switch for it to support wide characters.
+
 
 
 ## The Choice of Language
@@ -161,5 +197,61 @@ improving on others.
 - All major data structures should be aligned
 - Works on several compilers:  [Visual Studio], [clang], [gcc], [icc]
 - Work on several 64-bit platforms:  Linux & Windows
+
+
+## Latency Study
+I put some effort into benchmarking how to efficiently copy strings on x86 systems.
+Some ways to do it are:
+MOV m64, r64  & MOV r54, m64:  1, 2, p237 p4, 2, 1 + 1, 1, p23, 2, 0.5
+MOVS
+
+
+## Compiler Options
+—GC-sections
+
+-z noexecstack
+Mark output as not requiring executable stack
+-z now
+Mark object for immediate function binding
+
+“gcc -fsanitize=address,undefined”
+
+Whole program -fwhole-program
+
+Get into cppcheck
+
+
+
+Profile the code… find hotspots and make ‘em inline
+
+Make my getters inline
+
+
+Build to another compiler
+Can i install icc, the Intel compiler?
+— Think about correctly scoping my enums (in a Class) — can’t do CommodityType, though
+
+@brief The lowest level of design:  Detailed design & implementation decisions
+
+- Use modern Software Engineering practices like:
+  - Continuous integration with [GitHub Actions]
+  - Source-level documentation with [Doxygen]
+  - Unit testing with [Boost Test]
+  - Integration testing
+  - Static analysis / linting with [clang-tidy]
+  - Build orchestration with [CMake]
+
+
+## Negative Compilation Testing
+
+Let’s explore some negative compilation testing (ensure things that should not compile, really don't compile).  
+It may be part of a existing framework, we may be able to use CMake.
+
+
+## Uncategorized Notes
+
+We also need a set of rules for making sure that our copy and move constructors are either implemented or suppressed for every major object class
+
+Add an object checklist to the implementation content
 
 

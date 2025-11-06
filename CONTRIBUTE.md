@@ -1,5 +1,5 @@
-Contribute to Empire
-====================
+Conventions, Development Environments, & Contributing to Empire
+===============================================================
 
 @brief Document the development environment, code conventions, et al.
 
@@ -329,6 +329,14 @@ For review:
   - print_iomem_summary() and summarize_iomem() are not systematically tested.  Everything underneath them are.
   - compose_iomem_summary() and sort_iomem_summary() are tested with validate_summary() which is called frequently in all the tests and 
     at key places in the iomem module.
+
+
+## Unsorted Items
+
+Do a drawing that shows that we’ve created a macOS build system, a Windows build
+system, and Linux build system complete with directions on how to build each one.
+
+
 
 [Hungarian notation]: https://en.wikipedia.org/wiki/Hungarian_notation
 [clang-tidy]: https://releases.llvm.org/13.0.0/tools/clang/tools/extra/docs/clang-tidy/

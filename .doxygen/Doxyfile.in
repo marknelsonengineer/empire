@@ -1014,6 +1014,13 @@ INPUT                  = GOALS.md \
                          API_DESIGN.md \
                          IMPLEMENTATION.md \
                          DESIGN.md \
+                         CONTRIBUTE.md \
+                         STATISTICS.md \
+                         LICENSE.md \
+                         DOXYGEN.md \
+                         BOOST.md \
+                         BOOST_TEST.md \
+                         FAQ.md \
                          . \
                          .doxygen/stats.py \
                          .doxygen/update_version.py \

@@ -3,9 +3,11 @@ Conceptual Design
 
 ## The Singletons of Empire
 
+Singletons ensure controllers can find every object in the model from a
+convenient set of starting points.
+
 @startuml
 !theme crt-amber
-skinparam classAttributeIconSize 0
 top to bottom direction
 
 ' Template-based, abstract Singleton
@@ -24,7 +26,6 @@ class Logger
 class Metrics
 ' List of entities
 
-
 ' Relationships
 Core          -up-|> Singleton
 Configuration -up-|> Singleton
@@ -42,7 +43,7 @@ note right of Singleton: I am undecided on the need for a MobileUnits singleton
 
 <br><br>
 
-## The Core services of the Empire V server
+## Core Services of the Empire V Server
 As the `main()` for the Empire V server:
      - Initialize the system-level singletons
      - Either:
@@ -53,12 +54,37 @@ As the `main()` for the Empire V server:
      - Start the network server
      - Shutdown and save the game state
 
+@startuml
+!theme crt-amber
+top to bottom direction
+
+class Core
+class EmpireException
+class Sessions
+class Session
+class Nation
+class BaseThread
+class SessionThread
+class DeityThread
+
+' Relationships (inheritance)
+Sessions "n" *-- "1" Session
+Session "1" *-- "1" Nation
+BaseThread <|-down- SessionThread
+BaseThread <|-down- DeityThread
+SessionThread "1" -left- "1" Session
+
+@enduml
+
+@todo:  Create a Sessions Singleton or hold Sessions in Core
+
+
 <br><br>
 
 ## Configuring the Empire
-The configuration has two broad types:
+Configuration data falls into two broad families:
 
-- **Static Config:**  Unchanging parameters
+- **Static Config:**  Unchanging, compiled-in parameters
   - The number of nations
   - The size of the world
 - **Dynamic Data:**  Uhich can be marshaled with the entire state
@@ -66,27 +92,32 @@ The configuration has two broad types:
   - Time of next update
 
 ### Deign Goals
-  - Ensure each type of configuration is consolidated in one place
-  - There should be a single class that contains all config getters (regardless
-    of type) and setters (as appropriate)
-  - There should be a method to validate the configuration and ensure it follows
-    the business rules
+  - Consolidation:  Ensure each type of configuration is in one place
+  - Have a single class with all config getters (regardless of type) and 
+    setters (as appropriate)
+  - Have methods to validate the configuration and ensure they follow the
+    business rules
 
 ### Implementation Goals
   - For performance reasons, try to use compile-time expressions for the static 
-    configuration in the source.  Use C++ features like `constexpr` and `consteval`.
-  - Doxygen has a good configuration mechanism... emulate it.
+    configuration in the source (C++ features like `constexpr` and `consteval`)
+  - Doxygen has a good configuration mechanism... emulate it
 
-By design, and for optimization purposes, we are configuring the configuration at pre-compilation time.  Also, the nations and sectors data structures will be arrays who sizes are fixed at compilation time.
-
+By design and for optimization purposes, we set the static configuration at
+pre-compilation time.  
+  - Implication:  Several key collections like Nations, WorldMap and Sessions 
+    will be arrays that are fixed at compilation time
 
 <br><br>
 
-## Commands in Empire V
 
-I think the network layer API maps very closely to the commands. This way, all clients are created equal.
+## Commands in Empire
 
-The command handlers on the server side become controllers for orchestrating what the command does. That makes it very easy to add new commands.
+The network layer API will map closely to the commands.  This way, all clients 
+are created equal.
+
+The command handlers on the server side become controllers for orchestrating 
+what the command does.  This makes it very easy to add new commands.
 
 @startuml
 !theme crt-amber
@@ -119,36 +150,61 @@ Zdone "200"              --* Commands
 @enduml
 
 
-# Composition of Entities
+## Composition of Entities
 
-We need to put `BaseUnit` between `BaseEntity` and the three unit classes.  This is because sectors can’t be held by other sectors and we wanted to distinguish things that can be help from things that are inviolate once they’re created.
+`MobileUnit` is between `BaseEntity` and the unit classes because sectors can’t
+be held by other sectors and we want to distinguish things that can be held 
+(`MobileUnit`) from things that are inviolate once they’re created (`Sectors`).
 
 @startuml
 !theme crt-amber
-skinparam classAttributeIconSize 0
 
-class BaseEntity
 class Sector
-class BaseUnit
+class BaseEntity {
+  CommodityArray commodities
+}
+
+class MobileUnit
 class LandUnit
 class SeaUnit
 class AirUnit
 class NukeUnit
 
-' Relationships (inheritance)
+' Relationships
 Sector          -up-|> BaseEntity
-BaseUnit        -up-|> BaseEntity
-LandUnit        -up-|> BaseUnit
-SeaUnit         -up-|> BaseUnit
-AirUnit         -up-|> BaseUnit
-NukeUnit        -up-|> BaseUnit
+MobileUnit        -up-|> BaseEntity
+LandUnit        -up-|> MobileUnit
+SeaUnit         -up-|> MobileUnit
+AirUnit         -up-|> MobileUnit
+NukeUnit        -up-|> MobileUnit
+
+@enduml
+
+Each `BaseEntity` holds an array of `Commodities`...
+
+@startuml
+!theme crt-amber
+
+class CommodityEnum
+class CommodityType
+class CommodityArray
+
+class Commodity {
+int maxValue
+int value
+CommodityType commodityType
+}
+
+' Relationships
+CommodityArray          -up-|> CommodityType
+Commodity     --> CommodityType
 
 @enduml
 
 <br><br>
 
 
-# Composition of Maps
+## Composition of Maps
 
 Sectors are created in Genesis. And never ever re-created after that.  All sectors are held in the base map, array, as well as each nations national map array.
 
@@ -174,18 +230,49 @@ NationMap       -up-|> BaseMap
 
 <br><br>
 
-# Other Important Classes
+## Messages
 
-@startuml
-!theme crt-amber
-skinparam classAttributeIconSize 0
+## Loans
 
-class Core
-class EmpireException
+## Logger & Metrics
 
-' Relationships (inheritance)
+## Secure By Design
+Should the listener threads be in the same process space as the model?
 
-@enduml
+This should be in a section called, thinking about security or designing in security from the beginning
+
+The opposite of security is usability. I want the system to be usable and secure. The primary threat vector is buffer overflow attacks. Another threat factor is memory overwrites where an authorization or security token gets over written.
+
+If they’re in the same process, then we’re going to accept a certain amount of risk
+
+Another serious threat vector is denial, a service and causing memory, corruption or no point or access of some kind. In other words, causing the server to crash.  Inducing the server to crash. Inducing a crash on the server.
+
+You could create a security Oracle that runs in a separate process and use it to validate the current nation number in the process space. This is very similar to windows security process, and if it’s good enough for Microsoft…. LSASS.  The primary data model will not manage credentials.
+
+My guess is that any attempts at remote code execution or memory over rates will add a minimum crash the thread, and very likely corrupt the court data model
 
 
+## Use of Design Patterns and Containers
 
+Make a table of design patterns and where they’re being used:
+- Use flyweight for commodities, sectors, and the various mobile units
+- Use composition, mostly for source code management
+- Use the command patterns for updates and combat
+- We have a number of Singletons
+
+Make a list of major container classes:
+
+
+## Architectural Layers
+– facilities infrastructure
+– connectivity infrastructure
+– networks
+– compute and storage platforms
+– enabling services for applications and content.
+– application, frameworks, content, content structure.
+– applications.
+– enterprise activities and operations.
+– enterprise mission, and business architecture
+– strategy and policies
+
+<!-- @brief Entities and their relationships -->
