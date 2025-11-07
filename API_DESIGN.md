@@ -1,11 +1,77 @@
 API & ADT Design
 ================
 
+## Use of Design Patterns and Containers
+
+Make a table of design patterns and where they’re being used:
+- Use flyweight for commodities, sectors, and the various mobile units
+- Use composition, mostly for source code management
+- Use the command patterns for updates and combat
+- We have a number of Singletons
+
+Make a list of major container classes:
+
+- frameworks, content, content structure.
+
+
 ## Lists & Collections
-- All entities
-- All entities by nation
-- All Entities by sector
-- Entities by nation plus fleet
+
+| Type    | Element            | Container    | Default, min, max          | Estimated Count | Size (per element) | Total Size |
+|---------|--------------------|--------------|----------------------------|-----------------|--------------------|------------|
+| Array   | Nation             | Nations      | 10, 8, 8, 86               |                 |                    |            |
+| Array   | Sectors            | WorldMap     | (64x32) (64x32) (184x88)   |                 |                    |            |
+| Array   | View               | NationalView | Same as WorldMap x Nations |                 |                    |            |
+| Array   | Comodity           | BaseEntity   | 14 Commodities             |                 |                    |            |
+| List    | MobileUnit         | Nation       |                            |                 |                    |            |
+| List    | MobileUnit         | BaseEntity   |                            |                 |                    |            |
+| List    | BaseEntity + Fleet | Nation       |                            |                 |                    |            |
+| List    | Metric             | Metrics      |                            |                 |                    |            |
+| List    | Message            | Messages     |                            |                 |                    |            |
+| Array   | Session            | Sessions     |                            |                 |                    |            |
+| List    | Loan               | Loans        |                            |                 |                    |            |
+| HashMap | Command            | Commands     |                            |                 |                    |            |
+
+The default starting sectors/country = 30 for 10 countries with a world size of 52x32
+
+For example, a games starts with "30 sanctuaries" giving each player 30 sectors.
+
+Genesis creates a specified number of start islands (continents), and spaces 
+them evenly accross the map.  It makes all of them the same size, and makes sure
+that they don't meet.  It gives each start island exactly the same distribution 
+of resources and the same number of mountains.
+
+### Collections under Consideration
+  - All entities
+  - Entities by nation plus fleet
+  - Threads
+
+
+## Composite Pattern
+
+Behaviors to carve out as Composite Behaviors include:
+  - Spy
+  - Plague
+  - Combat
+  - Diplomacy
+  - Update
+
+For our composites...  
+  - Data used by more than one obejct will be held in the parent class
+  - Data used only by the composite will be held in the composite
+
+In the command pattern, each command should engage the model to update it, and
+then engage a view on the model to report back the current/new state.  It's
+on the client to identify changes & convert fields into a visualization.
+
+## Message
+
+  - Dates
+  - Message
+  - UID
+  - Sequence
+  - Type
+  - Source
+  - DestArray[ NATIONS ] -- A non-null value means that country is an intended recipient
 
 
 ## Maps
@@ -382,7 +448,10 @@ Every empire object has (from empobj.h):
 
 Create a convert that converts one commodity to another.  This can be used to convert civs to mil or gold bars to gold dust.
 
-@brief Expose the ADTs and their APIs
+
+## To Do
+[ ] Schedule a design review with some of the original authors.  Maybe advertise
+    on LinkedIn or fiverr
 
 
 ## Uncategorized Notes
@@ -396,3 +465,4 @@ or on marshaling?
 Consider a standard set of methods, like dump, validate, reset, sterilize, deserialize,
 
 Each country has a random GUID. That is the one and only mechanism for representing yourself to the server after initial login and credential exchange.
+

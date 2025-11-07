@@ -14,7 +14,6 @@ top to bottom direction
 abstract class "Singleton< T >" as Singleton {
 }
 
-' Concrete singletons
 class Core
 class Configuration
 class Commands
@@ -24,9 +23,7 @@ class Messages
 class Loans
 class Logger
 class Metrics
-' List of entities
 
-' Relationships
 Core          -up-|> Singleton
 Configuration -up-|> Singleton
 Commands      -up-|> Singleton
@@ -53,6 +50,8 @@ As the `main()` for the Empire V server:
      - Start the network server
      - Shutdown and save the game state
 
+The Core class will also maintain timekeeping services like the game clock.
+
 @startuml
 !theme crt-amber
 top to bottom direction
@@ -66,7 +65,6 @@ class BaseThread
 class SessionThread
 class DeityThread
 
-' Relationships (inheritance)
 Sessions "n" *-- "1" Session
 Session "1" *-- "1" Nation
 BaseThread <|-down- SessionThread
@@ -155,21 +153,15 @@ class Add
 class Xdump
 class Zdone
 
-' Relationships (inheritance)
-'Singleton -[hidden]left-> BaseCommand
-Commands          --|> Singleton
-Accept            -up-|> BaseCommand
-Add            -up-|> BaseCommand
-Xdump            -up-|> BaseCommand
-Zdone            -up-|> BaseCommand
-'BaseCommand -[hidden]down-> Accept
-Accept "1"              --* Commands
-'Accept -[hidden]down-> Add
-Add "2"              --* Commands
-'Add -[hidden]down-> Xdump
-Xdump "199"              --* Commands
-'Xdump -[hidden]down-> Zdone
-Zdone "200"              --* Commands
+Commands      --|>     Singleton
+Accept        -up-|>   BaseCommand
+Add           -up-|>   BaseCommand
+Xdump         -up-|>   BaseCommand
+Zdone         -up-|>   BaseCommand
+Accept "1"    --*      Commands
+Add "2"       --*      Commands
+Xdump "199"   --*      Commands
+Zdone "200"   --*      Commands
 
 @enduml
 
@@ -183,9 +175,11 @@ be held by other sectors and we want to distinguish things that can be held
 @startuml
 !theme crt-amber
 
-class Sector
+class Sector {
+   ResourceArray resources[ RESOURCE_COUNT ]
+}
 class BaseEntity {
-  CommodityArray commodities[ COMMODITY_COUNT ]
+   CommodityArray commodities[ COMMODITY_COUNT ]
 }
 
 class MobileUnit
@@ -194,17 +188,18 @@ class SeaUnit
 class AirUnit
 class NukeUnit
 
-' Relationships
-Sector          -up-|> BaseEntity
-MobileUnit        -up-|> BaseEntity
-LandUnit        -up-|> MobileUnit
-SeaUnit         -up-|> MobileUnit
-AirUnit         -up-|> MobileUnit
-NukeUnit        -up-|> MobileUnit
+Sector      -up-|> BaseEntity
+MobileUnit  -up-|> BaseEntity
+LandUnit    -up-|> MobileUnit
+SeaUnit     -up-|> MobileUnit
+AirUnit     -up-|> MobileUnit
+NukeUnit    -up-|> MobileUnit
 
 @enduml
 
-Each `BaseEntity` holds an array of `commodities`...
+Each `BaseEntity` holds an array of `commodities`... and
+
+Each `Sector` holds an array of `resources`...
 
 @startuml
 !theme crt-amber
@@ -214,14 +209,25 @@ class CommodityType
 class CommodityArray
 
 class Commodity {
-int maxValue
-int value
-CommodityType commodityType
+   int maxValue
+   int value
+   CommodityType commodityType
 }
 
-' Relationships
-CommodityArray          -up-|> CommodityType
-Commodity     --> CommodityType
+CommodityArray   -up-|> CommodityType
+Commodity        -->    CommodityType
+
+class Resource {
+   int value
+   ResourceType resourceType
+}
+
+class ResourceEnum
+class ResourceType
+class ResourceArray
+
+ResourceArray   -up-|> ResourceType
+Resource        -->    ResourceType
 
 @enduml
 
@@ -238,49 +244,86 @@ skinparam classAttributeIconSize 0
 
 class BaseMap
 class WorldMap
-class NationMap
-class Nations
+class NationalView
 class Nation
 
-' Relationships (inheritance)
-WorldMap        -up-|> BaseMap
-NationMap       -up-|> BaseMap
-'NationMap       -right-> Nation
-'Nations "1" -- "1..*" Nation : contains
+WorldMap         -up-|>   BaseMap
+NationalView     -up-|>   BaseMap
+NationalView     --       Nation
 
 @enduml
 
 
 ## Messages
 
+@startuml
+!theme crt-amber
+
+class Messages
+class Message
+
+Messages "1" -right-> "n" Message 
+
+@enduml
+
+
 ## Loans
+
+@startuml
+!theme crt-amber
+
+class Loans
+class Loan
+
+Loans "1" -right-> "n" Loan
+
+@enduml
+
 
 ## Logger & Metrics
 
+@startuml
+!theme crt-amber
+
+class Logger
+class Metrics
+class Metric
+class Counter
+class Timer
+class Measurement
+
+Metrics "1" -right-> "n" Metric
+
+Metric <|-- Counter
+Metric <|-- Timer
+Metric <|-- Measurement
+
+@enduml
+
+
 ## Secure By Design
-Should the listener threads be in the same process space as the model?
+Bottom line:  Should the listener threads be in the same process space as the model?
+If they are in the same process, then we’re must accept a certain amount of risk.
 
-This should be in a section called, thinking about security or designing in security from the beginning
+The opposite of security is usability.  I want the system to be both usable and 
+secure. 
 
-The opposite of security is usability. I want the system to be usable and secure. The primary threat vector is buffer overflow attacks. Another threat factor is memory overwrites where an authorization or security token gets over written.
+### Threat Vectors
+  - Buffer overflow attacks
+  - Memory overwrites - Where an authorization or security token gets overwritten
+  - Denial of service
+    - Memory corruption
+    - Inducing crashes
 
-If they’re in the same process, then we’re going to accept a certain amount of risk
+The primary data model will not manage credentials.  Instead, we use a Security
+Oracle that runs in a separate process.  This is similar to Windows' security 
+process LSASS. ...and if it’s good enough for Microsoft...
 
-Another serious threat vector is denial, a service and causing memory, corruption or no point or access of some kind. In other words, causing the server to crash.  Inducing the server to crash. Inducing a crash on the server.
+The Security Oracle will:
+  - Decrypt and manage a `shadow` password file
+  - Change passwords
+  - Cryptographically validate each session's nation ID to ensure it hasn't
+    been overwritten
 
-You could create a security Oracle that runs in a separate process and use it to validate the current nation number in the process space. This is very similar to windows security process, and if it’s good enough for Microsoft…. LSASS.  The primary data model will not manage credentials.
-
-My guess is that any attempts at remote code execution or memory over rates will add a minimum crash the thread, and very likely corrupt the court data model
-
-
-## Use of Design Patterns and Containers
-
-Make a table of design patterns and where they’re being used:
-- Use flyweight for commodities, sectors, and the various mobile units
-- Use composition, mostly for source code management
-- Use the command patterns for updates and combat
-- We have a number of Singletons
-
-Make a list of major container classes:
-
-- frameworks, content, content structure.
+My guess is that attempts at remote code execution or memory overwrites will
+tend to crash the thread and very likely corrupt the data model.

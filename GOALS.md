@@ -12,9 +12,7 @@ who is always clear, available and takes criticism _very well_.
 
 ## Design Philosophy
 
-Design.  Then code.
-
-@startuml
+@startuml "Design.  Then code."
 !theme crt-amber
 left to right direction
 
@@ -52,17 +50,6 @@ are in a unique situation where the [requirements for Empire] are very well
 documented and stable.  This allows us to focus on the design.
 
 
-## Layers of Design
-Separate the design into manageable layers:
-  - [Goals & Assumptions:](GOALS.md)      The highest level of design
-  - [Conceptual:](DESIGN_CONCEPTS.md)     Entities and their relationships
-  - [Specification:](API_DESIGN.md)       Expose the ADTs and their APIs
-  - [Implementation:](IMPLEMENTATION.md)  Detailed design & implementation decisions
-
-We are looking at possibly using the Zachman Framework for identifying the 
-layers of design.
-
-
 ## High Level Design Requirements
 
 In no particular order, here are the things I'd like Empire V to do:
@@ -90,8 +77,6 @@ In no particular order, here are the things I'd like Empire V to do:
   - Multicore CPU
   - Fast, reliable network
 
-
-@brief The highest level of design:  Goals & assumptions
 
 [Empire 4]:  http://www.wolfpackempire.com
 [modern c++]: https://www.modernescpp.com
