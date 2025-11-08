@@ -1,24 +1,11 @@
 API & ADT Design
 ================
 
-## Use of Design Patterns and Containers
-
-Make a table of design patterns and where they’re being used:
-- Use flyweight for commodities, sectors, and the various mobile units
-- Use composition, mostly for source code management
-- Use the command patterns for updates and combat
-- We have a number of Singletons
-
-Make a list of major container classes:
-
-- frameworks, content, content structure.
-
-
 ## Lists & Collections
 
 | Type    | Element            | Container    | Default, min, max          | Estimated Count | Size (per element) | Total Size |
 |---------|--------------------|--------------|----------------------------|-----------------|--------------------|------------|
-| Array   | Nation             | Nations      | 10, 8, 8, 86               |                 |                    |            |
+| Array   | Nation             | Nations      | 10, 8, 86                  |                 |                    |            |
 | Array   | Sectors            | WorldMap     | (64x32) (64x32) (184x88)   |                 |                    |            |
 | Array   | View               | NationalView | Same as WorldMap x Nations |                 |                    |            |
 | Array   | Comodity           | BaseEntity   | 14 Commodities             |                 |                    |            |
@@ -44,6 +31,197 @@ of resources and the same number of mountains.
   - All entities
   - Entities by nation plus fleet
   - Threads
+
+
+## API & ADT Designs
+
+In the Abstract Data Type (ADT) and Application Programming Interface (API)
+design, we will document the *relevant* members and methods, but not *all* of
+them as we would in the implementation design.
+
+The Singleton will highlight the differences between an ADT design and an 
+implementation.
+
+### Singleton
+
+@startuml
+!theme crt-amber
+top to bottom direction
+
+abstract class "Singleton< T >" as ADT {
+  # {static} T* instance
+  + {static} T& get()
+}
+
+note right
+An ADT
+end note
+
+abstract class "Singleton< T >" as Implementation {
+# {static} std::unique_ptr<T>  s_instance
+- {static} boost::uuids::uuid uuid
+- {static} singleton_counter_t constructCounter
+- {static} singleton_counter_t destructCounter
+
++ Singleton(Singleton &)=delete
++ Singleton(const Singleton &)=delete
++ Singleton(const Singleton &&)=delete
++ Singleton & operator=(const Singleton)=delete
++ Singleton & operator=(const Singleton &)=delete
++ Singleton & operator=(const Singleton &&)=delete
++ T & operator=(const T)=delete
++ T & operator=(const T &)=delete
++ T & operator=(const T &&)=delete
++ virtual ~Singleton()
++ boost::uuids::uuid getUUID() const
++ {static} T & get()
++ {static} std::string info()
++ {static} singleton_counter_t getConstructedCount()
++ {static} singleton_counter_t getDestroyedCount()
++ {static} bool isInstantiated()
++ {static} void validate()
++ {static} void erase()
+# Singleton()
+}
+
+note left
+An implementation contains:
+  - Copy constructors
+  - Copy assignments
+  - Destructor
+  - UUID methods
+  - `validate()` and `info()` methods
+  - Methods for unit testing
+end note
+
+@enduml
+
+
+### Configuration
+
+Configuration options come in many forms:
+1. Compiled into the code as `constexpr`.  For efficiency, this design's 
+   primary option set should be compiled in.
+2. Runtime options.  These are dynamic options that could be set/changed while
+   the program is running.
+3. Config file.  We will maintain state in files, but I don't intend to use
+   a configuration file in Empire V
+4. Command line.  The server will have a minimal set of command line options.
+5. Settable via unit tests
+6. Information about the platform
+
+
+#### Command line options
+
+    -h --help          Print this help and exit 
+    -v --version       Print the version and exit
+    --random_seed SEED Use for testing or reproducing certain configurations
+
+#### Configuration Object Model
+
+@startuml
+!theme crt-amber
+
+class __ <<typedef>> {
+const uint8_t  const_version_number_t
+const uint32_t const_build_number_t
+const uint16_t singleton_counter_t
+}
+
+class Config {
+  uint PORT
+  uint WORLD_X
+  uint WORLD_Y
+  uint ETU_PER_UPDATE 60
+  ...
+  bool RUNNING_TEST_SUITE false
+
+  void processCommandLineOptions()
+  uint getRandomSeed()
+}
+
+class Version {
+  const_version_number_t MAJOR_VERSION
+  const_version_number_t MINOR_VERSION
+  const_version_number_t PATCH_VERSION
+  const_build_number_t BUILD_NUMBER
+  string VERSION
+
+  string_view getVersion()
+}
+
+class Platform {
+  getOS()
+  getAddressSize()
+  getCompiler()
+  isDebug()
+}
+
+@enduml
+
+When serializing, store the fixed, compiled-in configuration.  
+When deserializing, compare the current configuration with the stored state and
+report any changes.
+
+
+### Commodity
+
+@startuml
+!theme crt-amber
+
+enum CommodityEnum {
+CIV   =0
+MIL   =1
+...
+UCW  =12
+RAD  =13
+}
+
+class CommodityType {
+char         inName1
+string_view  inName3
+string_view  inName8
+uint16_t     inPower
+bool         inIsSellable
+uint16_t     inPrice
+uint8_t      inWeight
+uint8_t      inPackingInefficient
+uint8_t      inPackingNormal
+uint8_t      inPackingWarehouse
+uint8_t      inPackingUrban
+uint8_t      inPackingBank
+string_view  inName32
+}
+
+class Commodity {
+
+const CommodityType &commodityType;
+const commodityValue maxValue;
+commodityValue value = 0;
+
+Commodity( CommodityEnum inCommodityEnum, commodityValue inMaxValue );
+commodityValue getMaxValue()
+commodityValue getValue()
+commodityValue operator +=()
+commodityValue operator -=()
+}
+
+Commodity --> CommodityType
+Commodity --> CommodityEnum
+
+@enduml
+
+
+
+
+## Use of Design Patterns and Containers
+
+Make a table of design patterns and where they’re being used:
+- Use flyweight for commodities, sectors, and the various mobile units
+- Use composition, mostly for source code management
+- Use the command patterns for updates and combat
+- We have a number of Singletons
+
 
 
 ## Composite Pattern
@@ -82,16 +260,12 @@ Each sector probably needs an observed method that generates data for a non-frie
 
 ## Instrumentation
 
-In addition to a really good logger, we should also build in a metrics and instrumentation capability to monitor the performance of the system. It should have periodic performance counters that measure the number of operations as well as timers that measure the duration of operations. That information should be made visibleand should could provide benchmarks and indications for health management.
+In addition to a really good logger, we should also build in a metrics and 
+instrumentation capability to monitor the performance of the system.  It should 
+have periodic performance counters that measure the number of operations as well 
+as timers that measure the duration of operations. That information should be 
+made visible and could provide benchmarks and indications for health management.
 
-
-## Configuration
-
-Commandline options and global configuration and knowledge of the platform
-
-When serializing, store the fixed, compiled-in configuration.  When restoring
-from a saved state, compare the current configuration with the stored state and
-report any changes.
 
 ## Design Notes to be Organized
 
@@ -150,10 +324,9 @@ The arguments against Singletons...
 - How do you create mock worlds for testing?
     - How will we test multiple world sizes?  How will we test creating and
       destroying a world?
-        - To achieve optimal performance, we'd hardcode configuration (for
-          example). But this sacrifices a lot of unit testing capabilities.  
-          Therefore, we will make a testability-over-performance tradeoff and make
-          configuration dynamic.
+        - To achieve optimal performance, we are hardcoding the configuration. 
+          But this sacrifices a lot of unit testing capabilities.  
+          Therefore, we will need to make a set of configuration files for testing.
         - empire::Singleton will have an `erase()` method which will destroy it
           and allow it to be recreated.
 - You loose control of initializations
@@ -318,6 +491,7 @@ Empire V will have the following layers:
 
 I'm thinking of using [gRPC] for the client-layer API.
 
+
 ## The Representative:
 
 It is not my intention to create a RESTful API -- one where we re-create state
@@ -332,70 +506,8 @@ for a session.  For example:
 [ ] We need to think about how we push new information about the real model to the users' model.
 
 
-## Configuration
-
-when I consider using the persistence model for holding configuration, here are
-my thoughts:
-- Consideration:  Use it as the master for config.  Users would modify the persisted files and
-  then Empire imports it.
-    - Decision:  The persistence model does not store key-value pairs.
-      I considered the persistence model for holding configuration.  The problem is
-      that the model does not store key-value pairs.  Positional information in the
-      model is implied by source order.  Therefore, users have no idea what they
-      are configuring.
-
-I'm going to explore the persistence model before looking into Boost
-Program Options.  Maybe we can get away with using persistence for config.
-
-Options come in many flavors:
-1. Compiled into the code (most of them - for efficiency)
-2. Runtime options
-3. Config file
-4. Command line
-5. Settable via unit tests
-
-Config flyweight??
-A configuration has:
-- A type: Int, float, double, bool,
-- A default value
-- Min and max values
-- Validator
-- Group & order within the group
-- Long description
-- A config key
-- Is settable/resettable from a test
-- ?? Source
-
-
-This is how a controller would use the config;
-
-    int& theConfig.getSomeValue();
-
-### Configuration Requirements
-
-- getSomeConfig() should **NOT** return a reference.  The reference would be mutable.
-- The config model (may) be persisted and restored with the game.
-    - This will allow certain values to be updated during the game.
-    - More importantly
-- Everything should (probably) have a value.  For those that do, the order is:
-    - Default
-    - Config from a file
-    - Config from saved state
-    - Config from a setter (for example, from a unit test)
-    - Config from command line??
-
-- The following iterators:
-    - Iterate over all config to read them in from a file
-    - Iterate over all config to print out the current configuration
-    - Iterate over all config to write a new file
-    - Iterate over all config to update a file
-    - Iterate over all config and validate the values
-
-- There should be one single class that contains all config getters.
-
 ## Object Model
 
-?? Should we create an object for a version?  It might be used in configuration.
 
 
 

@@ -140,7 +140,7 @@ void CommodityTypes::print() {
 
 Commodity::Commodity( const CommodityEnum inCommodityEnum
 	                  ,const commodityValue inMaxValue          )
-	                 : commodityType ( CommodityTypes::CommodityArray[inCommodityEnum])
+	                 : commodityType ( CommodityTypes::CommodityArray[ inCommodityEnum ])
 	                  ,maxValue ( inMaxValue ) {
    validate();
 }

@@ -20,7 +20,7 @@
 
 #include <memory>                          // For unique_ptr make_unique()
 
-#include "../typedefs.hpp"                   // For singleton_counter_t
+#include "../typedefs.hpp"                 // For singleton_counter_t
 
 namespace empire {
 
@@ -30,25 +30,25 @@ namespace empire {
 /// class and create their own Singleton like this:
 ///
 ///     /// Create a basic Singleton class
-///     class TestSingleton1 final : public Singleton< TestSingleton1 > {
+///     class TestSingleton final : public Singleton< TestSingleton > {
 ///     public:
-///        explicit TestSingleton1( [[maybe_unused]] token singletonToken ) {
-///           cout << "Constructor1  " << TestSingleton1::info() << endl;
+///        explicit TestSingleton( [[maybe_unused]] token singletonToken ) {
+///           cout << "Constructor1  " << TestSingleton::info() << endl;
 ///        }
 ///
 ///        // Do something useful with this class
 ///        void use() const {
-///           cout << "Use1 " << TestSingleton1::info() << endl;
+///           cout << "Use " << TestSingleton::info() << endl;
 ///        }
 ///     };
 ///
 /// This template not a guarantee of Singleness.  There are many ways you can
 /// override this and create multiple instances.  This Singleton, on the other
-/// hand, should detect if it happens and throw an exception.  Unfortunately,
+/// hand, should detect if that happens and throw an exception.  Unfortunately,
 /// these programs will compile and run.  We can't detect the problem until it
 /// happens.
 ///
-/// The assurances of singleness are at runtime and (I'd estimate) to be
+/// The assurances of singleness are at runtime and (I'd assess) to be
 /// relatively weak against a determined hacker.
 ///
 /// This class is also not thread-safe.
