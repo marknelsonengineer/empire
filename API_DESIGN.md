@@ -115,7 +115,7 @@ Configuration options come in many forms:
 6. Information about the platform
 
 
-#### Command line options
+#### Command Line Options
 
     -h --help          Print this help and exit 
     -v --version       Print the version and exit
@@ -139,9 +139,10 @@ class Config {
   uint ETUs_PER_UPDATE 60
   ...
   bool RUNNING_TEST_SUITE false
+}
 
-  void processCommandLineOptions()
-  void setRandomSeed()
+class CommandLine {
+  processCommandLineOptions()
 }
 
 class Version {
@@ -180,7 +181,7 @@ enum CommodityEnum {
   RAD  =13
 }
 
-class CommodityType {
+class CommodityProfile {
   name1 
   name3
   name8
@@ -196,21 +197,26 @@ class CommodityType {
   packingBank
 }
 
+class CommodityProfiles <<array>>
+
 class Commodity {
+  commodityProfile
+  maxValue
+  value
 
-commodityType
-maxValue
-value
+  Commodity( CommodityEnum, MaxCommodityValue );
 
-Commodity( CommodityEnum, MaxCommodityValue );
   getMaxValue()
   getValue()
   operator +=()
   operator -=()
 }
 
-Commodity::commodityType -right-* CommodityType
-Commodity::commodityType -right-* CommodityEnum
+Commodity::commodityProfile --> CommodityProfile
+CommodityEnum     --  Commodity
+CommodityEnum     --  CommodityProfile
+CommodityEnum     -- "n" CommodityProfiles
+CommodityProfiles "n" *-- CommodityProfile
 
 @enduml
 
@@ -226,7 +232,7 @@ OIL     = 3
 URANIUM = 4
 }
 
-class ResourceType {
+class ResourceProfile {
 name1
 name3
 name8
@@ -234,19 +240,24 @@ name32
 power
 }
 
-class Resource {
-Resource( ResourceEnum, MaxResourceValue );
-resourceType
-value
+class ResourceProfiles <<array>>
 
-getMaxValue()
-getValue()
-operator +=()
-operator -=()
+class Resource {
+  Resource( ResourceEnum, MaxResourceValue );
+  resourceProfile
+  value
+
+  getMaxValue()
+  getValue()
+  operator +=()
+  operator -=()
 }
 
-Resource::resourceType -right-* ResourceType
-Resource::resourceType -right-* ResourceEnum
+Resource::resourceProfile --> ResourceProfile
+ResourceEnum -- Resource
+ResourceEnum -- ResourceProfile
+ResourceEnum -- "n" ResourceProfiles
+ResourceProfiles "n" *-- ResourceProfile
 
 
 @enduml

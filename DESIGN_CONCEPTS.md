@@ -8,7 +8,6 @@ convenient set of starting points.
 
 @startuml
 !theme crt-amber
-top to bottom direction
 
 ' Template-based, abstract Singleton
 abstract class "Singleton< T >" as Singleton {
@@ -31,22 +30,22 @@ class Message
 class Loan
 class Metric
 
-Core          -up-|> Singleton
-Configuration -up-|> Singleton
-Commands      -up-|> Singleton
-Nations       -up-|> Singleton
-WorldMap      -up-|> Singleton
-Messages      -up-|> Singleton
-Loans         -up-|> Singleton
-Logger        -up-|> Singleton
-Metrics       -up-|> Singleton
+Singleton <|-- Core         
+Singleton <|-- Configuration
+Singleton <|-- Commands     
+Singleton <|-- Nations      
+Singleton <|-- WorldMap     
+Singleton <|-- Messages     
+Singleton <|-- Loans        
+Singleton <|-- Logger       
+Singleton <|-- Metrics      
 
-Nation        -up-* "n" Nations
-Command       -up-* "n" Commands
-Sector        -up-* "n" WorldMap
-Message       -up-* "*" Messages
-Loan          -up-* "*" Loans
-Metric        -up-* "n" Metrics
+Nations  "n" *-- Nation   
+Commands "n" *-- Command  
+WorldMap "n" *-- Sector   
+Messages "*" *-- Message  
+Loans    "*" *-- Loan     
+Metrics  "n" *-- Metric   
 
 @enduml
 
@@ -70,7 +69,6 @@ The Core class will also maintain timekeeping services like the game clock.
 
 @startuml
 !theme crt-amber
-top to bottom direction
 
 class Core
 class EmpireException
@@ -81,11 +79,11 @@ class BaseThread
 class SessionThread
 class DeityThread
 
-Sessions "n" *-- Session
-Session "1" *-- "1" Nation
-BaseThread <|-down- SessionThread
-BaseThread <|-down- DeityThread
-SessionThread -left- Session
+Sessions "n"  *--     Session
+Session "1"   *-- "1" Nation
+BaseThread    <|--    SessionThread
+BaseThread    <|--    DeityThread
+SessionThread --      Session
 
 @enduml
 
@@ -162,20 +160,22 @@ skinparam classAttributeIconSize 0
 class BaseCommand
 class Singleton
 class Commands <<Map>>
-class Accept
-class Add
 class Xdump
 class Zdone
+class Accept
+class Add
 
-Commands      --|>     Singleton
-Accept        -up-|>   BaseCommand
-Add           -up-|>   BaseCommand
-Xdump         -up-|>   BaseCommand
-Zdone         -up-|>   BaseCommand
-Accept "1"    --*      Commands
-Add "2"       --*      Commands
-Xdump "199"   --*      Commands
-Zdone "200"   --*      Commands
+Singleton <|-- Commands
+
+BaseCommand <|-- Zdone
+BaseCommand <|-- Xdump
+BaseCommand <|-- Add   
+BaseCommand <|-- Accept
+
+Commands *-- "200" Zdone
+Commands *-- "199" Xdump
+Commands *-- "2" Add
+Commands *-- "1" Accept
 
 @enduml
 
@@ -249,11 +249,11 @@ class Commodity {
    CommodityProfile
 }
 
-CommodityProfile --*    CommodityProfiles
-Commodity::CommodityProfile        o--    CommodityProfile
-Commodity         -left-     CommodityEnum
-CommodityProfile  -left-     CommodityEnum
-CommodityProfiles -left-     CommodityEnum
+CommodityProfiles           *-- CommodityProfile
+Commodity::CommodityProfile o-- CommodityProfile
+CommodityEnum               --  Commodity        
+CommodityEnum               --  CommodityProfile 
+CommodityEnum               --  CommodityProfiles
 
 class Resource {
    int value
@@ -270,11 +270,11 @@ class ResourceProfiles {
   ResourceProfile[ n ]
 }
 
-ResourceProfile --*    ResourceProfiles
-Resource::ResourceProfile        o--    ResourceProfile
-Resource         -left-     ResourceEnum
-ResourceProfile  -left-     ResourceEnum
-ResourceProfiles -left-     ResourceEnum
+ResourceProfiles          *-- ResourceProfile
+Resource::ResourceProfile o-- ResourceProfile
+ResourceEnum              --  Resource        
+ResourceEnum              --  ResourceProfile 
+ResourceEnum              --  ResourceProfiles
 
 @enduml
 
@@ -297,8 +297,8 @@ class Sector
 BaseMap      <|-- WorldMap
 BaseMap      <|-- NationalView
 NationalView --   Nation
-WorldMap     *--  Sector
-NationalView --   Sector
+WorldMap     *-- "n" Sector
+NationalView o.. "n" Sector
 
 @enduml
 
@@ -311,7 +311,7 @@ NationalView --   Sector
 class Messages
 class Message
 
-Messages -right-> "*" Message 
+Messages *-- "*" Message 
 
 @enduml
 
@@ -324,7 +324,7 @@ Messages -right-> "*" Message
 class Loans
 class Loan
 
-Loans -right-> "*" Loan
+Loans *-- "*" Loan
 
 @enduml
 
@@ -341,7 +341,7 @@ class Counter
 class Timer
 class Measurement
 
-Metrics "1" -right-> "n" Metric
+Metrics *-- "n" Metric
 
 Metric <|-- Counter
 Metric <|-- Timer
