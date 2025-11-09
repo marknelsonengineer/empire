@@ -20,7 +20,7 @@ can be implemented with modern programming practices.
 The design has been divided into manageable layers:
 - [Goals & Assumptions:](GOALS.md)      The highest level of design
 - [Conceptual:](DESIGN_CONCEPTS.md)     Entities and their relationships
-- [Specification:](API_DESIGN.md)       Expose the ADTs and their APIs
+- [Specification:](API_DESIGN.md)       Expose the Abstract Data Types and their Application Programming Interfaces
 - [Implementation:](IMPLEMENTATION.md)  Detailed design & implementation decisions
 
 [Empire 4]:  http://www.wolfpackempire.com

@@ -3,8 +3,8 @@ Goals & Assumptions
 
 Empire V is an exercise in modern software engineering and design.  It's based 
 on the well documented behavior of [Empire 4].  I don't intend to change the 
-gameplay in any significant way.  I am rewriting it from the ground up so it 
-can be designed and implemented with modern programming practices.
+gameplay in any significant way.  The exercise is to redesign it with modern 
+programming practices.
 
 Therefore, we have the ideal "customer": The original design of [Empire 4]...
 who is always clear, available and takes criticism _very well_.

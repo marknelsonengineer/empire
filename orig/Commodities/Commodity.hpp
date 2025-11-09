@@ -4,8 +4,8 @@
 /// Base class for all commodities (food, iron ore, civs, mil, etc.) that keeps
 /// data that varies between instances of a commodity.
 ///
-/// @internal  Commodities are fundamental to Empire.  To that end, I wanted to
-///            make this efficient and type safe.  A lot of effort has gone
+/// @internal  Commodities are fundamental to Empire.  To that end, this class
+///            must be efficient and type safe.  A lot of effort has gone
 ///            into inlining functions and getting the Flyweight class to be
 ///            built statically at compile-time and elidgable for inlining.
 ///
@@ -131,6 +131,7 @@ public:
    /// Because this class holds all of its members as const, we need to set them
    /// in a constructor and use an initializer list to set them.
    ///
+   /// @todo Rename to CommodityProfile
    constexpr CommodityType(
    	const char             inName1
      ,const std::string_view inName3

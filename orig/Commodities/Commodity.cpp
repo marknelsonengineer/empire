@@ -75,6 +75,7 @@ constexpr CommodityType::CommodityType(
 ///
 /// Because it's a static array, it needs to be set here.  It's built at
 /// compile-time.
+/// @todo Rename to CommodityRegistry
 constinit const CommodityType CommodityTypes::CommodityArray[COMMODITY_COUNT] = {
    //                                    power sellable price weight    packing           long name
    //                                                                 in  no  wh  ur  bk

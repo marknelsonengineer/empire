@@ -24,6 +24,13 @@ class Loans
 class Logger
 class Metrics
 
+class Nation
+class Command
+class Sector
+class Message
+class Loan
+class Metric
+
 Core          -up-|> Singleton
 Configuration -up-|> Singleton
 Commands      -up-|> Singleton
@@ -34,9 +41,18 @@ Loans         -up-|> Singleton
 Logger        -up-|> Singleton
 Metrics       -up-|> Singleton
 
-note right of Singleton: I am undecided on the need for a MobileUnits singleton
+Nation        -up-* "n" Nations
+Command       -up-* "n" Commands
+Sector        -up-* "n" WorldMap
+Message       -up-* "*" Messages
+Loan          -up-* "*" Loans
+Metric        -up-* "n" Metrics
 
 @enduml
+
+Singleton's I'm considering are:
+  - `MobileUnits` (or keep them as lists in `Nation` and `BaseUnit`)
+  - `Sessions` (or keep them as an array in `Core`)
 
 
 ## Core Services of the Empire V Server
@@ -65,15 +81,13 @@ class BaseThread
 class SessionThread
 class DeityThread
 
-Sessions "n" *-- "1" Session
+Sessions "n" *-- Session
 Session "1" *-- "1" Nation
 BaseThread <|-down- SessionThread
 BaseThread <|-down- DeityThread
-SessionThread "1" -left- "1" Session
+SessionThread -left- Session
 
 @enduml
-
-@todo:  Create a Sessions Singleton or hold Sessions in Core
 
 The compute, application, and storage architecture of Empire is:
 
@@ -147,7 +161,7 @@ skinparam classAttributeIconSize 0
 
 class BaseCommand
 class Singleton
-class Commands
+class Commands <<Map>>
 class Accept
 class Add
 class Xdump
@@ -176,11 +190,25 @@ be held by other sectors and we want to distinguish things that can be held
 !theme crt-amber
 
 class Sector {
-   ResourceArray resources[ RESOURCE_COUNT ]
+  Resource mineral
+  Resource gold
+  Resource fertile
+  Resource oil
+  Resource uranium
 }
+
+class Resource
+
 class BaseEntity {
-   CommodityArray commodities[ COMMODITY_COUNT ]
+  Commodity civ
+  Commodity mil
+  Commodity shell
+  Commodity gun
+  ...
+  Commodity rad
 }
+
+class Commodity
 
 class MobileUnit
 class LandUnit
@@ -189,7 +217,9 @@ class AirUnit
 class NukeUnit
 
 Sector      -up-|> BaseEntity
+Resource    -left-* Sector::resources
 MobileUnit  -up-|> BaseEntity
+Commodity   -left-*  BaseEntity::commodities
 LandUnit    -up-|> MobileUnit
 SeaUnit     -up-|> MobileUnit
 AirUnit     -up-|> MobileUnit
@@ -197,37 +227,54 @@ NukeUnit    -up-|> MobileUnit
 
 @enduml
 
-Each `BaseEntity` holds an array of `commodities`... and
-
-Each `Sector` holds an array of `resources`...
+Each `BaseEntity` holds a set of `commodities`, and each `Sector` holds a set of `resources`.
 
 @startuml
 !theme crt-amber
 
-class CommodityEnum
-class CommodityType
-class CommodityArray
-
-class Commodity {
-   int maxValue
-   int value
-   CommodityType commodityType
+enum CommodityEnum {
+  CIV   =0
+  MIL   =1
+  ...
+  RAD  =13
+}
+class CommodityProfile
+class CommodityProfiles {
+  CommodityProfile[ n ]
 }
 
-CommodityArray   -up-|> CommodityType
-Commodity        -->    CommodityType
+class Commodity {
+   maxValue
+   value
+   CommodityProfile
+}
+
+CommodityProfile --*    CommodityProfiles
+Commodity::CommodityProfile        o--    CommodityProfile
+Commodity         -left-     CommodityEnum
+CommodityProfile  -left-     CommodityEnum
+CommodityProfiles -left-     CommodityEnum
 
 class Resource {
    int value
-   ResourceType resourceType
+   ResourceProfile
 }
 
-class ResourceEnum
-class ResourceType
-class ResourceArray
+enum ResourceEnum {
+  MINERAL = 0
+  ...
+  URANIUM = 4
+}
+class ResourceProfile
+class ResourceProfiles {
+  ResourceProfile[ n ]
+}
 
-ResourceArray   -up-|> ResourceType
-Resource        -->    ResourceType
+ResourceProfile --*    ResourceProfiles
+Resource::ResourceProfile        o--    ResourceProfile
+Resource         -left-     ResourceEnum
+ResourceProfile  -left-     ResourceEnum
+ResourceProfiles -left-     ResourceEnum
 
 @enduml
 
@@ -240,16 +287,18 @@ Consider maintaining a world map, and then each nation having their own map. The
 
 @startuml
 !theme crt-amber
-skinparam classAttributeIconSize 0
 
 class BaseMap
 class WorldMap
 class NationalView
 class Nation
+class Sector
 
-WorldMap         -up-|>   BaseMap
-NationalView     -up-|>   BaseMap
-NationalView     --       Nation
+BaseMap      <|-- WorldMap
+BaseMap      <|-- NationalView
+NationalView --   Nation
+WorldMap     *--  Sector
+NationalView --   Sector
 
 @enduml
 
@@ -262,7 +311,7 @@ NationalView     --       Nation
 class Messages
 class Message
 
-Messages "1" -right-> "n" Message 
+Messages -right-> "*" Message 
 
 @enduml
 
@@ -275,7 +324,7 @@ Messages "1" -right-> "n" Message
 class Loans
 class Loan
 
-Loans "1" -right-> "n" Loan
+Loans -right-> "*" Loan
 
 @enduml
 

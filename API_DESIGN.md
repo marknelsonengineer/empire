@@ -36,10 +36,11 @@ of resources and the same number of mountains.
 ## API & ADT Designs
 
 In the Abstract Data Type (ADT) and Application Programming Interface (API)
-design, we will document the *relevant* members and methods, but not *all* of
-them as we would in the implementation design.
+design, we will document the defining characteristics... the soul of the class... 
+and document *relevant* members and methods, but not *all* of them as we would 
+in the implementation.
 
-The Singleton will highlight the differences between an ADT design and an 
+The Singleton highlights the differences between an ADT design and an 
 implementation.
 
 ### Singleton
@@ -49,8 +50,8 @@ implementation.
 top to bottom direction
 
 abstract class "Singleton< T >" as ADT {
-  # {static} T* instance
-  + {static} T& get()
+  # T instance
+  + T get()
 }
 
 note right
@@ -86,12 +87,15 @@ abstract class "Singleton< T >" as Implementation {
 
 note left
 An implementation contains:
-  - Copy constructors
-  - Copy assignments
-  - Destructor
+  - Copy & move constructors & assignments
+  - Constructors, Destructor
+  - Operators:  Equality, ordering, printing and hashing operators
   - UUID methods
-  - `validate()` and `info()` methods
-  - Methods for unit testing
+  - validate() and info() methods
+  - Support for testing
+  - Const correctness & typedefs and strict typing
+  - Exceptions, serializing & threading
+  - Alignment & padding
 end note
 
 @enduml
@@ -122,32 +126,31 @@ Configuration options come in many forms:
 @startuml
 !theme crt-amber
 
-class __ <<typedef>> {
-const uint8_t  const_version_number_t
-const uint32_t const_build_number_t
-const uint16_t singleton_counter_t
+class typedefs {
+  const uint8_t  const_version_number_t
+  const uint32_t const_build_number_t
+  const uint16_t singleton_counter_t
 }
 
 class Config {
-  uint PORT
-  uint WORLD_X
-  uint WORLD_Y
-  uint ETU_PER_UPDATE 60
+  uint PORT 6565
+  uint WORLD_X 64
+  uint WORLD_Y 32
+  uint ETUs_PER_UPDATE 60
   ...
   bool RUNNING_TEST_SUITE false
 
   void processCommandLineOptions()
-  uint getRandomSeed()
+  void setRandomSeed()
 }
 
 class Version {
-  const_version_number_t MAJOR_VERSION
-  const_version_number_t MINOR_VERSION
-  const_version_number_t PATCH_VERSION
-  const_build_number_t BUILD_NUMBER
+  MAJOR_VERSION
+  ...
+  BUILD_NUMBER
   string VERSION
 
-  string_view getVersion()
+  getVersion()
 }
 
 class Platform {
@@ -164,53 +167,124 @@ When deserializing, compare the current configuration with the stored state and
 report any changes.
 
 
-### Commodity
+### Commodities & Resources
 
 @startuml
 !theme crt-amber
 
 enum CommodityEnum {
-CIV   =0
-MIL   =1
-...
-UCW  =12
-RAD  =13
+  CIV   =0
+  MIL   =1
+  ...
+  UCW  =12
+  RAD  =13
 }
 
 class CommodityType {
-char         inName1
-string_view  inName3
-string_view  inName8
-uint16_t     inPower
-bool         inIsSellable
-uint16_t     inPrice
-uint8_t      inWeight
-uint8_t      inPackingInefficient
-uint8_t      inPackingNormal
-uint8_t      inPackingWarehouse
-uint8_t      inPackingUrban
-uint8_t      inPackingBank
-string_view  inName32
+  name1 
+  name3
+  name8
+  name32
+  power
+  isSellable
+  price
+  weight
+  packingInefficient
+  packingNormal
+  packingWarehouse
+  packingUrban
+  packingBank
 }
 
 class Commodity {
 
-const CommodityType &commodityType;
-const commodityValue maxValue;
-commodityValue value = 0;
+commodityType
+maxValue
+value
 
-Commodity( CommodityEnum inCommodityEnum, commodityValue inMaxValue );
-commodityValue getMaxValue()
-commodityValue getValue()
-commodityValue operator +=()
-commodityValue operator -=()
+Commodity( CommodityEnum, MaxCommodityValue );
+  getMaxValue()
+  getValue()
+  operator +=()
+  operator -=()
 }
 
-Commodity --> CommodityType
-Commodity --> CommodityEnum
+Commodity::commodityType -right-* CommodityType
+Commodity::commodityType -right-* CommodityEnum
 
 @enduml
 
+
+@startuml
+!theme crt-amber
+
+enum ResourceEnum {
+MINERAL = 0
+GOLD    = 1
+FERTILE = 2
+OIL     = 3
+URANIUM = 4
+}
+
+class ResourceType {
+name1
+name3
+name8
+name32
+power
+}
+
+class Resource {
+Resource( ResourceEnum, MaxResourceValue );
+resourceType
+value
+
+getMaxValue()
+getValue()
+operator +=()
+operator -=()
+}
+
+Resource::resourceType -right-* ResourceType
+Resource::resourceType -right-* ResourceEnum
+
+
+@enduml
+
+
+### Entities
+
+@startuml
+!theme crt-amber
+
+class BaseEntity {
+id
+uid
+owner
+
+efficiency
+mobility
+
+created_timestamp
+last_modified_timestamp
+}
+
+class Sector {
+  geography
+  designation
+  elevation
+  isCostal
+  loyalty
+  che
+  oldOwner
+}
+
+class MobileUnit {
+}
+
+BaseEntity <|-- Sector
+BaseEntity <|-- MobileUnit
+@enduml
 
 
 
