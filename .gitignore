@@ -151,3 +151,4 @@ bak/
 # Ignore project executables
 boost_tests
 empire
+/~$Commands.xlsx

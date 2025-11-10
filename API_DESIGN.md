@@ -1,6 +1,15 @@
 API & ADT Design
 ================
 
+In the Abstract Data Type (ADT) and Application Programming Interface (API)
+design, documents the defining characteristics... the soul of the class...
+and the *relevant* members and methods, but not *all* of them as we would
+in the implementation.
+
+The Singleton highlights the differences between an ADT design and an
+implementation.
+
+
 ## Lists & Collections
 
 | Type    | Element            | Container    | Default, min, max          | Estimated Count | Size (per element) | Total Size |
@@ -35,15 +44,9 @@ of resources and the same number of mountains.
 
 ## API & ADT Designs
 
-In the Abstract Data Type (ADT) and Application Programming Interface (API)
-design, we will document the defining characteristics... the soul of the class... 
-and document *relevant* members and methods, but not *all* of them as we would 
-in the implementation.
-
-The Singleton highlights the differences between an ADT design and an 
-implementation.
-
 ### Singleton
+
+The Singleton highlights the differences between an ADT design and an implementation.
 
 @startuml
 !theme crt-amber
@@ -99,6 +102,11 @@ An implementation contains:
 end note
 
 @enduml
+
+
+### Core Services
+
+@todo TBD
 
 
 ### Configuration
@@ -168,6 +176,71 @@ When deserializing, compare the current configuration with the stored state and
 report any changes.
 
 
+### Commands
+
+@startuml
+!theme crt-amber
+skinparam classAttributeIconSize 0
+
+class BaseCommand {
+  name : char[16]
+  level
+  usage : string
+  description : string
+  example : string
+  notes : List< String >
+  seeAlso : List< BaseCommand >
+}
+
+@enduml
+
+Consider modeling a bag-of-words searchable database for all of the commands.
+This will support `appropos`.
+
+
+### Nation
+
+Nation is a central object for Empire.  The Nation object may contain hidden
+information about a Nation that a player should not have access to.
+
+Things we still need to work out are:
+  - BTUs
+  - Treasury / cash on hand
+  - Military Reserves
+  - Education
+  - Technology
+  - Happiness
+  - Research
+  - Plague / plague factor
+  - Guerrilla / Loyalty / Che
+
+@startuml
+!theme crt-amber
+
+enum NationStatus {
+  SANCTUARY
+  ACTIVE   
+  DEITY    
+}
+
+class Nation {
+  status
+  name
+  leaderName
+  email
+  capital
+
+  cheMultiplier
+}
+
+NationStatus -- Nation
+
+@enduml
+
+The `DEITY` status is a placeholder.  For the object model, it represents things
+owned by `DEITY`.  This value will not be used to authorize changes to the model.
+
+
 ### Commodities & Resources
 
 @startuml
@@ -201,10 +274,8 @@ class CommodityProfiles <<array>>
 
 class Commodity {
   commodityProfile
-  maxValue
-  value
-
-  Commodity( CommodityEnum, MaxCommodityValue );
+  maxValue : uint
+  value : uint
 
   getMaxValue()
   getValue()
@@ -218,11 +289,6 @@ CommodityEnum     --  CommodityProfile
 CommodityEnum     -- "n" CommodityProfiles
 CommodityProfiles "n" *-- CommodityProfile
 
-@enduml
-
-
-@startuml
-!theme crt-amber
 
 enum ResourceEnum {
 MINERAL = 0
@@ -243,11 +309,9 @@ power
 class ResourceProfiles <<array>>
 
 class Resource {
-  Resource( ResourceEnum, MaxResourceValue );
   resourceProfile
-  value
+  value : float
 
-  getMaxValue()
   getValue()
   operator +=()
   operator -=()
@@ -278,6 +342,8 @@ mobility
 
 created_timestamp
 last_modified_timestamp
+
+List <MobileUnit>
 }
 
 class Sector {
@@ -293,10 +359,137 @@ class Sector {
 class MobileUnit {
 }
 
+class LandUnit
+class SeaUnit
+class AirUnit
+class NukeUnit {
+  loadedOnto : MobileUnit
+
+  isArmed() : bool
+}
+
 BaseEntity <|-- Sector
 BaseEntity <|-- MobileUnit
+
+MobileUnit <|-- LandUnit 
+MobileUnit <|-- SeaUnit  
+MobileUnit <|-- AirUnit  
+MobileUnit <|-- NukeUnit 
+
+class Nation {
+  groups : List <Groups>
+}
+
+class Groups {
+  nation
+  type
+  members : Map< BaseEntity >
+}
+
+Nation *-- Groups
+BaseEntity <-- Groups
+
 @enduml
 
+Every empire object has (from empobj.h):
+- Type (Sector, land, ship, plane, nuke)
+- Sequence number
+- Generation ???
+- UID
+- Timestamp
+- Nation owner
+- Coord x
+- Coord y
+- Efficiency
+- Mobility
+- Tech
+- Group
+- Linked list // Implement my own container
+
+Create a convert that converts one commodity to another.  This can be used to
+convert civs to mil or gold bars to gold dust.
+
+
+### Maps
+
+@startuml
+!theme crt-amber
+
+class BaseMap
+class WorldMap
+class NationalView
+class Nation
+class Sector
+
+BaseMap      <|-- WorldMap
+BaseMap      <|-- NationalView
+NationalView --   Nation
+WorldMap     *-- "n" Sector
+NationalView o.. "n" Sector
+
+@enduml
+
+The world map will be in array, as well, the nation map.  Map entries will have
+pointers to the sectors that are to the left right above and below.
+
+`NationalView` is an observe mechanism that holds data for a non-friendly nation 
+that they saw at some point in the past.
+
+
+### Messages
+
+@startuml
+!theme crt-amber
+
+class Messages <<list>>
+
+class Message {
+timestamp
+message
+recipients[ n ]
+}
+
+Messages *-- "*" Message
+
+
+class Nation {
+  AcceptMessages acceptMessagesFromNation[ n ]
+}
+
+struct AcceptMessages {
+  telegram : bool
+  announcements : bool
+  loan : bool
+}
+
+Nation --> AcceptMessages
+
+@enduml
+
+
+- Dates
+- Message
+- UID
+- Sequence
+- Type
+- Source
+- DestArray[ NATIONS ] -- A non-null value means that country is an intended recipient
+
+
+### Loans
+
+@todo TBD
+
+
+### Logger & Metrics
+
+@todo TBD
+
+In addition to a really good logger, we should also build in a metrics and
+instrumentation capability to monitor the performance of the system.  It should
+have periodic performance counters that measure the number of operations as well
+as timers that measure the duration of operations. That information should be
+made visible and could provide benchmarks and indications for health management.
 
 
 ## Use of Design Patterns and Containers
@@ -326,47 +519,6 @@ In the command pattern, each command should engage the model to update it, and
 then engage a view on the model to report back the current/new state.  It's
 on the client to identify changes & convert fields into a visualization.
 
-## Message
-
-  - Dates
-  - Message
-  - UID
-  - Sequence
-  - Type
-  - Source
-  - DestArray[ NATIONS ] -- A non-null value means that country is an intended recipient
-
-
-## Maps
-The world map will be in array, as well, the nation map.  Map entries will have pointers to the sectors that are to the left right above and below.
-
-Each sector probably needs an observed method that generates data for a non-friendly nation that they would be able to see. That generates with a non-friendly nation would be able to see.
-
-
-## Instrumentation
-
-In addition to a really good logger, we should also build in a metrics and 
-instrumentation capability to monitor the performance of the system.  It should 
-have periodic performance counters that measure the number of operations as well 
-as timers that measure the duration of operations. That information should be 
-made visible and could provide benchmarks and indications for health management.
-
-
-## Design Notes to be Organized
-
-Every unit gets a nation, serialized ID, and a random UID that will not change.
-
-Have a way of destroying and re-creating a Singleton.  This is for testing purposes only.
-
-I think our namespace strategy is lacking
-
-Hang class UID_Generator off of Core.   It can generate one or contiguous blocks of ids.
-
-Consider creating a serialized number class, a Singleton actually. And then assigning a unique ID number to every single object ever created. And that would be the primary key for the serialization or marshaling mechanism.
-
-We definitely need something like a model view controller architecture model is the colonels internal database. The view is each users capital centric view of the world. And everything the user interacts with needs to interact based on that map. In other words, users should never be exposed directly to the model itself.
-
-Put most of the commodity counters in the base class, or at least a large fraction of them, so they’re always there and in a predictable cashed place
 
 
 ## Singletons
@@ -591,12 +743,7 @@ for a session.  For example:
 [ ] We need to think about how we push new information about the real model to the users' model.
 
 
-## Object Model
-
-
-
-
-## Other Notes - for now
+## Notes to be Organized
 
 We are going to work very hard to keep the object model separate from the
 business rules.  We will call the object model the "Business Domain", or a set
@@ -615,6 +762,27 @@ I need to get smarter on delegates and composites
 
 Original empire had a telnet like interface to the program. Empire to will have a proper API, and provide a ton that like interface by default, moved it exactly what I chose not to do.
 
+Every unit gets a nation, serialized ID, and a random UID that will not change.
+
+Have a way of destroying and re-creating a Singleton.  This is for testing purposes only.
+
+I think our namespace strategy is lacking
+
+Hang class UID_Generator off of Core.   It can generate one or contiguous blocks of ids.
+
+Consider creating a serialized number class, a Singleton actually. And then assigning a unique ID number to every single object ever created. And that would be the primary key for the serialization or marshaling mechanism.
+
+We definitely need something like a model view controller architecture model is the colonels internal database. The view is each users capital centric view of the world. And everything the user interacts with needs to interact based on that map. In other words, users should never be exposed directly to the model itself.
+
+As we’re building out our objects, the constructor is going to be responsible
+for either creating the objects for a new game or on marshaling them.  If we
+marshall them, it’s gonna have to be done in two steps.  One question:   can we
+construct objects in an uninitialized state, and then have methods for Genesis
+or on marshaling?
+
+Consider a standard set of methods, like dump, validate, reset, sterilize, deserialize,
+
+Each country has a random GUID. That is the one and only mechanism for representing yourself to the server after initial login and credential exchange.
 
 
 ## SOLID Design Principles
@@ -626,40 +794,15 @@ The Interface segregation principle: "Clients should not be forced to depend upo
 The Dependency inversion principle: "Depend upon abstractions, [not] concretions."[10][4]
 
 
-
-## Entities
-Every empire object has (from empobj.h):
-- Type (Sector, land, ship, plane, nuke)
-- Sequence number
-- Generation ???
-- UID
-- Timestamp
-- Nation owner
-- Coord x
-- Coord y
-- Efficiency
-- Mobility
-- Tech
-- Group
-- Linked list // Implement my own container
-
-Create a convert that converts one commodity to another.  This can be used to convert civs to mil or gold bars to gold dust.
-
-
 ## To Do
+[ ] Iterate through all of the commands, documenting them and ensuring they are
+    modeled.
 [ ] Schedule a design review with some of the original authors.  Maybe advertise
     on LinkedIn or fiverr
 
 
-## Uncategorized Notes
+## Empire IV Functionality Removed from Empire V
 
-As we’re building out our objects, the constructor is going to be responsible 
-for either creating the objects for a new game or on marshaling them.  If we 
-marshall them, it’s gonna have to be done in two steps.  One question:   can we 
-construct objects in an uninitialized state, and then have methods for Genesis 
-or on marshaling?
-
-Consider a standard set of methods, like dump, validate, reset, sterilize, deserialize,
-
-Each country has a random GUID. That is the one and only mechanism for representing yourself to the server after initial login and credential exchange.
-
+- Nation
+  - Dynamically adding nations
+  - Visitors
