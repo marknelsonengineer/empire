@@ -51,7 +51,10 @@ Metrics  "n" *-- Metric
 
 Singleton's I'm considering are:
   - `MobileUnits` (or keep them as lists in `Nation` and `BaseUnit`)
-  - `Sessions` (or keep them as an array in `Core`)
+
+Decision:  Sessions should be held in the core and not as a Singleton. 
+Sessions don’t need to be accessed by absolutely everything, and I feel better 
+having a little bit of control around them via a getter access via the core.
 
 
 ## Core Services of the Empire V Server

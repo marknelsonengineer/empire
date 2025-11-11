@@ -103,10 +103,65 @@ end note
 
 @enduml
 
+I was originally thinking of having pointers to each Singleton embedded within 
+each Singleton.  Having a mesh of pointers does yield some efficiency, but it 
+tightly couples the code together.  I think I would rather be really clear in a 
+block of code which Singleton‘s are being imported...  and at least try to 
+keep things loosely coupled where possible.
+
 
 ### Core Services
 
-@todo TBD
+@startuml
+!theme crt-amber
+
+class Core {
+  createdTimestamp
+  playableTimestamp
+  playable : bool
+  updatable : bool
+
+  turn
+  tick : Elapsed BTUs
+  realtimeGameClock
+
+  randPct()
+  randRoll_10()
+
+}
+
+class EmpireException
+class Sessions
+class Session
+class Nation
+class BaseThread
+class SessionThread
+class DeityThread
+
+Sessions "n"  *--     Session
+Session "1"   *-- "1" Nation
+BaseThread    <|--    SessionThread
+BaseThread    <|--    DeityThread
+SessionThread --      Session
+EmpireException <|-- FatalEmpireException
+EmpireException <|-- WarningEmpireException
+EmpireException <|-- DebugEmpireException
+
+@enduml
+
+The security model is:
+
+@startuml
+!theme crt-amber
+
+class Capabilities {
+  TESTING
+  MODIFY
+  DEITY
+  VIEW
+}
+
+@enduml
 
 
 ### Configuration
@@ -167,6 +222,7 @@ class Platform {
   getAddressSize()
   getCompiler()
   isDebug()
+  compiledTimestamp()
 }
 
 @enduml
@@ -188,6 +244,14 @@ class BaseCommand {
   usage : string
   description : string
   example : string
+  notes : List< String >
+  seeAlso : List< BaseCommand >
+}
+
+class Concept {
+  name : char[16]
+  level
+  description : string
   notes : List< String >
   seeAlso : List< BaseCommand >
 }
@@ -225,12 +289,26 @@ enum NationStatus {
 
 class Nation {
   status
+  flags
   name
   leaderName
   email
-  capital
+  capitalSector
+  originSector
+
+  timeUsed
+  BTUs
+  money
+
+  tech : float
+  research : float
+  education : float
+  health : float
 
   cheMultiplier
+
+  lastLogin
+  lastLogout
 }
 
 NationStatus -- Nation
@@ -239,6 +317,21 @@ NationStatus -- Nation
 
 The `DEITY` status is a placeholder.  For the object model, it represents things
 owned by `DEITY`.  This value will not be used to authorize changes to the model.
+
+NationFlags
+  - Inform me about telegrams right away
+  - Allow other players to flash me
+  - Set a costal watch
+  - Report sonar contacts
+  - Sort lists by tech, not type
+  - Capital was sacked, but has not been reset
+
+Relations
+  - AT_WAR
+  - HOSTILE
+  - NEUTRAL
+  - FRIENDLY
+  - ALLIED
 
 
 ### Commodities & Resources
@@ -339,6 +432,12 @@ owner
 
 efficiency
 mobility
+techLevel
+
+radius : ?
+harden : ?
+
+fallout : float
 
 created_timestamp
 last_modified_timestamp
@@ -347,23 +446,41 @@ List <MobileUnit>
 }
 
 class Sector {
+  index
+  x_pos
+  y_pos
+
   geography
   designation
   elevation
   isCostal
   loyalty
   che
+  cheAntoganist
+  cheProtagonist
   oldOwner
+
+  numberOfMines
 }
 
 class MobileUnit {
 }
 
-class LandUnit
+class LandUnit {
+  morale
+}
+
 class SeaUnit
-class AirUnit
+class AirUnit {
+  mission
+  range
+  harden
+  theta
+}
+
 class NukeUnit {
   loadedOnto : MobileUnit
+  detonationType
 
   isArmed() : bool
 }
@@ -386,8 +503,9 @@ class Groups {
   members : Map< BaseEntity >
 }
 
-Nation *-- Groups
+Nation::groups <-- Groups
 BaseEntity <-- Groups
+Nation <-- BaseEntity::owner
 
 @enduml
 
@@ -409,6 +527,20 @@ Every empire object has (from empobj.h):
 Create a convert that converts one commodity to another.  This can be used to
 convert civs to mil or gold bars to gold dust.
 
+Retreat conditions:
+  - Whole group retreats at the first sign of trouble
+  - Retreat after any damage
+  - Retreat after being torpedoed
+  - Retreat after being pinged by sonar
+  - ...
+
+Plague enum
+  - HEALTHY
+  - EXPOSED
+  - INCUBATE
+  - INFECT
+  - DYING
+  - INNOCULATED
 
 ### Maps
 
@@ -478,7 +610,33 @@ Nation --> AcceptMessages
 
 ### Loans
 
-@todo TBD
+@startuml
+!theme crt-amber
+
+enum LoanStatus {
+  FREE
+  PROPOSED
+  SIGNED
+}
+
+class Loans
+
+class Loan {
+  lender : Nation
+  debtor : Nation
+  LoanStatus
+  interest
+  duration
+  paid
+  owed
+  lastPayDate
+  dueDate
+}
+
+LoanStatus <-- Loan
+Loans *-- Loan
+
+@enduml
 
 
 ### Logger & Metrics
@@ -784,6 +942,18 @@ Consider a standard set of methods, like dump, validate, reset, sterilize, deser
 
 Each country has a random GUID. That is the one and only mechanism for representing yourself to the server after initial login and credential exchange.
 
+Add APIs for Acts of God
+
+Think about what happens at the end of the game for a valid user who’s played who’s been played out. They have no sectors no memory no mobility no money. I think they should still be allowed to login and look around.  They deserve to be more than just a visitor.
+
+I don’t think a micro services architecture is a good fit. Consider a micro service for a sector. You would need to have an attack service, a defend service, a produce service,. It might make sense to have sectors do some of these things. But they almost always have to interact with other things, which requires an approach more like a controller.
+
+For the security entitlements in each thread, we could.
+One.use a before and after pattern
+2.get a nonce from the security Oracle that is cryptograph bound to my thread ID.
+Has the nonce the patterns and my thread ID and have the Oracle sign that with its private key
+Then have my process validate all of that information using the Oracle public key
+
 
 ## SOLID Design Principles
 The SOLID ideas are
@@ -795,14 +965,19 @@ The Dependency inversion principle: "Depend upon abstractions, [not] concretions
 
 
 ## To Do
-[ ] Iterate through all of the commands, documenting them and ensuring they are
+  - Profiles of the mobile units and their abilities
+  - Delivery and distribution
+  - Iterate through all the commands, documenting them and ensuring they are
     modeled.
-[ ] Schedule a design review with some of the original authors.  Maybe advertise
+  - Schedule a design review with some of the original authors.  Maybe advertise
     on LinkedIn or fiverr
 
 
-## Empire IV Functionality Removed from Empire V
+## Empire IV Functionality Changed in Empire V
 
 - Nation
-  - Dynamically adding nations
-  - Visitors
+  - Removed:  Dynamically adding nations
+  - Removed:  Visitors
+
+- Sector
+  - All Entities can now receive Fallout, not just sectors

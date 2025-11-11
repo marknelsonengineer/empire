@@ -254,4 +254,26 @@ We also need a set of rules for making sure that our copy and move constructors 
 
 Add an object checklist to the implementation content
 
+In the implementation, write a small program that extracts the commands and concepts into HTML and add it to the content… or render them is marked down files
 
+`misc.h` has some great macros like `LIMIT_TO()`
+
+If there's an exception (other than a `FatalEmpireException`), catch it and keep
+the server up.  When there is an exception, do a stack trace and re-validate
+the entire model.
+
+Find a way to create a hybrid Strings table of consteval and defines
+
+With modern CPUs what's more efficient `float` or `double`?
+
+Power is held as a float (at the nation level?)
+
+Place patterns before and after each set of methods and validate them.  We are
+looking for buffer overruns.
+
+Static constants and the use of getters.  I’m going to allow consteval static constant to be used directly and not require getters.  This is primarily in support of, optimization.  I believe that direct use of constants makes the code more expressive.
+
+When you login, there should be a login event where the configuration class sends the entire set of configuration to the client
+
+Let’s layer a template within a template.  For example, will use my Singleton, 
+and then have it incorporate a standard list or map or array.  

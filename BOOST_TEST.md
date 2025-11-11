@@ -48,6 +48,10 @@ Running [Boost Test] from this command line:
 [Boost Test]s are relatively easy to configure and run.  They are incredibly 
 powerful when you combine them with an IDE like [Eclipse] or [CLion].
 
+Build unit tests that exercise each method, including simple getters. The goal 
+however, is to validate how they are used and that they returned something that’s useful.
+
+
 ## Integration with CLion
 
 It's easy to add [Boost Test] support to [CLion].  Instead of giving you 

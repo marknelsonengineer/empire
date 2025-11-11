@@ -1,7 +1,8 @@
 Conventions, Development Environments, & Contributing to Empire
 ===============================================================
 
-@brief Document the development environment, code conventions, et al.
+For contributing… This document is divided in the two parts. The first is how to install the development environment, for Windows Lennox or macOS. The second are the coding standards and checklist that we use for the sorcery.
+
 
 Empire V is a [CMake]-based C++, POSIX usermode console program.
 
