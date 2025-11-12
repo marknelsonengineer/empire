@@ -18,18 +18,19 @@ implementation.
 | Array   | Sectors            | WorldMap     | (64x32) (64x32) (184x88)   |                 |                    |            |
 | Array   | View               | NationalView | Same as WorldMap x Nations |                 |                    |            |
 | Array   | Comodity           | BaseEntity   | 14 Commodities             |                 |                    |            |
-| List    | MobileUnit         | Nation       |                            |                 |                    |            |
-| List    | MobileUnit         | BaseEntity   |                            |                 |                    |            |
-| List    | BaseEntity + Fleet | Nation       |                            |                 |                    |            |
-| List    | Metric             | Metrics      |                            |                 |                    |            |
-| List    | Message            | Messages     |                            |                 |                    |            |
-| Array   | Session            | Sessions     |                            |                 |                    |            |
-| List    | Loan               | Loans        |                            |                 |                    |            |
-| HashMap | Command            | Commands     |                            |                 |                    |            |
+| List    | MobileUnit         | Nation       | 0, 0, *                    |                 |                    |            |
+| List    | MobileUnit         | BaseEntity   | 0, 0, *                    |                 |                    |            |
+| List    | BaseEntity + Group | Nation       |                            |                 |                    |            |
+| List    | Metric             | Metrics      | 0, 0, Compiled             |                 |                    |            |
+| List    | Message            | Messages     | 0, 0, *                    |                 |                    |            |
+| Array   | Session            | Sessions     | 0, 0, # of nations         |                 |                    |            |
+| List    | Loan               | Loans        | 0, 0, *                    |                 |                    |            |
+| HashMap | Command            | Commands     | n                          | ~200            |                    |            |
+| List    | Listing            | Market       | 0, 0, *                    |                 |                    |            |
 
 The default starting sectors/country = 30 for 10 countries with a world size of 52x32
 
-For example, a games starts with "30 sanctuaries" giving each player 30 sectors.
+For example, some games start with 30 nations and give each nation 30 sectors.
 
 Genesis creates a specified number of start islands (continents), and spaces 
 them evenly accross the map.  It makes all of them the same size, and makes sure
@@ -90,13 +91,17 @@ abstract class "Singleton< T >" as Implementation {
 
 note left
 An implementation contains:
-  - Copy & move constructors & assignments
+  - Typedefs and strict typing
+  - Copy & move constructors
+  - Copy & move assignments
   - Constructors, Destructor
-  - Operators:  Equality, ordering, printing and hashing operators
+  - Operators:  Equality, ordering
+  - Operators:  Printing
+  - Operators:  Hashing 
   - UUID methods
   - validate() and info() methods
   - Support for testing
-  - Const correctness & typedefs and strict typing
+  - Const correctness
   - Exceptions, serializing & threading
   - Alignment & padding
 end note
@@ -125,9 +130,12 @@ class Core {
   tick : Elapsed BTUs
   realtimeGameClock
 
+  List<Session>
+
+  Sector marketSector
+
   randPct()
   randRoll_10()
-
 }
 
 class EmpireException
@@ -138,6 +146,7 @@ class BaseThread
 class SessionThread
 class DeityThread
 
+Core          -->     Sessions
 Sessions "n"  *--     Session
 Session "1"   *-- "1" Nation
 BaseThread    <|--    SessionThread
@@ -156,12 +165,16 @@ The security model is:
 
 class Capabilities {
   TESTING
-  MODIFY
+  PLAYER
   DEITY
   VIEW
 }
 
 @enduml
+
+This hasn't been worked out yet, but some elements of this include:
+- Information private to the security oracle (like a nonce)
+- The thread ID of the session (something that's hard to forge)
 
 
 ### Configuration
@@ -241,50 +254,55 @@ skinparam classAttributeIconSize 0
 class BaseCommand {
   name : char[16]
   level
-  usage : string
   description : string
-  example : string
   notes : List< String >
   seeAlso : List< BaseCommand >
 }
 
-class Concept {
-  name : char[16]
-  level
-  description : string
-  notes : List< String >
-  seeAlso : List< BaseCommand >
+class Concept
+
+class CommandHandler {
+  usage : string
+  example : string
 }
+
+BaseCommand <|-- Concept
+BaseCommand <|-- CommandHandler
 
 @enduml
 
-Consider modeling a bag-of-words searchable database for all of the commands.
+Consider implementing a bag-of-words searchable database for all of the commands.
 This will support `appropos`.
 
 
 ### Nation
 
-Nation is a central object for Empire.  The Nation object may contain hidden
+Nation is a central object for Empire.  The Nation object contains hidden
 information about a Nation that a player should not have access to.
-
-Things we still need to work out are:
-  - BTUs
-  - Treasury / cash on hand
-  - Military Reserves
-  - Education
-  - Technology
-  - Happiness
-  - Research
-  - Plague / plague factor
-  - Guerrilla / Loyalty / Che
 
 @startuml
 !theme crt-amber
 
 enum NationStatus {
   SANCTUARY
-  ACTIVE   
+  ACTIVE
   DEITY    
+}
+
+enum PoliticalStanding {  
+  NORMAL
+  HIDING
+  OVERRUN
+  EXILE
+}
+
+enum RelationshipStatus { 
+  AT_WAR
+  HOSTILE
+  NEUTRAL
+  FRIENDLY
+  ALLIED
+  SELF
 }
 
 class Nation {
@@ -296,6 +314,8 @@ class Nation {
   capitalSector
   originSector
 
+  reserveMils
+
   timeUsed
   BTUs
   money
@@ -305,36 +325,47 @@ class Nation {
   education : float
   health : float
 
+  relationshipStatus[] 
+
   cheMultiplier
 
   lastLogin
   lastLogout
+
+  sortByTech: bool
+
+  telegramsHaveFlashPriority: bool
+  allowOthersToContactMe: bool
+
+  reportCostalContacts: bool
+  reportSonarContacts : bool
+
+  getPoliticalStanding()
 }
 
-NationStatus -- Nation
+NationStatus <-- Nation
+PoliticalStanding <-- Nation
+Nation::relationshipStatus -right-> RelationshipStatus
 
 @enduml
 
 The `DEITY` status is a placeholder.  For the object model, it represents things
 owned by `DEITY`.  This value will not be used to authorize changes to the model.
 
-NationFlags
-  - Inform me about telegrams right away
-  - Allow other players to flash me
-  - Set a costal watch
-  - Report sonar contacts
-  - Sort lists by tech, not type
-  - Capital was sacked, but has not been reset
+When `sortByTech` is false, then sort by name
 
-Relations
-  - AT_WAR
-  - HOSTILE
-  - NEUTRAL
-  - FRIENDLY
-  - ALLIED
-
+Definitions of `getPoliticalStanding()`:
+  - HIDING (Capitol is in the mountains)
+  - OVERRUN (You don't own your capitol)
+  - EXILE (No money, no BTUs, no sectors)
 
 ### Commodities & Resources
+
+Commodities and Resources use a flyweight pattern so that:
+  - Each Commodity/Resource holds an instance value and maybe a maxValue
+  - Information common to all the Commodities/Resources of a given type (like
+    the description or weight) will be held in a Profile class.  This way, we
+  - don't duplicate information for each instance of the class.
 
 @startuml
 !theme crt-amber
@@ -422,17 +453,29 @@ ResourceProfiles "n" *-- ResourceProfile
 
 ### Entities
 
+As we’re building out our `Entities`, the constructor is responsible
+for either creating the objects for a new game or on marshaling them.  If we
+marshall them, it’s gonna have to be done in two steps.  One question:   can we
+construct objects in an uninitialized state, and then have methods for Genesis
+or on marshaling?
+
 @startuml
 !theme crt-amber
 
 class BaseEntity {
 id
 uid
-owner
+owner : Nation*
+
+index
+x_pos
+y_pos
 
 efficiency
 mobility
 techLevel
+
+allowUpdates : bool
 
 radius : ?
 harden : ?
@@ -446,14 +489,19 @@ List <MobileUnit>
 }
 
 class Sector {
-  index
-  x_pos
-  y_pos
-
   geography
   designation
   elevation
   isCostal
+  coastWatch : bool
+
+  pctOfWorkersWorking
+
+  distributionWarehouse: Sector
+  distributionCommodityQty[]: uint
+  deliveryCommodityDirection[]: enum
+  deliveryCommodityQtyToKeep[]: uint
+
   loyalty
   che
   cheAntoganist
@@ -509,23 +557,8 @@ Nation <-- BaseEntity::owner
 
 @enduml
 
-Every empire object has (from empobj.h):
-- Type (Sector, land, ship, plane, nuke)
-- Sequence number
-- Generation ???
-- UID
-- Timestamp
-- Nation owner
-- Coord x
-- Coord y
-- Efficiency
-- Mobility
-- Tech
-- Group
-- Linked list // Implement my own container
-
-Create a convert that converts one commodity to another.  This can be used to
-convert civs to mil or gold bars to gold dust.
+Core::market is a special Sector that holds things that have been put up 
+for sale.
 
 Retreat conditions:
   - Whole group retreats at the first sign of trouble
@@ -548,23 +581,40 @@ Plague enum
 !theme crt-amber
 
 class BaseMap
-class WorldMap
-class NationalView
-class Nation
-class Sector
+class WorldMap <<Array>>
+class NationalView <<Array>> {
+  Sector
+  overrideDesignation
+  timeObserved
+}
+class Nation <<Array>>
+class Sector {
+  east
+  southEast
+  south
+  southWest
+  west
+  northWest
+  north
+  northEast
+}
+
 
 BaseMap      <|-- WorldMap
-BaseMap      <|-- NationalView
+BaseMap      <|-- NationalView:Sector
 NationalView --   Nation
 WorldMap     *-- "n" Sector
 NationalView o.. "n" Sector
+Sector --> Sector
+Sector --> Sector
 
 @enduml
 
-The world map will be in array, as well, the nation map.  Map entries will have
-pointers to the sectors that are to the left right above and below.
+`WorldMap` and `NationalView` are arrays.  
 
-`NationalView` is an observe mechanism that holds data for a non-friendly nation 
+`east`, `southEast`, etc. are pointers to the Sectors that around this Sector.
+
+`NationalView` is an observer that holds data for a non-friendly nation 
 that they saw at some point in the past.
 
 
@@ -576,9 +626,10 @@ that they saw at some point in the past.
 class Messages <<list>>
 
 class Message {
-timestamp
-message
-recipients[ n ]
+  timestamp
+  sender
+  message
+  recipients[ n ]
 }
 
 Messages *-- "*" Message
@@ -599,13 +650,27 @@ Nation --> AcceptMessages
 @enduml
 
 
-- Dates
-- Message
-- UID
-- Sequence
-- Type
-- Source
-- DestArray[ NATIONS ] -- A non-null value means that country is an intended recipient
+### Commerce
+
+@startuml
+!theme crt-amber
+
+class Market <<List>>
+
+class Listing {
+  status
+  lotNumber
+  seller : Nation
+  highBidder : Nation
+  timeOfBid
+  deliverTo : Sector
+  item : MobileUnit
+  commodity : Commodity
+}
+
+Market *-- Listing
+
+@enduml
 
 
 ### Loans
@@ -641,13 +706,37 @@ Loans *-- Loan
 
 ### Logger & Metrics
 
-@todo TBD
+@startuml
+!theme crt-amber
 
-In addition to a really good logger, we should also build in a metrics and
-instrumentation capability to monitor the performance of the system.  It should
+class Logger
+class Metrics
+class Metric
+class Counter
+class Timer
+class Measurement
+
+Metrics *-- "n" Metric
+
+Metric <|-- Counter
+Metric <|-- Timer
+Metric <|-- Measurement
+
+@enduml
+
+Build a metrics and instrumentation capability to monitor the performance of the system.  It should
 have periodic performance counters that measure the number of operations as well
 as timers that measure the duration of operations. That information should be
 made visible and could provide benchmarks and indications for health management.
+
+Use cases for Metrics:
+  - Counters for each update:
+    - BTUs used
+    - BTUs unused
+    - Born
+    - Died
+    - How long each update took to process
+    - Number of session-minutes
 
 
 ## Use of Design Patterns and Containers
@@ -660,9 +749,9 @@ Make a table of design patterns and where they’re being used:
 
 
 
-## Composite Pattern
+### Composite Pattern
 
-Behaviors to carve out as Composite Behaviors include:
+Behaviors to carve out as Composite Behaviors may include:
   - Spy
   - Plague
   - Combat
@@ -679,7 +768,7 @@ on the client to identify changes & convert fields into a visualization.
 
 
 
-## Singletons
+### Singletons
 
 I've read [Singletons are Pathological Liars], [Where Have All the Singletons Gone?]
 and [Performant Singletons].
@@ -879,7 +968,8 @@ Empire V will present an API to clients.  The default client will have an SSH
 terminal interface that accepts text input and converts it to the API.
 
 Empire V will have the following layers:
-- Core:  A multi-threaded C++ program that maintains the state of the application and processes transactions.
+- **Core**:  A multi-threaded C++ program that maintains the state of the application 
+  and processes transactions.
 - Rep:  The Representative.  This layer runs on the same server as the core, but in a different process space (Probably).  Its purpose is to mediate requests between the Client API.
 - Client API:  [gRPC] over SSH using XXX for authentication.
 - Default Client:  A multi-platform shell-like program that is the default Empire client.  The Client is considered untrusted code.
@@ -887,7 +977,7 @@ Empire V will have the following layers:
 I'm thinking of using [gRPC] for the client-layer API.
 
 
-## The Representative:
+## The Representative
 
 It is not my intention to create a RESTful API -- one where we re-create state
 for every request.  Rather, the Representative layer is meant to maintain state
@@ -918,50 +1008,45 @@ Then, explore their Behavioral Patterns to implement the business rules.
 
 I need to get smarter on delegates and composites
 
-Original empire had a telnet like interface to the program. Empire to will have a proper API, and provide a ton that like interface by default, moved it exactly what I chose not to do.
-
-Every unit gets a nation, serialized ID, and a random UID that will not change.
-
-Have a way of destroying and re-creating a Singleton.  This is for testing purposes only.
-
-I think our namespace strategy is lacking
-
-Hang class UID_Generator off of Core.   It can generate one or contiguous blocks of ids.
-
-Consider creating a serialized number class, a Singleton actually. And then assigning a unique ID number to every single object ever created. And that would be the primary key for the serialization or marshaling mechanism.
-
-We definitely need something like a model view controller architecture model is the colonels internal database. The view is each users capital centric view of the world. And everything the user interacts with needs to interact based on that map. In other words, users should never be exposed directly to the model itself.
-
-As we’re building out our objects, the constructor is going to be responsible
-for either creating the objects for a new game or on marshaling them.  If we
-marshall them, it’s gonna have to be done in two steps.  One question:   can we
-construct objects in an uninitialized state, and then have methods for Genesis
-or on marshaling?
+Original empire had a telnet like interface to the program. Empire V will have 
+a proper API.
 
 Consider a standard set of methods, like dump, validate, reset, sterilize, deserialize,
 
-Each country has a random GUID. That is the one and only mechanism for representing yourself to the server after initial login and credential exchange.
+Each country has a random GUID. That is the one and only mechanism for 
+representing yourself to the server after initial login and credential exchange.
 
 Add APIs for Acts of God
 
-Think about what happens at the end of the game for a valid user who’s played who’s been played out. They have no sectors no memory no mobility no money. I think they should still be allowed to login and look around.  They deserve to be more than just a visitor.
+Think about what happens at the end of the game for a valid user who’s played 
+who’s been played out. They have no sectors no memory no mobility no money. I 
+think they should still be allowed to login and look around.  They deserve to be 
+more than just a visitor.
 
-I don’t think a micro services architecture is a good fit. Consider a micro service for a sector. You would need to have an attack service, a defend service, a produce service,. It might make sense to have sectors do some of these things. But they almost always have to interact with other things, which requires an approach more like a controller.
+I don’t think a micro services architecture is a good fit. Consider a micro 
+service for a sector. You would need to have an attack service, a defend service, 
+a produce service,. It might make sense to have sectors do some of these things. 
+But they almost always have to interact with other things, which requires an 
+approach more like a controller.
 
 For the security entitlements in each thread, we could.
-One.use a before and after pattern
-2.get a nonce from the security Oracle that is cryptograph bound to my thread ID.
-Has the nonce the patterns and my thread ID and have the Oracle sign that with its private key
-Then have my process validate all of that information using the Oracle public key
+1. use a before and after pattern
+2. get a nonce from the security Oracle that is cryptograph bound to my thread ID.
+3. Has the nonce the patterns and my thread ID and have the Oracle sign that with its private key
+4. Then have my process validate all of that information using the Oracle public key
 
 
 ## SOLID Design Principles
-The SOLID ideas are
-The Single-responsibility principle: "There should never be more than one reason for a class to change."[5] In other words, every class should have only one responsibility.[6]
-The Open–closed principle: "Software entities ... should be open for extension, but closed for modification."[7]
-The Liskov substitution principle: "Functions that use pointers or references to base classes must be able to use objects of derived classes without knowing it."[8] See also design by contract.[8]
-The Interface segregation principle: "Clients should not be forced to depend upon interfaces that they do not use."[9][4]
-The Dependency inversion principle: "Depend upon abstractions, [not] concretions."[10][4]
+- **The Single-responsibility principle**: There should never be more than one 
+  reason for a class to change.  Every class should have only one responsibility.
+- **The Open–closed principle**: Entities... should be open for extension, but 
+  closed for modification.
+- **The Liskov substitution principle**: Functions that use pointers or references
+  to base classes must be able to use objects of derived classes without knowing 
+  it.  See also design by contract.
+- **The Interface segregation principle**: Clients should not be forced to depend 
+  upon interfaces that they do not use.
+- **The Dependency inversion principle**: Depend upon abstractions, *not* concretions.
 
 
 ## To Do
@@ -971,6 +1056,8 @@ The Dependency inversion principle: "Depend upon abstractions, [not] concretions
     modeled.
   - Schedule a design review with some of the original authors.  Maybe advertise
     on LinkedIn or fiverr
+  - Find compile-time constants in the Empire IV .h files and bring them into our
+    constants library
 
 
 ## Empire IV Functionality Changed in Empire V

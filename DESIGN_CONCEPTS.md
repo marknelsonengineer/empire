@@ -22,13 +22,16 @@ class Messages
 class Loans
 class Logger
 class Metrics
+class Market
 
+class Sessions
 class Nation
 class Command
 class Sector
 class Message
 class Loan
 class Metric
+class Listing
 
 Singleton <|-- Core         
 Singleton <|-- Configuration
@@ -38,23 +41,22 @@ Singleton <|-- WorldMap
 Singleton <|-- Messages     
 Singleton <|-- Loans        
 Singleton <|-- Logger       
-Singleton <|-- Metrics      
+Singleton <|-- Metrics     
+Singleton <|-- Market
 
+Core         -->  Sessions
 Nations  "n" *-- Nation   
 Commands "n" *-- Command  
 WorldMap "n" *-- Sector   
 Messages "*" *-- Message  
 Loans    "*" *-- Loan     
-Metrics  "n" *-- Metric   
+Metrics  "n" *-- Metric
+Market   "*" *-- Listing
 
 @enduml
 
 Singleton's I'm considering are:
-  - `MobileUnits` (or keep them as lists in `Nation` and `BaseUnit`)
-
-Decision:  Sessions should be held in the core and not as a Singleton. 
-Sessions don’t need to be accessed by absolutely everything, and I feel better 
-having a little bit of control around them via a getter access via the core.
+  - `MobileUnits` (or hold them as lists in `Nation` and `BaseUnit`)
 
 
 ## Core Services of the Empire V Server
@@ -65,7 +67,7 @@ As the `main()` for the Empire V server:
        - Unmartial saved game state
      - Test the system / assure it's healthy
      - Initiate timed activities such as updates
-     - Start the network server
+     - Listen for network connections
      - Shutdown and save the game state
 
 The Core class will also maintain timekeeping services like the game clock.
@@ -118,6 +120,10 @@ Clients --> EmpireServer : API modeled after commands
 
 **Note:**  Empire does not use a database.  For efficiency, the model is in the
   Empire Server and periodically marshalled to/from files to maintain state.
+
+Sessions will be held in the core and not as a Singleton.  Sessions don’t need 
+to be accessed by absolutely everything, and I feel better having a little bit 
+of control around them via a getter from the core.
 
 
 ## Configuring the Empire
@@ -200,7 +206,9 @@ class Sector {
   Resource uranium
 }
 
-class Resource
+class Resource {
+  value
+}
 
 class BaseEntity {
   Commodity civ
@@ -211,7 +219,10 @@ class BaseEntity {
   Commodity rad
 }
 
-class Commodity
+class Commodity {
+  maxValue
+  value
+}
 
 class MobileUnit
 class LandUnit
@@ -284,14 +295,22 @@ ResourceEnum              --  ResourceProfiles
 
 ## Composition of Maps
 
-Sectors are created in Genesis. And never ever re-created after that.  All sectors are held in the base map, array, as well as each nations national map array.
+Sectors are created in Genesis, and never ever re-created after that.  All 
+sectors are held in the BaseMap, array, as well as each Nations' array of sectors
+owned.
 
-Consider maintaining a world map, and then each nation having their own map. The nations map objects will have pointers to the global map. When a nation needs to generate their own map, they follow those pointers to the master map. If the nation owns the sector, they get all the data. If the nation is an ally, and has agreed to share data, they’ll get an appropriate amount of data from that. Otherwise, the nation will get information that was stored the last time they flew an aircraft over or learned something from a ship or a satellite or a radar station.
+There is a `WorldMap`, and then each `Nation` has their own `NationalView`, with 
+pointers to `Sectors` in `WorldMap`.  When a nation view a map, they follow those 
+pointers to the master map.  If the nation owns the sector, they get all the data. 
+If the nation is an ally, and has agreed to share data, they’ll get an appropriate 
+amount of data from that. Otherwise, the nation will get information that was 
+stored the last time they flew an aircraft over or learned something from a 
+ship or a satellite or a radar station.
 
 @startuml
 !theme crt-amber
 
-class BaseMap
+class BaseMap <<array>>
 class WorldMap
 class NationalView
 class Nation

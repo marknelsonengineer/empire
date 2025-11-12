@@ -277,3 +277,22 @@ When you login, there should be a login event where the configuration class send
 
 Let’s layer a template within a template.  For example, will use my Singleton, 
 and then have it incorporate a standard list or map or array.  
+
+I'm starting to reconsider my `validate()` and `validateThing()` strategy.
+Right now, I'm thinking they return strings or lists of strings.  If the 
+list (or string) is empty, there's no issue.  This gives the caller more choice
+for an exception.  We could also throw a FatalEmpireException if we ever find
+one of those..., otherwise return a helpful string.
+
+When a client logs out, the Session object should zero itself out and be
+destroyed.  There is no socket attached to it.  All stateful information should
+be in Nation.
+
+Have a way of destroying and re-creating a Singleton.  This is for testing purposes only.
+
+I think our namespace strategy is lacking
+
+Hang class UID_Generator off of Core.   It can generate one or contiguous blocks of ids.
+Consider creating a serialized number class, a Singleton actually. And then 
+assigning a unique ID number to every single object ever created. And that would 
+be the primary key for the serialization or marshaling mechanism.
